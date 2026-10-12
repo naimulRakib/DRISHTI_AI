@@ -82,6 +82,16 @@ export function startListening(callbacks: ListenCallbacks): void {
     return;
   }
 
+  // Check if device is currently offline
+  if (typeof navigator !== "undefined" && navigator.onLine === false) {
+    callbacks.onStateChange("error");
+    callbacks.onError(
+      "ভয়েস ইনপুটের জন্য ইন্টারনেট সংযোগ প্রয়োজন (বর্তমানে অফলাইন রয়েছে)। অনুগ্রহ করে নিচের বক্সে লিখে জানান।",
+      "network"
+    );
+    return;
+  }
+
   // Stop any previous instance
   stopListening();
 

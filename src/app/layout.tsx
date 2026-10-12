@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "দৃষ্টি — DRISHTI AI",
   description: "দৃষ্টিপ্রতিবন্ধী মানুষের জন্য বাংলা-ফার্স্ট লোকাল অ্যাক্সেসিবিলিটি সঙ্গী।",
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {
@@ -22,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="bn">
       <body>
+        <ServiceWorkerRegister />
         <a href="#main-content" className="skip-to-content">
           মূল বিষয়ে যান (Skip to content)
         </a>
