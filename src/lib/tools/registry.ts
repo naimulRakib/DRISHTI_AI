@@ -5,6 +5,7 @@ import { recognizePerson } from '@/lib/tools/person';
 import { getCurrentLocation } from '@/lib/tools/location';
 import { readProximityTool } from '@/lib/tools/proximity';
 import { askVisualQuestion } from '@/lib/tools/visualQa';
+import { readCurrency } from '@/lib/tools/currency';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -64,6 +65,11 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     status: 'LIVE',
     labelBn: 'দৃষ্টি সহকারী (Visual Q&A)',
     run: async (ctx) => askVisualQuestion(ctx as { question?: string; imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
+  },
+  readCurrency: {
+    status: 'LIVE',
+    labelBn: 'টাকা চেনা ও গণনা',
+    run: async (ctx) => readCurrency(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement; autoAddToTotal?: boolean }),
   },
   stopSpeaking: {
     status: 'PLANNED',

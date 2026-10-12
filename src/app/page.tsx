@@ -10,6 +10,7 @@ import SafetyPanel from "@/components/SafetyPanel";
 import ProximityPanel from "@/components/ProximityPanel";
 import WalkWithMeModal from "@/components/WalkWithMeModal";
 import FamilyMembersModal from "@/components/FamilyMembersModal";
+import CurrencyModal from "@/components/CurrencyModal";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -39,6 +40,7 @@ export default function Home() {
   const [isProximityOpen, setIsProximityOpen] = useState(false);
   const [isWalkOpen, setIsWalkOpen] = useState(false);
   const [isFamilyOpen, setIsFamilyOpen] = useState(false);
+  const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -146,6 +148,10 @@ export default function Home() {
       setIsWalkOpen(true);
     }
 
+    if (matchedTool === "readCurrency") {
+      setIsCurrencyOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
@@ -153,7 +159,8 @@ export default function Home() {
       if (
         matchedTool !== "readText" &&
         matchedTool !== "getLocation" &&
-        matchedTool !== "readProximity"
+        matchedTool !== "readProximity" &&
+        matchedTool !== "readCurrency"
       ) {
         speak(result.message_bn);
       }
@@ -225,6 +232,10 @@ export default function Home() {
       setIsWalkOpen(true);
     }
 
+    if (toolName === "readCurrency") {
+      setIsCurrencyOpen(true);
+    }
+
     const tool = toolRegistry[toolName];
     if (!tool) return;
 
@@ -233,7 +244,8 @@ export default function Home() {
     if (
       toolName !== "readText" &&
       toolName !== "getLocation" &&
-      toolName !== "readProximity"
+      toolName !== "readProximity" &&
+      toolName !== "readCurrency"
     ) {
       speak(result.message_bn);
     }
@@ -417,6 +429,15 @@ export default function Home() {
             variant="action"
           />
 
+          {/* Bangladeshi Currency Reader & Total Counter (টাকা চেনা ও গণনা) */}
+          <ActionButton
+            label="টাকা চেনা"
+            subLabel="নোট চেনা ও মোট টাকা গণনা"
+            status={toolRegistry.readCurrency.status}
+            onClick={() => handleExecuteTool("readCurrency")}
+            variant="action"
+          />
+
           {/* Safety Test */}
           <ActionButton
             label="নিরাপত্তা পরীক্ষা"
@@ -521,6 +542,12 @@ export default function Home() {
       <FamilyMembersModal
         isOpen={isFamilyOpen}
         onClose={() => setIsFamilyOpen(false)}
+      />
+
+      {/* Bangladeshi Currency Reader & Wallet Modal */}
+      <CurrencyModal
+        isOpen={isCurrencyOpen}
+        onClose={() => setIsCurrencyOpen(false)}
       />
     </div>
   );

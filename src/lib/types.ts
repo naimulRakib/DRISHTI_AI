@@ -9,6 +9,7 @@ export type ToolName =
   | "readProximity"
   | "safetyTest"
   | "askVision"
+  | "readCurrency"
   | "stopSpeaking"
   | "repeatLast"
   | "unknown";

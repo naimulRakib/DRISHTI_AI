@@ -148,6 +148,23 @@ describe("router - routeIntent priority and matching", () => {
     expect(routeIntent("সামনের দৃশ্য বিস্তারিত ব্যাখ্যা করো")).toBe("askVision");
   });
 
+  // Bangladeshi Currency & Wallet Counter queries
+  it("routes 'আমার টাকা গোণো' -> readCurrency", () => {
+    expect(routeIntent("আমার টাকা গোণো")).toBe("readCurrency");
+  });
+
+  it("routes 'টাকা চেনা শুরু করো' -> readCurrency", () => {
+    expect(routeIntent("টাকা চেনা শুরু করো")).toBe("readCurrency");
+  });
+
+  it("routes 'টাকা স্ক্যান করো' -> readCurrency", () => {
+    expect(routeIntent("টাকা স্ক্যান করো")).toBe("readCurrency");
+  });
+
+  it("routes 'মানিব্যাগে মোট টাকা কত আছে' -> readCurrency", () => {
+    expect(routeIntent("মানিব্যাগে মোট টাকা কত আছে")).toBe("readCurrency");
+  });
+
   // Gibberish and unknown cases
   it("routes gibberish 'asdkfjhsdf kjhsd' -> unknown", () => {
     expect(routeIntent("asdkfjhsdf kjhsd")).toBe("unknown");
