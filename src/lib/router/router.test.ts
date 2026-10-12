@@ -135,6 +135,19 @@ describe("router - routeIntent priority and matching", () => {
     expect(routeIntent("walk with me mode")).toBe("walkWithMe");
   });
 
+  // Visual Q&A queries (medicine, money, visual inquiries)
+  it("routes 'আমার হাতে কী ওষুধ?' -> askVision", () => {
+    expect(routeIntent("আমার হাতে কী ওষুধ?")).toBe("askVision");
+  });
+
+  it("routes 'এই টাকার নোটটি কত?' -> askVision", () => {
+    expect(routeIntent("এই টাকার নোটটি কত?")).toBe("askVision");
+  });
+
+  it("routes 'সামনের দৃশ্য বিস্তারিত ব্যাখ্যা করো' -> askVision", () => {
+    expect(routeIntent("সামনের দৃশ্য বিস্তারিত ব্যাখ্যা করো")).toBe("askVision");
+  });
+
   // Gibberish and unknown cases
   it("routes gibberish 'asdkfjhsdf kjhsd' -> unknown", () => {
     expect(routeIntent("asdkfjhsdf kjhsd")).toBe("unknown");

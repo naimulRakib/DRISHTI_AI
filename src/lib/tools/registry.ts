@@ -4,6 +4,7 @@ import { readTextFromImage } from '@/lib/tools/ocr';
 import { recognizePerson } from '@/lib/tools/person';
 import { getCurrentLocation } from '@/lib/tools/location';
 import { readProximityTool } from '@/lib/tools/proximity';
+import { askVisualQuestion } from '@/lib/tools/visualQa';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -58,6 +59,11 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
       message_bn: 'নিরাপত্তা ও পতন সনাক্তকরণ পরীক্ষা মোড সক্রিয় করা হয়েছে।',
       confidence: 1.0,
     }),
+  },
+  askVision: {
+    status: 'LIVE',
+    labelBn: 'দৃষ্টি সহকারী (Visual Q&A)',
+    run: async (ctx) => askVisualQuestion(ctx as { question?: string; imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
   },
   stopSpeaking: {
     status: 'PLANNED',

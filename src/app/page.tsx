@@ -118,6 +118,14 @@ export default function Home() {
       return;
     }
 
+    if (matchedTool === "askVision") {
+      setIsCameraOpen(true);
+      const tool = toolRegistry.askVision;
+      const result = await tool.run({ question: trimmed });
+      setCurrentMessage(result.message_bn);
+      return;
+    }
+
     if (
       matchedTool === "describeSurroundings" ||
       matchedTool === "readText" ||
@@ -192,9 +200,17 @@ export default function Home() {
     if (
       toolName === "describeSurroundings" ||
       toolName === "readText" ||
-      toolName === "recognizePerson"
+      toolName === "recognizePerson" ||
+      toolName === "askVision"
     ) {
       setIsCameraOpen(true);
+    }
+
+    if (toolName === "askVision") {
+      const tool = toolRegistry.askVision;
+      const result = await tool.run({ question: "আমার সামনে কী রয়েছে বিস্তারিত ব্যাখ্যা করো" });
+      setCurrentMessage(result.message_bn);
+      return;
     }
 
     if (toolName === "safetyTest") {
@@ -389,6 +405,15 @@ export default function Home() {
             subLabel="পরিবার ও কেয়ারগিভার সনাক্ত"
             status={toolRegistry.recognizePerson.status}
             onClick={() => handleExecuteTool("recognizePerson")}
+            variant="action"
+          />
+
+          {/* Visual Q&A (দৃষ্টি সহকারী - Multimodal Assistant) */}
+          <ActionButton
+            label="দৃষ্টি সহকারী"
+            subLabel="ওষুধ, টাকা ও দৃশ্যপটের প্রশ্নোত্তর"
+            status={toolRegistry.askVision.status}
+            onClick={() => handleExecuteTool("askVision")}
             variant="action"
           />
 

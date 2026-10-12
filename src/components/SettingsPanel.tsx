@@ -79,6 +79,12 @@ export default function SettingsPanel({
   const [prepareProgress, setPrepareProgress] = useState<string>("");
   const [prepareResults, setPrepareResults] = useState<AssetCacheResult[]>([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(null);
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("drishti.gemini_api_key.v1") || "";
+    }
+    return "";
+  });
 
   useEffect(() => {
     const stored = loadStoredSettings();
@@ -106,6 +112,13 @@ export default function SettingsPanel({
       setDefaultRate(value as number);
     }
     onSettingsChange?.(nextSettings);
+  };
+
+  const handleSaveApiKey = (key: string) => {
+    setGeminiApiKey(key);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("drishti.gemini_api_key.v1", key.trim());
+    }
   };
 
   const handlePrepareOffline = async () => {
@@ -293,6 +306,27 @@ export default function SettingsPanel({
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Cloud Vision AI (Gemini) Key Section */}
+          <div className="offline-prepare-card">
+            <strong style={{ fontSize: "1.05rem", color: "#38bdf8" }}>
+              ক্লাউড ভিশন অ্যাসিস্ট্যান্ট (Gemini API কী - ঐচ্ছিক)
+            </strong>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "0.4rem 0" }}>
+              ওষুধের নাম, টাকা বা জটিল প্রশ্ন আরও গভীরভাবে জানার জন্য আপনার Gemini API কী দিতে পারেন। কী না দিলেও অন-ডিভাইস লোকাল মডেল সম্পূর্ণ অফলাইনে স্বয়ংক্রিয়ভাবে কাজ করবে।
+            </p>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <input
+                id="gemini-api-key-input"
+                type="password"
+                value={geminiApiKey}
+                onChange={(e) => handleSaveApiKey(e.target.value)}
+                placeholder="AIzaSy..."
+                className="text-input"
+                style={{ flex: 1, padding: "0.5rem 0.75rem", borderRadius: "0.4rem", fontSize: "0.9rem" }}
+              />
+            </div>
           </div>
 
           {/* Data Deletion Section (Part 10) */}

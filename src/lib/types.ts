@@ -8,6 +8,7 @@ export type ToolName =
   | "walkWithMe"
   | "readProximity"
   | "safetyTest"
+  | "askVision"
   | "stopSpeaking"
   | "repeatLast"
   | "unknown";
