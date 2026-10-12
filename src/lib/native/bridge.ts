@@ -46,6 +46,7 @@ export interface DrishtiNativeInterface {
   triggerFallSimulation(): void;
   isFallMonitoringActive(): boolean;
   getSmartCaneServerUrl(): string;
+  compareFaceEmbeddingsNative?(queryJson: string, targetJson: string): number;
 }
 
 export interface CaneImageData {

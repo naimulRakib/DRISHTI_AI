@@ -163,6 +163,19 @@ class DrishtiBridge(
         }
     }
 
+    @JavascriptInterface
+    fun compareFaceEmbeddingsNative(queryEmbeddingJson: String, targetEmbeddingJson: String): Float {
+        return try {
+            val queryArr = org.json.JSONArray(queryEmbeddingJson)
+            val targetArr = org.json.JSONArray(targetEmbeddingJson)
+            val qFloats = FloatArray(queryArr.length()) { i -> queryArr.getDouble(i).toFloat() }
+            val tFloats = FloatArray(targetArr.length()) { i -> targetArr.getDouble(i).toFloat() }
+            ai.drishti.app.sensors.ArcFaceHelper.cosineSimilarity(qFloats, tFloats)
+        } catch (e: Exception) {
+            0f
+        }
+    }
+
     // --- NavEventListener Implementations ---
 
     override fun onNavTick(

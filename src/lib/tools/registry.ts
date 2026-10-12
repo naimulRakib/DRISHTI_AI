@@ -1,6 +1,7 @@
 import { FeatureStatus, ToolName, ToolResult } from '@/lib/types';
 import { detectObjects } from '@/lib/tools/objects';
 import { readTextFromImage } from '@/lib/tools/ocr';
+import { recognizePerson } from '@/lib/tools/person';
 import { getCurrentLocation } from '@/lib/tools/location';
 import { readProximityTool } from '@/lib/tools/proximity';
 
@@ -22,15 +23,9 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     run: async (ctx) => readTextFromImage(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
   },
   recognizePerson: {
-    status: 'PLANNED',
+    status: 'LIVE',
     labelBn: 'পরিচিত মুখ চেনা',
-    run: async () => ({
-      tool: 'recognizePerson',
-      status: 'not_implemented',
-      source: 'none',
-      message_bn: 'এই সুবিধাটি এখনও প্রস্তুত নয়।',
-      confidence: null,
-    }),
+    run: async (ctx) => recognizePerson(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
   },
   getLocation: {
     status: 'LIVE',

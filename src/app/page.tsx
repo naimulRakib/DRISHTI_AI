@@ -9,6 +9,7 @@ import CameraPanel from "@/components/CameraPanel";
 import SafetyPanel from "@/components/SafetyPanel";
 import ProximityPanel from "@/components/ProximityPanel";
 import WalkWithMeModal from "@/components/WalkWithMeModal";
+import FamilyMembersModal from "@/components/FamilyMembersModal";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -37,6 +38,7 @@ export default function Home() {
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
   const [isProximityOpen, setIsProximityOpen] = useState(false);
   const [isWalkOpen, setIsWalkOpen] = useState(false);
+  const [isFamilyOpen, setIsFamilyOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -116,7 +118,11 @@ export default function Home() {
       return;
     }
 
-    if (matchedTool === "describeSurroundings" || matchedTool === "readText") {
+    if (
+      matchedTool === "describeSurroundings" ||
+      matchedTool === "readText" ||
+      matchedTool === "recognizePerson"
+    ) {
       setIsCameraOpen(true);
     }
 
@@ -183,7 +189,11 @@ export default function Home() {
 
   // Direct trigger for registry tool buttons
   const handleExecuteTool = async (toolName: ToolName) => {
-    if (toolName === "describeSurroundings" || toolName === "readText") {
+    if (
+      toolName === "describeSurroundings" ||
+      toolName === "readText" ||
+      toolName === "recognizePerson"
+    ) {
       setIsCameraOpen(true);
     }
 
@@ -283,6 +293,13 @@ export default function Home() {
             variant="secondary"
             ariaLabel="সেটিংস ও অ্যাক্সেসিবিলিটি প্যানেল খুলুন"
           />
+          <ActionButton
+            label="পরিচিত তালিকা"
+            subLabel="পরিবার ও কেয়ারগিভার"
+            onClick={() => setIsFamilyOpen(true)}
+            variant="secondary"
+            ariaLabel="পরিবার ও কেয়ারগিভার তালিকা খুলুন"
+          />
           <Link
             href="/demo"
             className="action-button variant-secondary"
@@ -363,6 +380,15 @@ export default function Home() {
             subLabel="কাগজ বা সাইনবোর্ডের লেখা"
             status={toolRegistry.readText.status}
             onClick={() => handleExecuteTool("readText")}
+            variant="action"
+          />
+
+          {/* Recognize Person (পরিচিত মুখ চেনা) */}
+          <ActionButton
+            label="পরিচিত মুখ"
+            subLabel="পরিবার ও কেয়ারগিভার সনাক্ত"
+            status={toolRegistry.recognizePerson.status}
+            onClick={() => handleExecuteTool("recognizePerson")}
             variant="action"
           />
 
@@ -464,6 +490,12 @@ export default function Home() {
       <WalkWithMeModal
         isOpen={isWalkOpen}
         onClose={() => setIsWalkOpen(false)}
+      />
+
+      {/* Caregiver & Family Members Modal */}
+      <FamilyMembersModal
+        isOpen={isFamilyOpen}
+        onClose={() => setIsFamilyOpen(false)}
       />
     </div>
   );
