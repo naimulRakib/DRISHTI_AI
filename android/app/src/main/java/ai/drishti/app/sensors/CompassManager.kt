@@ -86,13 +86,13 @@ class CompassManager(context: Context) : SensorEventListener {
             val bengaliHour = bengaliDigits[clockHour] ?: "$clockHour"
             return when (clockHour) {
                 12 -> "১২টার দিকে সোজা চলুন"
-                1, 2 -> "$bengaliHourটার দিকে সামান্য ডানে এগোন"
+                1, 2 -> "${bengaliHour}টার দিকে সামান্য ডানে এগোন"
                 3 -> "৩টার দিকে ডানপাশে ঘুরুন"
-                4, 5 -> "$bengaliHourটার দিকে পেছন-ডানে ঘুরুন"
+                4, 5 -> "${bengaliHour}টার দিকে পেছন-ডানে ঘুরুন"
                 6 -> "৬টার দিকে সম্পূর্ণ পেছনে ঘুরুন"
-                7, 8 -> "$bengaliHourটার দিকে পেছন-বাঁয়ে ঘুরুন"
+                7, 8 -> "${bengaliHour}টার দিকে পেছন-বাঁয়ে ঘুরুন"
                 9 -> "৯টার দিকে বামপাশে ঘুরুন"
-                10, 11 -> "$bengaliHourটার দিকে সামান্য বাঁয়ে এগোন"
+                10, 11 -> "${bengaliHour}টার দিকে সামান্য বাঁয়ে এগোন"
                 else -> "সোজা চলুন"
             }
         }

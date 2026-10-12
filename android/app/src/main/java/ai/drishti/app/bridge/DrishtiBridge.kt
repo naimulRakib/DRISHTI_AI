@@ -9,6 +9,7 @@ import android.os.VibratorManager
 import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import ai.drishti.app.server.SmartCaneServer
 import ai.drishti.app.service.WalkWithMeService
 import org.json.JSONObject
 import java.util.Locale
@@ -20,6 +21,9 @@ import java.util.Locale
  * - FusedLocationProviderClient (1Hz GPS updates)
  * - Hardware Compass (azimuth orientation & clock directions)
  * - Foreground Service (screen-off continuous tracking)
+ * - Native Fall Detection & Audible Siren Alert (ANVI Integration)
+ * - Emergency Contact persistence & Automated Dispatch
+ * - Smart Cane IoT Gateway (NanoHTTPD port 5000)
  * - Android Vibrator (directional haptics)
  * - Native Android TextToSpeech engine
  */
@@ -37,7 +41,6 @@ class DrishtiBridge(
             if (status == TextToSpeech.SUCCESS) {
                 val result = tts?.setLanguage(Locale("bn", "BD"))
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    // Fallback to default or English
                     tts?.language = Locale.US
                 }
                 isTtsReady = true
@@ -46,14 +49,10 @@ class DrishtiBridge(
     }
 
     @JavascriptInterface
-    fun isNativeAvailable(): Boolean {
-        return true
-    }
+    fun isNativeAvailable(): Boolean = true
 
     @JavascriptInterface
-    fun getPlatform(): String {
-        return "android_kotlin"
-    }
+    fun getPlatform(): String = "android_kotlin"
 
     @JavascriptInterface
     fun startWalkWithMe(destLat: Double, destLng: Double, destName: String) {
@@ -80,6 +79,41 @@ class DrishtiBridge(
         WalkWithMeService.setTargetDestination(destLat, destLng, destName)
     }
 
+    // --- ANVI Safety & Fall Detection Extensions ---
+
+    @JavascriptInterface
+    fun saveEmergencyContact(phoneNumber: String) {
+        WalkWithMeService.saveEmergencyContact(context, phoneNumber)
+    }
+
+    @JavascriptInterface
+    fun getEmergencyContact(): String {
+        return WalkWithMeService.getStoredEmergencyContact(context)
+    }
+
+    @JavascriptInterface
+    fun cancelFallAlert() {
+        WalkWithMeService.instance?.cancelFallAlert()
+    }
+
+    @JavascriptInterface
+    fun triggerFallSimulation() {
+        WalkWithMeService.instance?.triggerFallAlert()
+    }
+
+    @JavascriptInterface
+    fun isFallMonitoringActive(): Boolean {
+        return WalkWithMeService.instance != null
+    }
+
+    @JavascriptInterface
+    fun getSmartCaneServerUrl(): String {
+        val ip = SmartCaneServer.getDeviceIpAddress()
+        return "http://$ip:5000"
+    }
+
+    // --- Haptics and Speech ---
+
     @JavascriptInterface
     fun triggerHaptic(patternType: String) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -95,17 +129,14 @@ class DrishtiBridge(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             when (patternType) {
                 "turn_left" -> {
-                    // Two short pulses
                     val timings = longArrayOf(0, 100, 80, 100)
                     vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
                 }
                 "turn_right" -> {
-                    // Three short pulses
                     val timings = longArrayOf(0, 80, 60, 80, 60, 80)
                     vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
                 }
                 "obstacle_alert" -> {
-                    // Strong emergency pulse
                     vibrator.vibrate(VibrationEffect.createOneShot(350, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
                 "confirm" -> {
@@ -131,6 +162,8 @@ class DrishtiBridge(
             tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "DrishtiNativeTTS")
         }
     }
+
+    // --- NavEventListener Implementations ---
 
     override fun onNavTick(
         lat: Double,
@@ -158,6 +191,52 @@ class DrishtiBridge(
         webView.post {
             webView.evaluateJavascript(
                 "if (window.__drishtiNavListener) { window.__drishtiNavListener($json); }",
+                null
+            )
+        }
+    }
+
+    override fun onFallAlertTriggered(countdownSeconds: Int) {
+        webView.post {
+            webView.evaluateJavascript(
+                "if (window.__drishtiOnFallAlert) { window.__drishtiOnFallAlert({ countdownSeconds: $countdownSeconds }); }",
+                null
+            )
+        }
+    }
+
+    override fun onFallCountdownTick(secondsRemaining: Int) {
+        webView.post {
+            webView.evaluateJavascript(
+                "if (window.__drishtiOnFallCountdownTick) { window.__drishtiOnFallCountdownTick({ secondsRemaining: $secondsRemaining }); }",
+                null
+            )
+        }
+    }
+
+    override fun onFallAlertCancelled() {
+        webView.post {
+            webView.evaluateJavascript(
+                "if (window.__drishtiOnFallCancelled) { window.__drishtiOnFallCancelled(); }",
+                null
+            )
+        }
+    }
+
+    override fun onMotionMagnitude(magnitude: Float) {
+        webView.post {
+            webView.evaluateJavascript(
+                "if (window.__drishtiOnMotionMagnitude) { window.__drishtiOnMotionMagnitude({ magnitude: $magnitude }); }",
+                null
+            )
+        }
+    }
+
+    override fun onCaneImageCaptured(imagePath: String) {
+        val escapedPath = JSONObject.quote(imagePath)
+        webView.post {
+            webView.evaluateJavascript(
+                "if (window.__drishtiOnCaneImage) { window.__drishtiOnCaneImage({ imagePath: $escapedPath }); }",
                 null
             )
         }

@@ -38,12 +38,25 @@ export interface DrishtiNativeInterface {
   setDestination(destLat: number, destLng: number, destName: string): void;
   triggerHaptic(pattern: HapticPattern): void;
   speakNative(text: string): void;
+
+  // ANVI Safety & Fall Detection Extensions
+  saveEmergencyContact(phoneNumber: string): void;
+  getEmergencyContact(): string;
+  cancelFallAlert(): void;
+  triggerFallSimulation(): void;
+  isFallMonitoringActive(): boolean;
+  getSmartCaneServerUrl(): string;
 }
 
 declare global {
   interface Window {
     DrishtiBridge?: DrishtiNativeInterface;
     __drishtiNavListener?: (data: NavTickData) => void;
+    __drishtiOnFallAlert?: (data: { countdownSeconds: number }) => void;
+    __drishtiOnFallCountdownTick?: (data: { secondsRemaining: number }) => void;
+    __drishtiOnFallCancelled?: () => void;
+    __drishtiOnMotionMagnitude?: (data: { magnitude: number }) => void;
+    __drishtiOnCaneImage?: (data: { imagePath: string }) => void;
   }
 }
 
@@ -320,3 +333,105 @@ export function speakNative(text: string): boolean {
   }
   return false;
 }
+
+/**
+ * Save emergency contact phone number in native encrypted storage
+ */
+export function saveEmergencyContact(phoneNumber: string): void {
+  if (isNativeAvailable() && window.DrishtiBridge) {
+    window.DrishtiBridge.saveEmergencyContact(phoneNumber);
+  } else if (typeof window !== "undefined") {
+    localStorage.setItem("drishti_emergency_contact", phoneNumber);
+  }
+}
+
+/**
+ * Read stored emergency contact phone number
+ */
+export function getEmergencyContact(): string {
+  if (isNativeAvailable() && window.DrishtiBridge) {
+    return window.DrishtiBridge.getEmergencyContact();
+  }
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("drishti_emergency_contact") || "";
+  }
+  return "";
+}
+
+/**
+ * Cancel an active native fall detection alert and loud siren
+ */
+export function cancelFallAlert(): void {
+  if (isNativeAvailable() && window.DrishtiBridge) {
+    window.DrishtiBridge.cancelFallAlert();
+  }
+}
+
+/**
+ * Trigger fall alert simulation (plays native siren and tests countdown)
+ */
+export function triggerFallSimulation(): void {
+  if (isNativeAvailable() && window.DrishtiBridge) {
+    window.DrishtiBridge.triggerFallSimulation();
+  }
+}
+
+/**
+ * Check if native 24/7 background fall monitoring service is active
+ */
+export function isFallMonitoringActive(): boolean {
+  if (isNativeAvailable() && window.DrishtiBridge) {
+    return window.DrishtiBridge.isFallMonitoringActive();
+  }
+  return false;
+}
+
+/**
+ * Get Smart Cane IoT Gateway URL (NanoHTTPD on port 5000)
+ */
+export function getSmartCaneServerUrl(): string {
+  if (isNativeAvailable() && window.DrishtiBridge) {
+    return window.DrishtiBridge.getSmartCaneServerUrl();
+  }
+  return "http://localhost:5000";
+}
+
+export interface FallAlertListeners {
+  onTriggered?: (countdownSeconds: number) => void;
+  onTick?: (secondsRemaining: number) => void;
+  onCancelled?: () => void;
+  onMotionMagnitude?: (magnitude: number) => void;
+  onCaneImage?: (imagePath: string) => void;
+}
+
+/**
+ * Subscribe to native fall alert and smart cane events
+ */
+export function subscribeFallEvents(listeners: FallAlertListeners): () => void {
+  if (typeof window === "undefined") return () => {};
+
+  window.__drishtiOnFallAlert = (data) => {
+    listeners.onTriggered?.(data.countdownSeconds);
+  };
+  window.__drishtiOnFallCountdownTick = (data) => {
+    listeners.onTick?.(data.secondsRemaining);
+  };
+  window.__drishtiOnFallCancelled = () => {
+    listeners.onCancelled?.();
+  };
+  window.__drishtiOnMotionMagnitude = (data) => {
+    listeners.onMotionMagnitude?.(data.magnitude);
+  };
+  window.__drishtiOnCaneImage = (data) => {
+    listeners.onCaneImage?.(data.imagePath);
+  };
+
+  return () => {
+    window.__drishtiOnFallAlert = undefined;
+    window.__drishtiOnFallCountdownTick = undefined;
+    window.__drishtiOnFallCancelled = undefined;
+    window.__drishtiOnMotionMagnitude = undefined;
+    window.__drishtiOnCaneImage = undefined;
+  };
+}
+

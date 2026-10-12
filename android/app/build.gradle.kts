@@ -59,4 +59,8 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.3.4")
     implementation("androidx.camera:camera-lifecycle:1.3.4")
     implementation("androidx.camera:camera-view:1.3.4")
+
+    // ANVI IoT & Emergency Response Modules
+    implementation("org.nanohttpd:nanohttpd:2.3.1")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }

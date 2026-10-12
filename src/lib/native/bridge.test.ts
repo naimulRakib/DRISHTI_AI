@@ -1,49 +1,55 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
-  calculateDistanceMeters,
   calculateBearing,
   calculateClockDirection,
+  calculateDistanceMeters,
   isNativeAvailable,
-  subscribeNavTick,
+  NavTickData,
   startWalkWithMe,
   stopWalkWithMe,
+  subscribeNavTick,
   triggerHaptic,
-  NavTickData,
+  saveEmergencyContact,
+  getEmergencyContact,
+  cancelFallAlert,
+  triggerFallSimulation,
+  subscribeFallEvents,
 } from './bridge';
 
-describe('Drishti Native Kotlin Bridge & Nav Calculations', () => {
+describe('Drishti Kotlin Bridge & Compass Calculations', () => {
   beforeEach(() => {
-    // Ensure window exists in test environment
-    if (typeof globalThis.window === 'undefined') {
-      (globalThis as unknown as { window: unknown }).window = globalThis;
+    if (typeof window === 'undefined') {
+      (globalThis as Record<string, unknown>).window = globalThis;
     }
-    delete (window as unknown as { DrishtiBridge?: unknown }).DrishtiBridge;
-    delete (window as unknown as { __drishtiNavListener?: unknown }).__drishtiNavListener;
-  });
-
-  afterEach(() => {
+    delete (window as unknown as Record<string, unknown>).DrishtiBridge;
+    delete (window as unknown as Record<string, unknown>).__drishtiNavListener;
+    delete (window as unknown as Record<string, unknown>).__drishtiOnFallAlert;
+    delete window.__drishtiOnFallCountdownTick;
+    delete window.__drishtiOnFallCancelled;
+    delete window.__drishtiOnMotionMagnitude;
+    delete window.__drishtiOnCaneImage;
     vi.restoreAllMocks();
   });
 
-  it('calculates distance between two coordinates accurately using Haversine', () => {
-    // Distance between Dhaka University Curzon Hall (23.7277, 90.4013)
-    // and Central Shaheed Minar (23.7273, 90.3986) ~ 278 meters
-    const dist = calculateDistanceMeters(23.7277, 90.4013, 23.7273, 90.3986);
-    expect(dist).toBeGreaterThan(250);
-    expect(dist).toBeLessThan(310);
+  it('calculates Haversine distance between two coordinates correctly', () => {
+    // BUET (23.7266, 90.3888) to TSC Dhaka University (23.7317, 90.3957) ~ 900m
+    const distance = calculateDistanceMeters(23.7266, 90.3888, 23.7317, 90.3957);
+    expect(distance).toBeGreaterThan(800);
+    expect(distance).toBeLessThan(1000);
   });
 
-  it('calculates bearing degrees accurately', () => {
-    // Due North: bearing is approx 0 / 360
-    const bearingNorth = calculateBearing(0, 0, 10, 0);
-    expect(bearingNorth).toBe(0);
-
-    // Due East: bearing is approx 90
-    const bearingEast = calculateBearing(0, 0, 0, 10);
-    expect(bearingEast).toBe(90);
+  it('calculates bearing angle accurately (0-360°)', () => {
+    // Due North
+    expect(calculateBearing(0, 0, 1, 0)).toBe(0);
+    // Due East
+    expect(calculateBearing(0, 0, 0, 1)).toBe(90);
+    // Due South
+    expect(calculateBearing(1, 0, 0, 0)).toBe(180);
+    // Due West
+    expect(calculateBearing(0, 1, 0, 0)).toBe(270);
   });
 
-  it('translates heading differences into Bengali clock-face directions', () => {
+  it('translates heading and bearing differences into Bengali clock face directions', () => {
     // Facing North (0°), Destination is North (0°) -> 12 o'clock straight
     expect(calculateClockDirection(0, 0)).toContain('১২টার দিকে সোজা চলুন');
 
@@ -68,6 +74,12 @@ describe('Drishti Native Kotlin Bridge & Nav Calculations', () => {
       setDestination: vi.fn(),
       triggerHaptic: vi.fn(),
       speakNative: vi.fn(),
+      saveEmergencyContact: vi.fn(),
+      getEmergencyContact: () => '+8801700000000',
+      cancelFallAlert: vi.fn(),
+      triggerFallSimulation: vi.fn(),
+      isFallMonitoringActive: () => true,
+      getSmartCaneServerUrl: () => 'http://192.168.1.100:5000',
     };
 
     expect(isNativeAvailable()).toBe(true);
@@ -112,6 +124,12 @@ describe('Drishti Native Kotlin Bridge & Nav Calculations', () => {
       setDestination: vi.fn(),
       triggerHaptic: hapticSpy,
       speakNative: vi.fn(),
+      saveEmergencyContact: vi.fn(),
+      getEmergencyContact: () => '',
+      cancelFallAlert: vi.fn(),
+      triggerFallSimulation: vi.fn(),
+      isFallMonitoringActive: () => true,
+      getSmartCaneServerUrl: () => 'http://localhost:5000',
     };
 
     startWalkWithMe(23.72, 90.40, 'হাসপাতাল');
@@ -121,5 +139,52 @@ describe('Drishti Native Kotlin Bridge & Nav Calculations', () => {
     expect(hapticSpy).toHaveBeenCalledWith('turn_left');
 
     stopWalkWithMe();
+  });
+
+  it('supports emergency contact saving and native fall alert events', () => {
+    const saveContactSpy = vi.fn();
+    const cancelSpy = vi.fn();
+    const simSpy = vi.fn();
+
+    window.DrishtiBridge = {
+      isNativeAvailable: () => true,
+      getPlatform: () => 'android_kotlin',
+      startWalkWithMe: vi.fn(),
+      stopWalkWithMe: vi.fn(),
+      setDestination: vi.fn(),
+      triggerHaptic: vi.fn(),
+      speakNative: vi.fn(),
+      saveEmergencyContact: saveContactSpy,
+      getEmergencyContact: () => '+8801999999999',
+      cancelFallAlert: cancelSpy,
+      triggerFallSimulation: simSpy,
+      isFallMonitoringActive: () => true,
+      getSmartCaneServerUrl: () => 'http://192.168.1.50:5000',
+    };
+
+    saveEmergencyContact('+8801999999999');
+    expect(saveContactSpy).toHaveBeenCalledWith('+8801999999999');
+    expect(getEmergencyContact()).toBe('+8801999999999');
+
+    cancelFallAlert();
+    expect(cancelSpy).toHaveBeenCalled();
+
+    triggerFallSimulation();
+    expect(simSpy).toHaveBeenCalled();
+
+    let alertTriggered = false;
+    let tickCount = 0;
+    const unsub = subscribeFallEvents({
+      onTriggered: () => { alertTriggered = true; },
+      onTick: (sec) => { tickCount = sec; },
+    });
+
+    window.__drishtiOnFallAlert?.({ countdownSeconds: 12 });
+    expect(alertTriggered).toBe(true);
+
+    window.__drishtiOnFallCountdownTick?.({ secondsRemaining: 9 });
+    expect(tickCount).toBe(9);
+
+    unsub();
   });
 });

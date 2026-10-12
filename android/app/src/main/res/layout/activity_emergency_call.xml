@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7F1D1D"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvAlertIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🚨"
+        android:textSize="64sp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tvAlertTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="জরুরি পতন সতর্কতা!\nEMERGENCY FALL DETECTED"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ব্যবহারকারীর কোনো সাড়া পাওয়া যায়নি। জরুরি নম্বরে স্বয়ংক্রিয়ভাবে ফোন করা হচ্ছে…"
+        android:textColor="#FEE2E2"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/tvContactNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+8801XXXXXXXXX"
+        android:textColor="#FEF08A"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/tvLocationDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="জিপিএস অবস্থান সংগ্রহ করা হচ্ছে…"
+        android:textColor="#CBD5E1"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnCallNow"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="📞 অবিলম্বে কল করুন (CALL NOW)"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="#16A34A"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="32dp" />
+
+    <Button
+        android:id="@+id/btnCancelEmergency"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="✕ বাতিল করুন (CANCEL)"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="#475569"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
