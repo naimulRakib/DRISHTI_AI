@@ -165,6 +165,19 @@ describe("router - routeIntent priority and matching", () => {
     expect(routeIntent("মানিব্যাগে মোট টাকা কত আছে")).toBe("readCurrency");
   });
 
+  // Safe-Zone & Geofence queries
+  it("routes 'আমি কি নিরাপদ এলাকায় আছি?' -> checkSafeZone", () => {
+    expect(routeIntent("আমি কি নিরাপদ এলাকায় আছি?")).toBe("checkSafeZone");
+  });
+
+  it("routes 'সেফ জোন পরীক্ষা করো' -> checkSafeZone", () => {
+    expect(routeIntent("সেফ জোন পরীক্ষা করো")).toBe("checkSafeZone");
+  });
+
+  it("routes 'আমার নিরাপদ সীমানা দেখাও' -> checkSafeZone", () => {
+    expect(routeIntent("আমার নিরাপদ সীমানা দেখাও")).toBe("checkSafeZone");
+  });
+
   // Gibberish and unknown cases
   it("routes gibberish 'asdkfjhsdf kjhsd' -> unknown", () => {
     expect(routeIntent("asdkfjhsdf kjhsd")).toBe("unknown");

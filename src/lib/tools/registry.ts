@@ -6,6 +6,7 @@ import { getCurrentLocation } from '@/lib/tools/location';
 import { readProximityTool } from '@/lib/tools/proximity';
 import { askVisualQuestion } from '@/lib/tools/visualQa';
 import { readCurrency } from '@/lib/tools/currency';
+import { checkSafeZone } from '@/lib/tools/geofence';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -70,6 +71,11 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     status: 'LIVE',
     labelBn: 'টাকা চেনা ও গণনা',
     run: async (ctx) => readCurrency(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement; autoAddToTotal?: boolean }),
+  },
+  checkSafeZone: {
+    status: 'LIVE',
+    labelBn: 'নিরাপদ এলাকা ও সেফ জোন',
+    run: async (ctx) => checkSafeZone(ctx as { lat: number; lng: number } | undefined),
   },
   stopSpeaking: {
     status: 'PLANNED',

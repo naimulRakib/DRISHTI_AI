@@ -374,6 +374,29 @@ class WalkWithMeService : Service() {
             return prefs.getString(KEY_EMERGENCY_CONTACT, "") ?: ""
         }
 
+        fun sendCustomSms(context: Context, phoneNumber: String, message: String) {
+            if (phoneNumber.isBlank()) return
+            try {
+                if (androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.SEND_SMS) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    val smsManager = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        context.getSystemService(android.telephony.SmsManager::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        android.telephony.SmsManager.getDefault()
+                    }
+                    val parts = smsManager.divideMessage(message)
+                    if (parts.size > 1) {
+                        smsManager.sendMultipartTextMessage(phoneNumber, null, parts, null, null)
+                    } else {
+                        smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                    }
+                    android.util.Log.i(TAG, "✅ Custom SMS successfully sent to $phoneNumber")
+                }
+            } catch (e: Exception) {
+                android.util.Log.e(TAG, "Error sending custom SMS", e)
+            }
+        }
+
         interface NavEventListener {
             fun onNavTick(
                 lat: Double,

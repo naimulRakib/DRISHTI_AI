@@ -11,6 +11,7 @@ import ProximityPanel from "@/components/ProximityPanel";
 import WalkWithMeModal from "@/components/WalkWithMeModal";
 import FamilyMembersModal from "@/components/FamilyMembersModal";
 import CurrencyModal from "@/components/CurrencyModal";
+import GeofenceModal from "@/components/GeofenceModal";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -41,6 +42,7 @@ export default function Home() {
   const [isWalkOpen, setIsWalkOpen] = useState(false);
   const [isFamilyOpen, setIsFamilyOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
+  const [isGeofenceOpen, setIsGeofenceOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -152,6 +154,10 @@ export default function Home() {
       setIsCurrencyOpen(true);
     }
 
+    if (matchedTool === "checkSafeZone") {
+      setIsGeofenceOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
@@ -160,7 +166,8 @@ export default function Home() {
         matchedTool !== "readText" &&
         matchedTool !== "getLocation" &&
         matchedTool !== "readProximity" &&
-        matchedTool !== "readCurrency"
+        matchedTool !== "readCurrency" &&
+        matchedTool !== "checkSafeZone"
       ) {
         speak(result.message_bn);
       }
@@ -236,6 +243,10 @@ export default function Home() {
       setIsCurrencyOpen(true);
     }
 
+    if (toolName === "checkSafeZone") {
+      setIsGeofenceOpen(true);
+    }
+
     const tool = toolRegistry[toolName];
     if (!tool) return;
 
@@ -245,7 +256,8 @@ export default function Home() {
       toolName !== "readText" &&
       toolName !== "getLocation" &&
       toolName !== "readProximity" &&
-      toolName !== "readCurrency"
+      toolName !== "readCurrency" &&
+      toolName !== "checkSafeZone"
     ) {
       speak(result.message_bn);
     }
@@ -438,6 +450,15 @@ export default function Home() {
             variant="action"
           />
 
+          {/* Safe-Zone & Geofencing Sentinel (নিরাপদ এলাকা ও সেফ জোন) */}
+          <ActionButton
+            label="নিরাপদ এলাকা"
+            subLabel="সেফ জোন ও লাইভ ট্র্যাকিং"
+            status={toolRegistry.checkSafeZone.status}
+            onClick={() => handleExecuteTool("checkSafeZone")}
+            variant="action"
+          />
+
           {/* Safety Test */}
           <ActionButton
             label="নিরাপত্তা পরীক্ষা"
@@ -548,6 +569,12 @@ export default function Home() {
       <CurrencyModal
         isOpen={isCurrencyOpen}
         onClose={() => setIsCurrencyOpen(false)}
+      />
+
+      {/* Caregiver Safe-Zone & Geofencing Modal */}
+      <GeofenceModal
+        isOpen={isGeofenceOpen}
+        onClose={() => setIsGeofenceOpen(false)}
       />
     </div>
   );

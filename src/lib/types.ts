@@ -10,6 +10,7 @@ export type ToolName =
   | "safetyTest"
   | "askVision"
   | "readCurrency"
+  | "checkSafeZone"
   | "stopSpeaking"
   | "repeatLast"
   | "unknown";

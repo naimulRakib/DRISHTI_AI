@@ -57,6 +57,21 @@ const INTENT_PATTERNS: IntentPattern[] = [
     ],
   },
   {
+    tool: "checkSafeZone",
+    keywords: [
+      "নিরাপদ এলাকা",
+      "নিরাপদ সীমানা",
+      "সেফ জোন",
+      "সেফজোন",
+      "সীমানা",
+      "আমি কি নিরাপদে আছি",
+      "নিরাপদ জায়গায় আছি",
+      "নিরাপদ জায়গায় আছি",
+      "safe zone",
+      "geofence",
+    ],
+  },
+  {
     tool: "getLocation",
     keywords: ["লোকেশন", "অবস্থান", "কোথায় আছি", "কোথায় আছি"],
   },

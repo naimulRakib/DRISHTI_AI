@@ -112,6 +112,18 @@ class DrishtiBridge(
         return "http://$ip:5000"
     }
 
+    @JavascriptInterface
+    fun triggerGeofenceAlert(zoneName: String, lat: Double, lng: Double, distanceMeters: Float) {
+        val contactNumber = getEmergencyContact()
+        if (contactNumber.isNotBlank()) {
+            val dist = distanceMeters.toInt()
+            val mapsLink = if (lat != 0.0 && lng != 0.0) "https://maps.google.com/?q=$lat,$lng" else "অজানা"
+            val message = "সতর্কতা! দৃষ্টি (DRISHTI AI) ব্যবহারকারী নিরাপদ এলাকা '$zoneName' অতিক্রম করেছেন (${dist} মিটার দূরে)।\nলাইভ অবস্থান: $mapsLink"
+            WalkWithMeService.sendCustomSms(context, contactNumber, message)
+        }
+        triggerHaptic("obstacle_alert")
+    }
+
     // --- Haptics and Speech ---
 
     @JavascriptInterface

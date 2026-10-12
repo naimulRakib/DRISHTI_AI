@@ -46,6 +46,7 @@ export interface DrishtiNativeInterface {
   triggerFallSimulation(): void;
   isFallMonitoringActive(): boolean;
   getSmartCaneServerUrl(): string;
+  triggerGeofenceAlert?(zoneName: string, lat: number, lng: number, distanceMeters: number): void;
   compareFaceEmbeddingsNative?(queryJson: string, targetJson: string): number;
 }
 
@@ -441,4 +442,31 @@ export function subscribeFallEvents(listeners: FallAlertListeners): () => void {
     window.__drishtiOnCaneImage = undefined;
   };
 }
+
+/**
+ * Trigger Geofence Breach Alert.
+ * Dispatches via Android Native Bridge (SMS to caregiver + haptics) or Web API fallback.
+ */
+export function triggerGeofenceAlert(
+  zoneName: string,
+  lat: number,
+  lng: number,
+  distanceMeters: number
+): void {
+  if (isNativeAvailable() && window.DrishtiBridge?.triggerGeofenceAlert) {
+    window.DrishtiBridge.triggerGeofenceAlert(zoneName, lat, lng, distanceMeters);
+    return;
+  }
+
+  // Web Fallback: trigger haptic and dispatch custom event
+  triggerHaptic("obstacle_alert");
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("drishti:geofence-alert", {
+        detail: { zoneName, lat, lng, distanceMeters },
+      })
+    );
+  }
+}
+
 
