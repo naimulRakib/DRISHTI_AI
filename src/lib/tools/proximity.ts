@@ -27,7 +27,7 @@ export interface ProximityProvider {
  */
 export class SimulatedProvider implements ProximityProvider {
   name = "সিমুলেটেড প্রক্সিমিটি সেন্সর (Simulated Slider)";
-  kind: "simulation" = "simulation";
+  kind = "simulation" as const;
   private currentDistanceCm: number = 150;
 
   setDistance(cm: number): void {

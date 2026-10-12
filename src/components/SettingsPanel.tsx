@@ -58,6 +58,16 @@ interface SettingsPanelProps {
   onSettingsChange?: (settings: DrishtiSettings) => void;
 }
 
+function applySettingsToDOM(newSettings: DrishtiSettings) {
+  if (typeof document === "undefined") return;
+  document.documentElement.setAttribute("data-text-size", newSettings.textSize);
+  if (newSettings.highContrast) {
+    document.documentElement.setAttribute("data-high-contrast", "true");
+  } else {
+    document.documentElement.removeAttribute("data-high-contrast");
+  }
+}
+
 export default function SettingsPanel({
   isOpen,
   onClose,
@@ -72,25 +82,17 @@ export default function SettingsPanel({
 
   useEffect(() => {
     const stored = loadStoredSettings();
-    setSettings(stored);
     setDefaultRate(stored.speechRate);
     applySettingsToDOM(stored);
+    queueMicrotask(() => {
+      setSettings(stored);
+    });
 
     // Check if offline assets already cached
     checkOfflineReadiness().then((ready) => {
       setIsOfflineReady(ready);
     });
   }, []);
-
-  const applySettingsToDOM = (newSettings: DrishtiSettings) => {
-    if (typeof document === "undefined") return;
-    document.documentElement.setAttribute("data-text-size", newSettings.textSize);
-    if (newSettings.highContrast) {
-      document.documentElement.setAttribute("data-high-contrast", "true");
-    } else {
-      document.documentElement.removeAttribute("data-high-contrast");
-    }
-  };
 
   const updateSetting = <K extends keyof DrishtiSettings>(
     key: K,

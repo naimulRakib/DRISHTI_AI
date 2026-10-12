@@ -30,9 +30,10 @@ export default function CameraPanel({
 
   // Stop camera on unmount or when modal is closed
   useEffect(() => {
+    const videoEl = videoRef.current;
     return () => {
-      if (streamRef.current || videoRef.current) {
-        stopCamera(streamRef.current, videoRef.current);
+      if (streamRef.current || videoEl) {
+        stopCamera(streamRef.current, videoEl);
         streamRef.current = null;
       }
     };

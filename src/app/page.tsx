@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, FormEvent, useRef } from "react";
+import Link from "next/link";
 import ActionButton from "@/components/ActionButton";
 import StatusRegion from "@/components/StatusRegion";
 import SettingsPanel from "@/components/SettingsPanel";
@@ -243,6 +244,19 @@ export default function Home() {
             variant="secondary"
             ariaLabel="সেটিংস ও অ্যাক্সেসিবিলিটি প্যানেল খুলুন"
           />
+          <Link
+            href="/demo"
+            className="action-button variant-secondary"
+            style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+            aria-label="ডেমো মোড সিস্টেম চেকলিস্ট"
+          >
+            <div className="button-inner">
+              <div className="button-titles">
+                <span className="button-primary-label">ডেমো মোড</span>
+                <span className="button-sub-label">সিস্টেম চেকলিস্ট</span>
+              </div>
+            </div>
+          </Link>
         </div>
       </header>
 
