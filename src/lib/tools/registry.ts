@@ -2,6 +2,7 @@ import { FeatureStatus, ToolName, ToolResult } from '@/lib/types';
 import { detectObjects } from '@/lib/tools/objects';
 import { readTextFromImage } from '@/lib/tools/ocr';
 import { getCurrentLocation } from '@/lib/tools/location';
+import { readProximityTool } from '@/lib/tools/proximity';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -38,14 +39,8 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
   },
   readProximity: {
     status: 'SIMULATED',
-    labelBn: 'নিকটবর্তী দূরত্ব',
-    run: async () => ({
-      tool: 'readProximity',
-      status: 'not_implemented',
-      source: 'simulation',
-      message_bn: 'এই সুবিধাটি এখনও প্রস্তুত নয়।',
-      confidence: null,
-    }),
+    labelBn: 'নিকটবর্তী দূরত্ব (SIMULATED)',
+    run: async () => readProximityTool(),
   },
   safetyTest: {
     status: 'LIVE',

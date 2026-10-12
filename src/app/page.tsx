@@ -6,6 +6,7 @@ import StatusRegion from "@/components/StatusRegion";
 import SettingsPanel from "@/components/SettingsPanel";
 import CameraPanel from "@/components/CameraPanel";
 import SafetyPanel from "@/components/SafetyPanel";
+import ProximityPanel from "@/components/ProximityPanel";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -30,6 +31,7 @@ export default function Home() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
+  const [isProximityOpen, setIsProximityOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -90,11 +92,19 @@ export default function Home() {
       setIsSafetyOpen(true);
     }
 
+    if (matchedTool === "readProximity") {
+      setIsProximityOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
       setCurrentMessage(result.message_bn);
-      if (matchedTool !== "readText" && matchedTool !== "getLocation") {
+      if (
+        matchedTool !== "readText" &&
+        matchedTool !== "getLocation" &&
+        matchedTool !== "readProximity"
+      ) {
         speak(result.message_bn);
       }
     }
@@ -145,12 +155,20 @@ export default function Home() {
       setIsSafetyOpen(true);
     }
 
+    if (toolName === "readProximity") {
+      setIsProximityOpen(true);
+    }
+
     const tool = toolRegistry[toolName];
     if (!tool) return;
 
     const result = await tool.run();
     setCurrentMessage(result.message_bn);
-    if (toolName !== "readText" && toolName !== "getLocation") {
+    if (
+      toolName !== "readText" &&
+      toolName !== "getLocation" &&
+      toolName !== "readProximity"
+    ) {
       speak(result.message_bn);
     }
   };
@@ -312,6 +330,15 @@ export default function Home() {
             onClick={() => handleExecuteTool("getLocation")}
             variant="action"
           />
+
+          {/* Proximity Warning (SIMULATION ONLY) */}
+          <ActionButton
+            label="নিকটবর্তী দূরত্ব"
+            subLabel="বাধা পরিমাপ (সিমুলেশন)"
+            status={toolRegistry.readProximity.status}
+            onClick={() => handleExecuteTool("readProximity")}
+            variant="action"
+          />
         </div>
       </section>
 
@@ -363,6 +390,12 @@ export default function Home() {
       <SafetyPanel
         isOpen={isSafetyOpen}
         onClose={() => setIsSafetyOpen(false)}
+      />
+
+      {/* Proximity Warning Modal (Simulation Only) */}
+      <ProximityPanel
+        isOpen={isProximityOpen}
+        onClose={() => setIsProximityOpen(false)}
       />
     </div>
   );
