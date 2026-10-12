@@ -5,6 +5,7 @@ export type ToolName =
   | "readText"
   | "recognizePerson"
   | "getLocation"
+  | "walkWithMe"
   | "readProximity"
   | "safetyTest"
   | "stopSpeaking"

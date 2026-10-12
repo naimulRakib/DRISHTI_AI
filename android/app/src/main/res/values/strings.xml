@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">দৃষ্টি (DRISHTI AI)</string>
+    <string name="walk_service_channel_name">হাঁটার সঙ্গী (Walk With Me)</string>
+    <string name="walk_service_channel_desc">রিয়েল-টাইম জিপিএস এবং ভিশন অ্যাসিস্ট্যান্ট চালু রয়েছে</string>
+    <string name="walk_service_notification_title">দৃষ্টি হাঁটার সঙ্গী সক্রিয়</string>
+    <string name="walk_service_notification_text">ক্যামেরা ও জিপিএস নির্দেশিকা চলছে…</string>
+</resources>

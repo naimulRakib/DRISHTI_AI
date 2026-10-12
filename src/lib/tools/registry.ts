@@ -37,6 +37,17 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     labelBn: 'অবস্থান জানা',
     run: async () => getCurrentLocation(),
   },
+  walkWithMe: {
+    status: 'LIVE',
+    labelBn: 'হাঁটার সঙ্গী (Vision + GPS)',
+    run: async () => ({
+      tool: 'walkWithMe',
+      status: 'success',
+      source: 'hardware',
+      message_bn: 'হাঁটার সঙ্গী সক্রিয় হয়েছে। ভিশন ও জিপিএস নির্দেশিকা চালু রয়েছে।',
+      confidence: 1.0,
+    }),
+  },
   readProximity: {
     status: 'SIMULATED',
     labelBn: 'নিকটবর্তী দূরত্ব (SIMULATED)',

@@ -118,6 +118,23 @@ describe("router - routeIntent priority and matching", () => {
     expect(routeIntent("আশেপাশে কী দেখতে পাচ্ছ?")).toBe("describeSurroundings");
   });
 
+  // Walk With Me commands
+  it("routes 'হাঁটার সঙ্গী চালু করো' -> walkWithMe", () => {
+    expect(routeIntent("হাঁটার সঙ্গী চালু করো")).toBe("walkWithMe");
+  });
+
+  it("routes 'হাঁটা শুরু করো' -> walkWithMe", () => {
+    expect(routeIntent("হাঁটা শুরু করো")).toBe("walkWithMe");
+  });
+
+  it("routes 'আমাকে পথ দেখাও' -> walkWithMe", () => {
+    expect(routeIntent("আমাকে পথ দেখাও")).toBe("walkWithMe");
+  });
+
+  it("routes 'walk with me mode' -> walkWithMe", () => {
+    expect(routeIntent("walk with me mode")).toBe("walkWithMe");
+  });
+
   // Gibberish and unknown cases
   it("routes gibberish 'asdkfjhsdf kjhsd' -> unknown", () => {
     expect(routeIntent("asdkfjhsdf kjhsd")).toBe("unknown");

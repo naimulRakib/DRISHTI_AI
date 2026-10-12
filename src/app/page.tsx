@@ -8,6 +8,7 @@ import SettingsPanel from "@/components/SettingsPanel";
 import CameraPanel from "@/components/CameraPanel";
 import SafetyPanel from "@/components/SafetyPanel";
 import ProximityPanel from "@/components/ProximityPanel";
+import WalkWithMeModal from "@/components/WalkWithMeModal";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -33,6 +34,7 @@ export default function Home() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
   const [isProximityOpen, setIsProximityOpen] = useState(false);
+  const [isWalkOpen, setIsWalkOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -97,6 +99,10 @@ export default function Home() {
       setIsProximityOpen(true);
     }
 
+    if (matchedTool === "walkWithMe") {
+      setIsWalkOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
@@ -158,6 +164,10 @@ export default function Home() {
 
     if (toolName === "readProximity") {
       setIsProximityOpen(true);
+    }
+
+    if (toolName === "walkWithMe") {
+      setIsWalkOpen(true);
     }
 
     const tool = toolRegistry[toolName];
@@ -336,6 +346,15 @@ export default function Home() {
             variant="action"
           />
 
+          {/* Walk With Me (হাঁটার সঙ্গী - Vision + GPS) */}
+          <ActionButton
+            label="হাঁটার সঙ্গী"
+            subLabel="ভিশন + জিপিএস দিকনির্দেশনা"
+            status={toolRegistry.walkWithMe.status}
+            onClick={() => handleExecuteTool("walkWithMe")}
+            variant="action"
+          />
+
           {/* Location */}
           <ActionButton
             label="লোকেশন"
@@ -410,6 +429,12 @@ export default function Home() {
       <ProximityPanel
         isOpen={isProximityOpen}
         onClose={() => setIsProximityOpen(false)}
+      />
+
+      {/* Walk With Me Modal (Vision + GPS + Compass Navigation) */}
+      <WalkWithMeModal
+        isOpen={isWalkOpen}
+        onClose={() => setIsWalkOpen(false)}
       />
     </div>
   );

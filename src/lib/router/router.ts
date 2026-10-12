@@ -61,6 +61,17 @@ const INTENT_PATTERNS: IntentPattern[] = [
     keywords: ["লোকেশন", "অবস্থান", "কোথায় আছি", "কোথায় আছি"],
   },
   {
+    tool: "walkWithMe",
+    keywords: [
+      "হাঁটার সঙ্গী",
+      "হাঁটা শুরু",
+      "হাঁটবো",
+      "নেভিগেশন",
+      "পথ দেখাও",
+      "walk with me",
+    ],
+  },
+  {
     tool: "recognizePerson",
     keywords: ["চেনো", "চিনতে", "কে এটা", "কে ইনি"],
   },
