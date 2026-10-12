@@ -1,4 +1,5 @@
 import { FeatureStatus, ToolName, ToolResult } from '@/lib/types';
+import { detectObjects } from '@/lib/tools/objects';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -8,15 +9,9 @@ export interface ToolDefinition {
 
 export const toolRegistry: Record<ToolName, ToolDefinition> = {
   describeSurroundings: {
-    status: 'PLANNED',
+    status: 'LIVE',
     labelBn: 'পরিবেশ পর্যবেক্ষণ',
-    run: async () => ({
-      tool: 'describeSurroundings',
-      status: 'not_implemented',
-      source: 'none',
-      message_bn: 'এই সুবিধাটি এখনও প্রস্তুত নয়।',
-      confidence: null,
-    }),
+    run: async (ctx) => detectObjects(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
   },
   readText: {
     status: 'PLANNED',

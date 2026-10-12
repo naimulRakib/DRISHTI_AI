@@ -80,6 +80,10 @@ export default function Home() {
       return;
     }
 
+    if (matchedTool === "describeSurroundings") {
+      setIsCameraOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
