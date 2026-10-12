@@ -80,7 +80,7 @@ export default function Home() {
       return;
     }
 
-    if (matchedTool === "describeSurroundings") {
+    if (matchedTool === "describeSurroundings" || matchedTool === "readText") {
       setIsCameraOpen(true);
     }
 
@@ -88,7 +88,9 @@ export default function Home() {
     if (tool) {
       const result = await tool.run();
       setCurrentMessage(result.message_bn);
-      speak(result.message_bn);
+      if (matchedTool !== "readText") {
+        speak(result.message_bn);
+      }
     }
   };
 
@@ -129,12 +131,18 @@ export default function Home() {
 
   // Direct trigger for registry tool buttons
   const handleExecuteTool = async (toolName: ToolName) => {
+    if (toolName === "describeSurroundings" || toolName === "readText") {
+      setIsCameraOpen(true);
+    }
+
     const tool = toolRegistry[toolName];
     if (!tool) return;
 
     const result = await tool.run();
     setCurrentMessage(result.message_bn);
-    speak(result.message_bn);
+    if (toolName !== "readText") {
+      speak(result.message_bn);
+    }
   };
 
   const handleStopSpeaking = () => {

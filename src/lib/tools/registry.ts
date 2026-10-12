@@ -1,5 +1,6 @@
 import { FeatureStatus, ToolName, ToolResult } from '@/lib/types';
 import { detectObjects } from '@/lib/tools/objects';
+import { readTextFromImage } from '@/lib/tools/ocr';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -14,15 +15,9 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     run: async (ctx) => detectObjects(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
   },
   readText: {
-    status: 'PLANNED',
+    status: 'LIVE',
     labelBn: 'লেখা পড়া',
-    run: async () => ({
-      tool: 'readText',
-      status: 'not_implemented',
-      source: 'none',
-      message_bn: 'এই সুবিধাটি এখনও প্রস্তুত নয়।',
-      confidence: null,
-    }),
+    run: async (ctx) => readTextFromImage(ctx as { imageSource?: ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement }),
   },
   recognizePerson: {
     status: 'PLANNED',
