@@ -5,6 +5,7 @@ import ActionButton from "@/components/ActionButton";
 import StatusRegion from "@/components/StatusRegion";
 import SettingsPanel from "@/components/SettingsPanel";
 import CameraPanel from "@/components/CameraPanel";
+import SafetyPanel from "@/components/SafetyPanel";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -28,6 +29,7 @@ export default function Home() {
   );
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isSafetyOpen, setIsSafetyOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -84,11 +86,15 @@ export default function Home() {
       setIsCameraOpen(true);
     }
 
+    if (matchedTool === "safetyTest") {
+      setIsSafetyOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
       setCurrentMessage(result.message_bn);
-      if (matchedTool !== "readText") {
+      if (matchedTool !== "readText" && matchedTool !== "getLocation") {
         speak(result.message_bn);
       }
     }
@@ -135,12 +141,16 @@ export default function Home() {
       setIsCameraOpen(true);
     }
 
+    if (toolName === "safetyTest") {
+      setIsSafetyOpen(true);
+    }
+
     const tool = toolRegistry[toolName];
     if (!tool) return;
 
     const result = await tool.run();
     setCurrentMessage(result.message_bn);
-    if (toolName !== "readText") {
+    if (toolName !== "readText" && toolName !== "getLocation") {
       speak(result.message_bn);
     }
   };
@@ -347,6 +357,12 @@ export default function Home() {
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}
         onCapture={handleFrameCaptured}
+      />
+
+      {/* Safety Test & Fall Detection Modal */}
+      <SafetyPanel
+        isOpen={isSafetyOpen}
+        onClose={() => setIsSafetyOpen(false)}
       />
     </div>
   );

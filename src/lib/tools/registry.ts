@@ -1,6 +1,7 @@
 import { FeatureStatus, ToolName, ToolResult } from '@/lib/types';
 import { detectObjects } from '@/lib/tools/objects';
 import { readTextFromImage } from '@/lib/tools/ocr';
+import { getCurrentLocation } from '@/lib/tools/location';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -31,15 +32,9 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     }),
   },
   getLocation: {
-    status: 'PLANNED',
+    status: 'LIVE',
     labelBn: 'অবস্থান জানা',
-    run: async () => ({
-      tool: 'getLocation',
-      status: 'not_implemented',
-      source: 'none',
-      message_bn: 'এই সুবিধাটি এখনও প্রস্তুত নয়।',
-      confidence: null,
-    }),
+    run: async () => getCurrentLocation(),
   },
   readProximity: {
     status: 'SIMULATED',
@@ -53,14 +48,14 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     }),
   },
   safetyTest: {
-    status: 'PLANNED',
-    labelBn: 'নিরাপত্তা পরীক্ষা',
+    status: 'LIVE',
+    labelBn: 'নিরাপত্তা পরীক্ষা (TEST MODE)',
     run: async () => ({
       tool: 'safetyTest',
-      status: 'not_implemented',
-      source: 'none',
-      message_bn: 'এই সুবিধাটি এখনও প্রস্তুত নয়।',
-      confidence: null,
+      status: 'success',
+      source: 'simulation',
+      message_bn: 'নিরাপত্তা ও পতন সনাক্তকরণ পরীক্ষা মোড সক্রিয় করা হয়েছে।',
+      confidence: 1.0,
     }),
   },
   stopSpeaking: {
