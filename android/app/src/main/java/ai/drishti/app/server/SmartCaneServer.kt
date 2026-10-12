@@ -1,9 +1,11 @@
 package ai.drishti.app.server
 
 import android.content.Context
+import android.util.Base64
 import android.util.Log
 import fi.iki.elonen.NanoHTTPD
 import java.io.File
+import java.io.FileInputStream
 import java.net.NetworkInterface
 
 /**
@@ -12,13 +14,14 @@ import java.net.NetworkInterface
  *
  * Endpoints:
  * - POST /upload: Ingests raw photo bytes captured by the smart cane's hardware push-button
+ * - GET /latest_frame: Serves the last captured camera frame to WebView and companion browsers
  * - POST /stopalarm: Cancels an active fall detection emergency siren triggered by the user's cane
  * - GET /status: Reports IoT bridge status, battery, and server health
  */
 class SmartCaneServer(
     port: Int = 5000,
     private val context: Context,
-    private val onImageReceived: (imageFile: File) -> Unit,
+    private val onImageReceived: (imageFile: File, base64Uri: String) -> Unit,
     private val onStopAlarmRequested: () -> Unit
 ) : NanoHTTPD(port) {
 
@@ -69,14 +72,19 @@ class SmartCaneServer(
                 val caneImage = File(context.cacheDir, "smart_cane_frame.jpg")
                 caneImage.writeBytes(body)
 
-                Log.i(TAG, "Received image frame from Smart Cane: $totalRead bytes saved to ${caneImage.absolutePath}")
-                onImageReceived(caneImage)
+                val base64Data = Base64.encodeToString(body, Base64.NO_WRAP)
+                val base64Uri = "data:image/jpeg;base64,$base64Data"
 
-                newFixedLengthResponse(
+                Log.i(TAG, "Received image frame from Smart Cane: $totalRead bytes saved to ${caneImage.absolutePath}")
+                onImageReceived(caneImage, base64Uri)
+
+                val response = newFixedLengthResponse(
                     Response.Status.OK,
                     "application/json",
                     """{"status":"ok","bytes":$totalRead,"message":"Frame received successfully"}"""
                 )
+                response.addHeader("Access-Control-Allow-Origin", "*")
+                response
             } catch (e: Exception) {
                 Log.e(TAG, "Error processing cane image upload", e)
                 newFixedLengthResponse(
@@ -87,30 +95,53 @@ class SmartCaneServer(
             }
         }
 
-        // 2. Hardware Cane Alarm Cancellation
+        // 2. Serve the latest camera frame to WebView / browsers
+        if (method == Method.GET && (uri == "/latest_frame" || uri == "/image/latest" || uri == "/smart_cane_frame.jpg")) {
+            val caneImage = File(context.cacheDir, "smart_cane_frame.jpg")
+            return if (caneImage.exists() && caneImage.length() > 0) {
+                val response = newChunkedResponse(
+                    Response.Status.OK,
+                    "image/jpeg",
+                    FileInputStream(caneImage)
+                )
+                response.addHeader("Access-Control-Allow-Origin", "*")
+                response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate")
+                response
+            } else {
+                newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "No frame captured yet")
+            }
+        }
+
+        // 3. Hardware Cane Alarm Cancellation
         if (method == Method.POST && uri == "/stopalarm") {
             Log.w(TAG, "Hardware Stop Alarm triggered from Smart Cane button!")
             onStopAlarmRequested()
-            return newFixedLengthResponse(
+            val response = newFixedLengthResponse(
                 Response.Status.OK,
                 "application/json",
                 """{"status":"ok","message":"Fall alarm cancelled via smart cane"}"""
             )
+            response.addHeader("Access-Control-Allow-Origin", "*")
+            return response
         }
 
-        // 3. IoT Status check
+        // 4. IoT Status check
         if (uri == "/status") {
-            return newFixedLengthResponse(
+            val response = newFixedLengthResponse(
                 Response.Status.OK,
                 "application/json",
                 """{"status":"online","system":"DRISHTI_AI","version":"1.0.0","ip":"${getDeviceIpAddress()}"}"""
             )
+            response.addHeader("Access-Control-Allow-Origin", "*")
+            return response
         }
 
-        return newFixedLengthResponse(
+        val response = newFixedLengthResponse(
             Response.Status.OK,
             "text/plain",
             "DRISHTI AI Smart Cane IoT Gateway Active on port 5000"
         )
+        response.addHeader("Access-Control-Allow-Origin", "*")
+        return response
     }
 }

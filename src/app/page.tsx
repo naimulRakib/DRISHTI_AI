@@ -25,6 +25,8 @@ import {
 } from "@/lib/tools/listen";
 import { routeIntent } from "@/lib/router/router";
 import { ToolName } from "@/lib/types";
+import { subscribeFallEvents } from "@/lib/native/bridge";
+import { processCaneFrame, CaneVisionResult } from "@/lib/tools/smartCaneVision";
 
 export default function Home() {
   const [currentMessage, setCurrentMessage] = useState<string>(
@@ -57,6 +59,33 @@ export default function Home() {
     return () => {
       unsubscribe();
       stopListening();
+    };
+  }, []);
+
+  // Hands-Free Smart Cane Vision Ingestion: Triggers automatically when cane button is pressed
+  useEffect(() => {
+    const unsubFall = subscribeFallEvents({
+      onCaneImage: async (caneData) => {
+        setIsCameraOpen(true);
+        const result = await processCaneFrame(caneData);
+        if (result.spokenSummaryBn) {
+          setCurrentMessage(result.spokenSummaryBn);
+        }
+      },
+    });
+
+    const handleVisionResult = (e: Event) => {
+      const customEvent = e as CustomEvent<CaneVisionResult>;
+      if (customEvent.detail?.spokenSummaryBn) {
+        setCurrentMessage(customEvent.detail.spokenSummaryBn);
+      }
+    };
+
+    window.addEventListener("drishti:cane-vision-result", handleVisionResult);
+
+    return () => {
+      unsubFall();
+      window.removeEventListener("drishti:cane-vision-result", handleVisionResult);
     };
   }, []);
 

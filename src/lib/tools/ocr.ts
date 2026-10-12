@@ -233,3 +233,5 @@ export async function readTextFromImage(ctx?: ReadTextContext): Promise<ToolResu
     };
   }
 }
+
+export { readTextFromImage as readText };

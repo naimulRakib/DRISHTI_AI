@@ -232,11 +232,14 @@ class DrishtiBridge(
         }
     }
 
-    override fun onCaneImageCaptured(imagePath: String) {
+    override fun onCaneImageCaptured(imagePath: String, base64Uri: String) {
         val escapedPath = JSONObject.quote(imagePath)
+        val escapedBase64 = JSONObject.quote(base64Uri)
+        val ip = SmartCaneServer.getDeviceIpAddress()
+        val frameUrl = JSONObject.quote("http://$ip:5000/latest_frame")
         webView.post {
             webView.evaluateJavascript(
-                "if (window.__drishtiOnCaneImage) { window.__drishtiOnCaneImage({ imagePath: $escapedPath }); }",
+                "if (window.__drishtiOnCaneImage) { window.__drishtiOnCaneImage({ imagePath: $escapedPath, base64: $escapedBase64, frameUrl: $frameUrl }); }",
                 null
             )
         }

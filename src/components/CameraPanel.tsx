@@ -27,6 +27,35 @@ export default function CameraPanel({
     "ক্যামেরা বর্তমানে বন্ধ রয়েছে। চালু করতে নিচের বাটনে চাপ দিন।"
   );
   const [captureFeedback, setCaptureFeedback] = useState<string | null>(null);
+  const [caneVisionResult, setCaneVisionResult] = useState<{
+    imageUrl: string;
+    spokenSummaryBn: string;
+    timestamp: number;
+  } | null>(null);
+
+  // Listen for Smart Cane vision processing results
+  useEffect(() => {
+    const handleCaneResult = (e: Event) => {
+      const customEvent = e as CustomEvent<{
+        imageUrl: string;
+        spokenSummaryBn: string;
+        timestamp: number;
+      }>;
+      if (customEvent.detail) {
+        setCaneVisionResult(customEvent.detail);
+        setCaptureFeedback("🦯 স্মার্ট ক্যান থেকে নতুন ফ্রেম সফলভাবে বিশ্লেষণ করা হয়েছে।");
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("drishti:cane-vision-result", handleCaneResult);
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("drishti:cane-vision-result", handleCaneResult);
+      }
+    };
+  }, []);
 
   // Stop camera on unmount or when modal is closed
   useEffect(() => {
@@ -143,6 +172,44 @@ export default function CameraPanel({
             </div>
           )}
         </div>
+
+        {/* Smart Cane Frame & Analysis Card */}
+        {caneVisionResult && (
+          <div
+            style={{
+              marginTop: "0.75rem",
+              padding: "0.85rem",
+              borderRadius: "0.5rem",
+              background: "rgba(15, 23, 42, 0.8)",
+              border: "1px solid #38bdf8",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.4rem" }}>
+              <span style={{ fontSize: "1.2rem" }}>🦯</span>
+              <strong style={{ color: "#38bdf8", fontSize: "0.95rem" }}>
+                স্মার্ট ক্যান ক্যামেরা ফ্রেম (Smart Cane Snapshot):
+              </strong>
+            </div>
+            {caneVisionResult.imageUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={caneVisionResult.imageUrl}
+                alt="স্মার্ট ক্যান ফ্রেম"
+                style={{
+                  width: "100%",
+                  maxHeight: "180px",
+                  objectFit: "cover",
+                  borderRadius: "0.4rem",
+                  marginBottom: "0.5rem",
+                  border: "1px solid #334155",
+                }}
+              />
+            )}
+            <p style={{ margin: 0, fontSize: "0.9rem", color: "#f8fafc", fontWeight: 600 }}>
+              {caneVisionResult.spokenSummaryBn}
+            </p>
+          </div>
+        )}
 
         {/* Capture Feedback */}
         {captureFeedback && (

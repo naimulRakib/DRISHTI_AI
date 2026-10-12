@@ -243,3 +243,5 @@ export async function detectObjects(
     };
   }
 }
+
+export { detectObjects as describeSurroundings };

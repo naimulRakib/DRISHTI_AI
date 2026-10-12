@@ -48,6 +48,12 @@ export interface DrishtiNativeInterface {
   getSmartCaneServerUrl(): string;
 }
 
+export interface CaneImageData {
+  imagePath: string;
+  base64?: string;
+  frameUrl?: string;
+}
+
 declare global {
   interface Window {
     DrishtiBridge?: DrishtiNativeInterface;
@@ -56,7 +62,7 @@ declare global {
     __drishtiOnFallCountdownTick?: (data: { secondsRemaining: number }) => void;
     __drishtiOnFallCancelled?: () => void;
     __drishtiOnMotionMagnitude?: (data: { magnitude: number }) => void;
-    __drishtiOnCaneImage?: (data: { imagePath: string }) => void;
+    __drishtiOnCaneImage?: (data: CaneImageData) => void;
   }
 }
 
@@ -401,7 +407,7 @@ export interface FallAlertListeners {
   onTick?: (secondsRemaining: number) => void;
   onCancelled?: () => void;
   onMotionMagnitude?: (magnitude: number) => void;
-  onCaneImage?: (imagePath: string) => void;
+  onCaneImage?: (data: CaneImageData) => void;
 }
 
 /**
@@ -423,7 +429,7 @@ export function subscribeFallEvents(listeners: FallAlertListeners): () => void {
     listeners.onMotionMagnitude?.(data.magnitude);
   };
   window.__drishtiOnCaneImage = (data) => {
-    listeners.onCaneImage?.(data.imagePath);
+    listeners.onCaneImage?.(data);
   };
 
   return () => {

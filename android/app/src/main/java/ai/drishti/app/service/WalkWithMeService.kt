@@ -96,8 +96,8 @@ class WalkWithMeService : Service() {
             smartCaneServer = SmartCaneServer(
                 port = 5000,
                 context = this,
-                onImageReceived = { file ->
-                    listener?.onCaneImageCaptured(file.absolutePath)
+                onImageReceived = { file, base64Uri ->
+                    listener?.onCaneImageCaptured(file.absolutePath, base64Uri)
                 },
                 onStopAlarmRequested = {
                     cancelFallAlert()
@@ -391,7 +391,7 @@ class WalkWithMeService : Service() {
             fun onFallCountdownTick(secondsRemaining: Int)
             fun onFallAlertCancelled()
             fun onMotionMagnitude(magnitude: Float)
-            fun onCaneImageCaptured(imagePath: String)
+            fun onCaneImageCaptured(imagePath: String, base64Uri: String)
         }
     }
 }
