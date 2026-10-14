@@ -16,6 +16,7 @@ import EcholocationRadarModal from "@/components/EcholocationRadarModal";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
+  speakTouch,
   stopSpeaking,
   repeatLast,
   subscribeSpeechState,
@@ -355,6 +356,9 @@ export default function Home() {
           />
           <Link
             href="/demo"
+            onTouchStart={() => speakTouch("ডেমো মোড, লাইভ প্রদর্শনী ও সিস্টেম চেকলিস্ট")}
+            onMouseEnter={() => speakTouch("ডেমো মোড, লাইভ প্রদর্শনী ও সিস্টেম চেকলিস্ট")}
+            onFocus={() => speakTouch("ডেমো মোড, লাইভ প্রদর্শনী ও সিস্টেম চেকলিস্ট")}
             className="action-button variant-secondary"
             style={{
               textDecoration: "none",
@@ -511,11 +515,11 @@ export default function Home() {
             variant="action"
           />
 
-          {/* Walk With Me (হাঁটার সঙ্গী - Vision + GPS) */}
+          {/* Walk With Me -> Pothchola (পথচলা - Vision + GPS + Gemini Guidance) */}
           <ActionButton
-            icon="🚶"
-            label="হাঁটার সঙ্গী"
-            subLabel="ভিশন + জিপিএস দিকনির্দেশনা"
+            icon="🚶‍♂️"
+            label="পথচলা"
+            subLabel="লাইভ ম্যাপ ও এআই অন্ধ সহচর"
             status={toolRegistry.walkWithMe.status}
             onClick={() => handleExecuteTool("walkWithMe")}
             variant="action"
@@ -567,7 +571,13 @@ export default function Home() {
               className="text-input"
               autoComplete="off"
             />
-            <button type="submit" className="submit-btn">
+            <button
+              type="submit"
+              className="submit-btn"
+              onTouchStart={() => speakTouch("কমান্ড প্রেরণ করুন")}
+              onMouseEnter={() => speakTouch("কমান্ড প্রেরণ করুন")}
+              onFocus={() => speakTouch("কমান্ড প্রেরণ করুন")}
+            >
               প্রেরণ
             </button>
           </div>

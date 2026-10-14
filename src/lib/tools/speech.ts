@@ -419,3 +419,33 @@ export function repeatLast(options?: SpeechOptions): void {
     speak("পুনরায় বলার মতো কোনো পূর্ববর্তী বার্তা নেই।", options);
   }
 }
+
+let touchDebounceTimer: NodeJS.Timeout | null = null;
+let lastTouchDescription: string | null = null;
+let lastTouchTimestamp = 0;
+
+/**
+ * Explore-by-Touch Pronunciation:
+ * When a blind user touches, hovers, or focuses on any UI button/option,
+ * this function announces what it is in Bengali audio.
+ */
+export function speakTouch(description: string): void {
+  if (!description || description.trim() === "") return;
+  const clean = description.trim();
+  const now = Date.now();
+
+  // Avoid repeating identical option within 1.2s to prevent stutter
+  if (lastTouchDescription === clean && now - lastTouchTimestamp < 1200) {
+    return;
+  }
+
+  if (touchDebounceTimer) {
+    clearTimeout(touchDebounceTimer);
+  }
+
+  touchDebounceTimer = setTimeout(() => {
+    lastTouchDescription = clean;
+    lastTouchTimestamp = Date.now();
+    speak(clean);
+  }, 100);
+}

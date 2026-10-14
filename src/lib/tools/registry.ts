@@ -38,12 +38,12 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
   },
   walkWithMe: {
     status: 'LIVE',
-    labelBn: 'হাঁটার সঙ্গী (Vision + GPS)',
+    labelBn: 'পথচলা (Pothchola Navigation)',
     run: async () => ({
       tool: 'walkWithMe',
       status: 'success',
       source: 'hardware',
-      message_bn: 'হাঁটার সঙ্গী সক্রিয় হয়েছে। ভিশন ও জিপিএস নির্দেশিকা চালু রয়েছে।',
+      message_bn: 'পথচলা সহকারী সক্রিয় হয়েছে। লাইভ ম্যাপ ও এআই অডিও দিকনির্দেশনা শুনুন।',
       confidence: 1.0,
     }),
   },

@@ -95,11 +95,15 @@ const INTENT_PATTERNS: IntentPattern[] = [
   {
     tool: "walkWithMe",
     keywords: [
+      "পথচলা",
+      "পথ চলো",
       "হাঁটার সঙ্গী",
       "হাঁটা শুরু",
       "হাঁটবো",
       "নেভিগেশন",
       "পথ দেখাও",
+      "চলো হাঁটি",
+      "pothchola",
       "walk with me",
     ],
   },

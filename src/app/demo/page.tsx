@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { speak, stopSpeaking } from "@/lib/tools/speech";
+import { speak, stopSpeaking, speakTouch } from "@/lib/tools/speech";
 import { echolocationEngine } from "@/lib/audio/echolocationEngine";
 import {
   getWalletBills,
@@ -668,7 +668,7 @@ export default function DemoPage() {
     announceAction("স্মার্ট কেইনের বাটন দ্বারা ফল অ্যালার্ম সফলভাবে নিষ্ক্রিয় করা হয়েছে।", true);
   };
 
-  // 6. Walk With Me Navigation Tests
+  // 6. Pothchola Navigation Tests
   const handleNavDirectionTest = (clockHour: number, directionBn: string) => {
     if (clockHour === 12) {
       triggerHaptic("confirm");
@@ -677,7 +677,7 @@ export default function DemoPage() {
     } else {
       triggerHaptic("turn_left");
     }
-    const msg = `হাঁটার সঙ্গী নির্দেশনা: ${directionBn}`;
+    const msg = `পথচলা নির্দেশনা: ${directionBn}`;
     announceAction(msg, true);
   };
 
@@ -1353,21 +1353,21 @@ export default function DemoPage() {
               </button>
             </article>
 
-            {/* Card 6: Walk With Me (Vision + GPS) */}
+            {/* Card 6: Pothchola (Vision + Live Leaflet Map + Gemini) */}
             <article className="demo-card">
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>🚶</span> হাঁটার সঙ্গী দিকনির্দেশনা
+                    <span>🚶‍♂️</span> পথচলা (Pothchola) — লাইভ ম্যাপ ও এআই নির্দেশনা
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                    Walk With Me — Vision + Compass Azimuth
+                    Pothchola — Live Leaflet Map + Gemini AI Audio Guidance
                   </span>
                 </div>
                 <span className="status-badge badge-live">LIVE</span>
               </div>
               <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
-                ঘড়ির কাঁটার অবস্থান (যেমন ১২টা, ২টা, ১০টা) অনুযায়ী দিকনির্দেশনা এবং ক্যামেরায় সামনের বাধার তাৎক্ষণিক বাংলা সংকেত।
+                লিফলেট লাইভ জিপিএস ম্যাপ, ক্যামেরা অবজেক্ট ডিটেকশন ও জেমিনাই এআই কমান্ডের মাধ্যমে দৃষ্টিহীনদের স্বয়ংক্রিয় বাংলা অডিও হাঁটার দিকনির্দেশনা।
               </p>
 
               <div className="demo-metric-box">
@@ -1381,6 +1381,8 @@ export default function DemoPage() {
                 <button
                   type="button"
                   onClick={() => handleNavDirectionTest(12, "১২টার দিকে সোজা চলুন")}
+                  onTouchStart={() => speakTouch("১২টার দিকে সোজা চলুন")}
+                  onMouseEnter={() => speakTouch("১২টার দিকে সোজা চলুন")}
                   className="demo-quick-btn primary"
                 >
                   🧭 ১২টা সোজা চলুন
@@ -1388,6 +1390,8 @@ export default function DemoPage() {
                 <button
                   type="button"
                   onClick={() => handleNavDirectionTest(2, "২টার দিকে সামান্য ডানে এগোন")}
+                  onTouchStart={() => speakTouch("২টায় ডানে মোড়")}
+                  onMouseEnter={() => speakTouch("২টায় ডানে মোড়")}
                   className="demo-quick-btn"
                 >
                   🧭 ২টায় ডানে মোড়
@@ -1395,6 +1399,8 @@ export default function DemoPage() {
                 <button
                   type="button"
                   onClick={() => handleNavDirectionTest(10, "১০টার দিকে সামান্য বাঁয়ে এগোন")}
+                  onTouchStart={() => speakTouch("১০টায় বাঁয়ে মোড়")}
+                  onMouseEnter={() => speakTouch("১০টায় বাঁয়ে মোড়")}
                   className="demo-quick-btn"
                 >
                   🧭 ১০টায় বাঁয়ে মোড়
@@ -1404,10 +1410,12 @@ export default function DemoPage() {
               <button
                 type="button"
                 onClick={() => setIsWalkOpen(true)}
+                onTouchStart={() => speakTouch("সম্পূর্ণ পথচলা প্যানেল খুলুন")}
+                onMouseEnter={() => speakTouch("সম্পূর্ণ পথচলা প্যানেল খুলুন")}
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                🚶 সম্পূর্ণ হাঁটার সঙ্গী প্যানেল খুলুন
+                🚶‍♂️ সম্পূর্ণ পথচলা প্যানেল খুলুন
               </button>
             </article>
 

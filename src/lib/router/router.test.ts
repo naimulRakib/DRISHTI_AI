@@ -118,7 +118,15 @@ describe("router - routeIntent priority and matching", () => {
     expect(routeIntent("আশেপাশে কী দেখতে পাচ্ছ?")).toBe("describeSurroundings");
   });
 
-  // Walk With Me commands
+  // Pothchola (Walk With Me) commands
+  it("routes 'পথচলা শুরু করো' -> walkWithMe", () => {
+    expect(routeIntent("পথচলা শুরু করো")).toBe("walkWithMe");
+  });
+
+  it("routes 'pothchola navigation' -> walkWithMe", () => {
+    expect(routeIntent("pothchola navigation")).toBe("walkWithMe");
+  });
+
   it("routes 'হাঁটার সঙ্গী চালু করো' -> walkWithMe", () => {
     expect(routeIntent("হাঁটার সঙ্গী চালু করো")).toBe("walkWithMe");
   });
