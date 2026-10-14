@@ -270,6 +270,15 @@ class DrishtiBridge(
         }
     }
 
+    override fun onCaneDistanceMeasured(distanceCm: Float) {
+        webView.post {
+            webView.evaluateJavascript(
+                "if (window.__drishtiOnCaneDistance) { window.__drishtiOnCaneDistance({ distanceCm: $distanceCm }); }",
+                null
+            )
+        }
+    }
+
     fun onDestroy() {
         WalkWithMeService.listener = null
         tts?.stop()

@@ -65,6 +65,7 @@ declare global {
     __drishtiOnFallCancelled?: () => void;
     __drishtiOnMotionMagnitude?: (data: { magnitude: number }) => void;
     __drishtiOnCaneImage?: (data: CaneImageData) => void;
+    __drishtiOnCaneDistance?: (data: { distanceCm: number }) => void;
   }
 }
 
@@ -410,6 +411,7 @@ export interface FallAlertListeners {
   onCancelled?: () => void;
   onMotionMagnitude?: (magnitude: number) => void;
   onCaneImage?: (data: CaneImageData) => void;
+  onCaneDistance?: (data: { distanceCm: number }) => void;
 }
 
 /**
@@ -433,6 +435,12 @@ export function subscribeFallEvents(listeners: FallAlertListeners): () => void {
   window.__drishtiOnCaneImage = (data) => {
     listeners.onCaneImage?.(data);
   };
+  window.__drishtiOnCaneDistance = (data) => {
+    listeners.onCaneDistance?.(data);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("drishti:cane-distance", { detail: data }));
+    }
+  };
 
   return () => {
     window.__drishtiOnFallAlert = undefined;
@@ -440,6 +448,7 @@ export function subscribeFallEvents(listeners: FallAlertListeners): () => void {
     window.__drishtiOnFallCancelled = undefined;
     window.__drishtiOnMotionMagnitude = undefined;
     window.__drishtiOnCaneImage = undefined;
+    window.__drishtiOnCaneDistance = undefined;
   };
 }
 

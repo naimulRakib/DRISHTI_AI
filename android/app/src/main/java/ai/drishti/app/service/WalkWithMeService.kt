@@ -101,6 +101,9 @@ class WalkWithMeService : Service() {
                 },
                 onStopAlarmRequested = {
                     cancelFallAlert()
+                },
+                onDistanceReceived = { distanceCm ->
+                    listener?.onCaneDistanceMeasured(distanceCm)
                 }
             )
             smartCaneServer?.start()
@@ -415,6 +418,7 @@ class WalkWithMeService : Service() {
             fun onFallAlertCancelled()
             fun onMotionMagnitude(magnitude: Float)
             fun onCaneImageCaptured(imagePath: String, base64Uri: String)
+            fun onCaneDistanceMeasured(distanceCm: Float)
         }
     }
 }

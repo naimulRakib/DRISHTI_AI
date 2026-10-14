@@ -85,20 +85,31 @@ def measure_distance():
 
 def ultrasonic_loop(stop_event):
     print("[DRISHTI IoT] Ultrasonic distance detection active (Threshold: 20cm)")
+    last_telemetry_time = 0.0
+
     while not stop_event.is_set():
         dist = measure_distance()
         if dist is not None:
             if dist < DISTANCE_THRESHOLD_CM:
                 if GPIO:
                     GPIO.output(BUZZER_PIN, True)
-                # print(f"[ALERT] Obstacle ahead: {dist} cm!")
             else:
                 if GPIO:
                     GPIO.output(BUZZER_PIN, False)
+
+            # Stream distance telemetry to phone on :5000/distance every 0.3s when an obstacle is within 1.5m
+            now = time.time()
+            if dist <= 150.0 and (now - last_telemetry_time) >= 0.3:
+                last_telemetry_time = now
+                server_url = get_server_url() + "/distance"
+                try:
+                    requests.post(server_url, json={"distanceCm": dist}, timeout=0.25)
+                except Exception:
+                    pass
         else:
             if GPIO:
                 GPIO.output(BUZZER_PIN, False)
-        time.sleep(0.1)
+        time.sleep(0.08)
 
 def camera_button_loop(stop_event):
     print("[DRISHTI IoT] Camera button listener active (GPIO 17)")

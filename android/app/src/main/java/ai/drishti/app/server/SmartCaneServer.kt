@@ -16,13 +16,15 @@ import java.net.NetworkInterface
  * - POST /upload: Ingests raw photo bytes captured by the smart cane's hardware push-button
  * - GET /latest_frame: Serves the last captured camera frame to WebView and companion browsers
  * - POST /stopalarm: Cancels an active fall detection emergency siren triggered by the user's cane
+ * - POST /distance: Receives real-time ultrasonic proximity measurements from the physical cane
  * - GET /status: Reports IoT bridge status, battery, and server health
  */
 class SmartCaneServer(
     port: Int = 5000,
     private val context: Context,
     private val onImageReceived: (imageFile: File, base64Uri: String) -> Unit,
-    private val onStopAlarmRequested: () -> Unit
+    private val onStopAlarmRequested: () -> Unit,
+    private val onDistanceReceived: ((distanceCm: Float) -> Unit)? = null
 ) : NanoHTTPD(port) {
 
     companion object {
@@ -125,7 +127,36 @@ class SmartCaneServer(
             return response
         }
 
-        // 4. IoT Status check
+        // 4. Hardware Cane Ultrasonic Distance Telemetry
+        if (method == Method.POST && (uri == "/distance" || uri == "/sensor/distance")) {
+            return try {
+                val contentLength = session.headers["content-length"]?.toIntOrNull() ?: 0
+                val body = ByteArray(contentLength)
+                var totalRead = 0
+                while (totalRead < contentLength) {
+                    val read = session.inputStream.read(body, totalRead, contentLength - totalRead)
+                    if (read == -1) break
+                    totalRead += read
+                }
+                val text = String(body)
+                val json = org.json.JSONObject(text)
+                val dist = json.optDouble("distanceCm", json.optDouble("distance", -1.0)).toFloat()
+                if (dist >= 0) {
+                    onDistanceReceived?.invoke(dist)
+                }
+                val response = newFixedLengthResponse(
+                    Response.Status.OK,
+                    "application/json",
+                    """{"status":"ok","distanceCm":$dist}"""
+                )
+                response.addHeader("Access-Control-Allow-Origin", "*")
+                response
+            } catch (e: Exception) {
+                newFixedLengthResponse(Response.Status.BAD_REQUEST, "text/plain", "Invalid distance payload")
+            }
+        }
+
+        // 5. IoT Status check
         if (uri == "/status") {
             val response = newFixedLengthResponse(
                 Response.Status.OK,
