@@ -11,6 +11,7 @@ export type ToolName =
   | "askVision"
   | "readCurrency"
   | "checkSafeZone"
+  | "echolocationRadar"
   | "stopSpeaking"
   | "repeatLast"
   | "unknown";

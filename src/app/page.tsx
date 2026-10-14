@@ -12,6 +12,7 @@ import WalkWithMeModal from "@/components/WalkWithMeModal";
 import FamilyMembersModal from "@/components/FamilyMembersModal";
 import CurrencyModal from "@/components/CurrencyModal";
 import GeofenceModal from "@/components/GeofenceModal";
+import EcholocationRadarModal from "@/components/EcholocationRadarModal";
 import { toolRegistry } from "@/lib/tools/registry";
 import {
   speak,
@@ -43,6 +44,7 @@ export default function Home() {
   const [isFamilyOpen, setIsFamilyOpen] = useState(false);
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isGeofenceOpen, setIsGeofenceOpen] = useState(false);
+  const [isRadarOpen, setIsRadarOpen] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -158,6 +160,10 @@ export default function Home() {
       setIsGeofenceOpen(true);
     }
 
+    if (matchedTool === "echolocationRadar") {
+      setIsRadarOpen(true);
+    }
+
     const tool = toolRegistry[matchedTool];
     if (tool) {
       const result = await tool.run();
@@ -167,7 +173,8 @@ export default function Home() {
         matchedTool !== "getLocation" &&
         matchedTool !== "readProximity" &&
         matchedTool !== "readCurrency" &&
-        matchedTool !== "checkSafeZone"
+        matchedTool !== "checkSafeZone" &&
+        matchedTool !== "echolocationRadar"
       ) {
         speak(result.message_bn);
       }
@@ -247,6 +254,10 @@ export default function Home() {
       setIsGeofenceOpen(true);
     }
 
+    if (toolName === "echolocationRadar") {
+      setIsRadarOpen(true);
+    }
+
     const tool = toolRegistry[toolName];
     if (!tool) return;
 
@@ -257,7 +268,8 @@ export default function Home() {
       toolName !== "getLocation" &&
       toolName !== "readProximity" &&
       toolName !== "readCurrency" &&
-      toolName !== "checkSafeZone"
+      toolName !== "checkSafeZone" &&
+      toolName !== "echolocationRadar"
     ) {
       speak(result.message_bn);
     }
@@ -459,6 +471,15 @@ export default function Home() {
             variant="action"
           />
 
+          {/* Spatial Audio Echolocation & 3D Obstacle Radar (ইকো রাডার ও ৩ডি সাউন্ড) */}
+          <ActionButton
+            label="ইকো রাডার"
+            subLabel="৩ডি সাউন্ড ও বাধা সনাক্ত"
+            status={toolRegistry.echolocationRadar.status}
+            onClick={() => handleExecuteTool("echolocationRadar")}
+            variant="action"
+          />
+
           {/* Safety Test */}
           <ActionButton
             label="নিরাপত্তা পরীক্ষা"
@@ -575,6 +596,12 @@ export default function Home() {
       <GeofenceModal
         isOpen={isGeofenceOpen}
         onClose={() => setIsGeofenceOpen(false)}
+      />
+
+      {/* 3D Spatial Audio Echolocation & Obstacle Radar Modal */}
+      <EcholocationRadarModal
+        isOpen={isRadarOpen}
+        onClose={() => setIsRadarOpen(false)}
       />
     </div>
   );

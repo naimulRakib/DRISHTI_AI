@@ -7,6 +7,7 @@ import { readProximityTool } from '@/lib/tools/proximity';
 import { askVisualQuestion } from '@/lib/tools/visualQa';
 import { readCurrency } from '@/lib/tools/currency';
 import { checkSafeZone } from '@/lib/tools/geofence';
+import { scanEcholocationRadar } from '@/lib/tools/echolocationRadar';
 
 export interface ToolDefinition {
   status: FeatureStatus;
@@ -76,6 +77,11 @@ export const toolRegistry: Record<ToolName, ToolDefinition> = {
     status: 'LIVE',
     labelBn: 'নিরাপদ এলাকা ও সেফ জোন',
     run: async (ctx) => checkSafeZone(ctx as { lat: number; lng: number } | undefined),
+  },
+  echolocationRadar: {
+    status: 'LIVE',
+    labelBn: 'ইকো রাডার ও ৩ডি সাউন্ড',
+    run: async (ctx) => scanEcholocationRadar(ctx as ImageData | HTMLImageElement | HTMLVideoElement | HTMLCanvasElement | undefined),
   },
   stopSpeaking: {
     status: 'PLANNED',

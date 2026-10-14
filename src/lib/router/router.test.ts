@@ -178,6 +178,23 @@ describe("router - routeIntent priority and matching", () => {
     expect(routeIntent("আমার নিরাপদ সীমানা দেখাও")).toBe("checkSafeZone");
   });
 
+  // Spatial Audio Echolocation & 3D Obstacle Radar queries
+  it("routes 'বাধা রাডার চালু করো' -> echolocationRadar", () => {
+    expect(routeIntent("বাধা রাডার চালু করো")).toBe("echolocationRadar");
+  });
+
+  it("routes 'ইকোলোকেশন শুরু করো' -> echolocationRadar", () => {
+    expect(routeIntent("ইকোলোকেশন শুরু করো")).toBe("echolocationRadar");
+  });
+
+  it("routes 'শব্দে বাধা মাপো' -> echolocationRadar", () => {
+    expect(routeIntent("শব্দে বাধা মাপো")).toBe("echolocationRadar");
+  });
+
+  it("routes 'সোনার রাডার মোড' -> echolocationRadar", () => {
+    expect(routeIntent("সোনার রাডার মোড")).toBe("echolocationRadar");
+  });
+
   // Gibberish and unknown cases
   it("routes gibberish 'asdkfjhsdf kjhsd' -> unknown", () => {
     expect(routeIntent("asdkfjhsdf kjhsd")).toBe("unknown");

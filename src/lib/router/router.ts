@@ -72,6 +72,23 @@ const INTENT_PATTERNS: IntentPattern[] = [
     ],
   },
   {
+    tool: "echolocationRadar",
+    keywords: [
+      "ইকোলোকেশন",
+      "রাডার",
+      "বাধা রাডার",
+      "বাধা মাপো",
+      "বাধা নির্ণয়",
+      "বাধা নির্ণয়",
+      "শব্দে বাধা",
+      "সোনার",
+      "শব্দ নির্দেশিকা",
+      "radar",
+      "echolocation",
+      "sonar",
+    ],
+  },
+  {
     tool: "getLocation",
     keywords: ["লোকেশন", "অবস্থান", "কোথায় আছি", "কোথায় আছি"],
   },
