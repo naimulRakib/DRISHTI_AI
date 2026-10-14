@@ -134,10 +134,17 @@ export default function Home() {
 
     if (
       matchedTool === "describeSurroundings" ||
-      matchedTool === "readText" ||
-      matchedTool === "recognizePerson"
+      matchedTool === "readText"
     ) {
       setIsCameraOpen(true);
+    }
+
+    if (matchedTool === "recognizePerson") {
+      setIsFamilyOpen(true);
+      const msg = "পরিচিত মুখ ও পরিবার তালিকা চালু হয়েছে। ক্যামেরার সামনে মুখ রাখুন।";
+      setCurrentMessage(msg);
+      speak(msg);
+      return;
     }
 
     if (matchedTool === "safetyTest") {
@@ -221,10 +228,17 @@ export default function Home() {
     if (
       toolName === "describeSurroundings" ||
       toolName === "readText" ||
-      toolName === "recognizePerson" ||
       toolName === "askVision"
     ) {
       setIsCameraOpen(true);
+    }
+
+    if (toolName === "recognizePerson") {
+      setIsFamilyOpen(true);
+      const msg = "পরিচিত মুখ ও পরিবার তালিকা চালু হয়েছে। ক্যামেরার সামনে মুখ রাখুন।";
+      setCurrentMessage(msg);
+      speak(msg);
+      return;
     }
 
     if (toolName === "askVision") {

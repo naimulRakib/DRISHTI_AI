@@ -8,7 +8,7 @@
 
 import { ToolResult } from "@/lib/types";
 import { speak } from "@/lib/tools/speech";
-import { captureFrame, startCamera } from "@/lib/tools/camera";
+import { captureFrame } from "@/lib/tools/camera";
 import {
   findClosestPersonMatch,
   l2Normalize,
@@ -205,16 +205,46 @@ export async function recognizePerson(
   }
 
   // Fallback to launching temporary camera feed if active camera was closed
-  if (!source && typeof document !== "undefined") {
+  if (!source && typeof document !== "undefined" && typeof navigator !== "undefined" && navigator.mediaDevices) {
+    let tempStream: MediaStream | null = null;
     try {
-      const tempVideo = document.createElement("video");
-      const cam = await startCamera(tempVideo);
-      if (cam.success && tempVideo.videoWidth > 0) {
-        const frame = captureFrame(tempVideo);
-        source = frame || tempVideo;
+      try {
+        tempStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "user" }, width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false,
+        });
+      } catch {
+        tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      }
+
+      if (tempStream) {
+        const tempVideo = document.createElement("video");
+        tempVideo.muted = true;
+        tempVideo.playsInline = true;
+        tempVideo.srcObject = tempStream;
+        await tempVideo.play().catch(() => {});
+
+        // Wait for first video frame to decode
+        await new Promise<void>((resolve) => {
+          if (tempVideo.videoWidth > 0 && tempVideo.videoHeight > 0) {
+            resolve();
+          } else {
+            tempVideo.onloadeddata = () => resolve();
+            setTimeout(resolve, 800);
+          }
+        });
+
+        if (tempVideo.videoWidth > 0) {
+          const frame = captureFrame(tempVideo);
+          source = frame || tempVideo;
+        }
       }
     } catch {
       // Ignore fallback camera error
+    } finally {
+      if (tempStream) {
+        tempStream.getTracks().forEach((t) => t.stop());
+      }
     }
   }
 
@@ -261,7 +291,7 @@ export async function recognizePerson(
 
   // Extract embedding & match against enrolled family/caregivers
   const queryVector = extractFaceEmbeddingFromImageData(imageData);
-  const match = findClosestPersonMatch(queryVector, 0.72);
+  const match = findClosestPersonMatch(queryVector, 0.65);
 
   const { messageBn, detail, confidence } = formatPersonRecognitionBengali(match, true);
   speak(messageBn);
