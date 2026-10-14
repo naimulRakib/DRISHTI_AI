@@ -5,7 +5,7 @@ import Link from "next/link";
 import ActionButton from "@/components/ActionButton";
 import StatusRegion from "@/components/StatusRegion";
 import SettingsPanel from "@/components/SettingsPanel";
-import CameraPanel from "@/components/CameraPanel";
+import CameraPanel, { CameraAiMode } from "@/components/CameraPanel";
 import SafetyPanel from "@/components/SafetyPanel";
 import ProximityPanel from "@/components/ProximityPanel";
 import WalkWithMeModal from "@/components/WalkWithMeModal";
@@ -38,6 +38,7 @@ export default function Home() {
   );
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraMode, setCameraMode] = useState<CameraAiMode>("objects");
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
   const [isProximityOpen, setIsProximityOpen] = useState(false);
   const [isWalkOpen, setIsWalkOpen] = useState(false);
@@ -125,6 +126,7 @@ export default function Home() {
     }
 
     if (matchedTool === "askVision") {
+      setCameraMode("qa");
       setIsCameraOpen(true);
       const tool = toolRegistry.askVision;
       const result = await tool.run({ question: trimmed });
@@ -132,11 +134,16 @@ export default function Home() {
       return;
     }
 
-    if (
-      matchedTool === "describeSurroundings" ||
-      matchedTool === "readText"
-    ) {
+    if (matchedTool === "describeSurroundings") {
+      setCameraMode("objects");
       setIsCameraOpen(true);
+      return;
+    }
+
+    if (matchedTool === "readText") {
+      setCameraMode("ocr");
+      setIsCameraOpen(true);
+      return;
     }
 
     if (matchedTool === "recognizePerson") {
@@ -176,7 +183,6 @@ export default function Home() {
       const result = await tool.run();
       setCurrentMessage(result.message_bn);
       if (
-        matchedTool !== "readText" &&
         matchedTool !== "getLocation" &&
         matchedTool !== "readProximity" &&
         matchedTool !== "readCurrency" &&
@@ -225,26 +231,21 @@ export default function Home() {
 
   // Direct trigger for registry tool buttons
   const handleExecuteTool = async (toolName: ToolName) => {
-    if (
-      toolName === "describeSurroundings" ||
-      toolName === "readText" ||
-      toolName === "askVision"
-    ) {
+    if (toolName === "describeSurroundings") {
+      setCameraMode("objects");
       setIsCameraOpen(true);
+      return;
     }
 
-    if (toolName === "recognizePerson") {
-      setIsFamilyOpen(true);
-      const msg = "পরিচিত মুখ ও পরিবার তালিকা চালু হয়েছে। ক্যামেরার সামনে মুখ রাখুন।";
-      setCurrentMessage(msg);
-      speak(msg);
+    if (toolName === "readText") {
+      setCameraMode("ocr");
+      setIsCameraOpen(true);
       return;
     }
 
     if (toolName === "askVision") {
-      const tool = toolRegistry.askVision;
-      const result = await tool.run({ question: "আমার সামনে কী রয়েছে বিস্তারিত ব্যাখ্যা করো" });
-      setCurrentMessage(result.message_bn);
+      setCameraMode("qa");
+      setIsCameraOpen(true);
       return;
     }
 
@@ -278,7 +279,6 @@ export default function Home() {
     const result = await tool.run();
     setCurrentMessage(result.message_bn);
     if (
-      toolName !== "readText" &&
       toolName !== "getLocation" &&
       toolName !== "readProximity" &&
       toolName !== "readCurrency" &&
@@ -601,6 +601,7 @@ export default function Home() {
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}
         onCapture={handleFrameCaptured}
+        initialMode={cameraMode}
       />
 
       {/* Safety Test & Fall Detection Modal */}
