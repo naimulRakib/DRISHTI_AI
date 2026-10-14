@@ -332,6 +332,7 @@ export default function Home() {
         </div>
         <div className="header-controls">
           <ActionButton
+            icon="📷"
             label="ক্যামেরা ভিউ"
             subLabel="লাইভ প্রিভিউ ও ছবি"
             onClick={() => setIsCameraOpen(true)}
@@ -339,6 +340,7 @@ export default function Home() {
             ariaLabel="ক্যামেরা প্যানেল খুলুন"
           />
           <ActionButton
+            icon="⚙️"
             label="সেটিংস"
             subLabel="অ্যাক্সেসিবিলিটি বিকল্প"
             onClick={() => setIsSettingsOpen(true)}
@@ -346,6 +348,7 @@ export default function Home() {
             ariaLabel="সেটিংস ও অ্যাক্সেসিবিলিটি প্যানেল খুলুন"
           />
           <ActionButton
+            icon="👥"
             label="পরিচিত তালিকা"
             subLabel="পরিবার ও কেয়ারগিভার"
             onClick={() => setIsFamilyOpen(true)}
@@ -355,13 +358,23 @@ export default function Home() {
           <Link
             href="/demo"
             className="action-button variant-secondary"
-            style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-            aria-label="ডেমো মোড সিস্টেম চেকলিস্ট"
+            style={{
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderColor: "var(--accent-cyan)",
+              background: "rgba(56, 189, 248, 0.12)",
+            }}
+            aria-label="ডেমো মোড ও সম্পূর্ণ সিস্টেম চেকলিস্ট"
           >
             <div className="button-inner">
-              <div className="button-titles">
-                <span className="button-primary-label">ডেমো মোড</span>
-                <span className="button-sub-label">সিস্টেম চেকলিস্ট</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+                <span className="button-icon" aria-hidden="true" style={{ fontSize: "1.5rem" }}>⚡</span>
+                <div className="button-titles">
+                  <span className="button-primary-label" style={{ color: "var(--accent-cyan)" }}>ডেমো মোড</span>
+                  <span className="button-sub-label">লাইভ প্রদর্শনী ও চেকলিস্ট</span>
+                </div>
               </div>
             </div>
           </Link>
@@ -385,6 +398,7 @@ export default function Home() {
       {/* Primary Voice and Speech Controls */}
       <nav aria-label="ভয়েস ও স্পিচ নিয়ন্ত্রণ" className="control-bar">
         <ActionButton
+          icon="🎙"
           label={micState === "listening" ? "শোনা বন্ধ করুন" : "প্রশ্ন করুন"}
           subLabel="মুখে কথা বলে নির্দেশ দিন"
           onClick={handleVoiceInputClick}
@@ -396,6 +410,7 @@ export default function Home() {
           }
         />
         <ActionButton
+          icon="⏹"
           label="থামুন"
           subLabel="কথা বলা বন্ধ করুন"
           onClick={handleStopSpeaking}
@@ -403,6 +418,7 @@ export default function Home() {
           ariaLabel="কথা বলা বন্ধ করুন"
         />
         <ActionButton
+          icon="🔁"
           label="আবার বলুন"
           subLabel="সর্বশেষ বার্তা পুনরাবৃত্তি"
           onClick={handleRepeatLast}
@@ -419,6 +435,7 @@ export default function Home() {
         <div className="button-grid">
           {/* Understand Surroundings */}
           <ActionButton
+            icon="👁️"
             label="চারপাশ বুঝুন"
             subLabel="সামনের পরিবেশ পর্যবেক্ষণ"
             status={toolRegistry.describeSurroundings.status}
@@ -428,6 +445,7 @@ export default function Home() {
 
           {/* Read Text */}
           <ActionButton
+            icon="📖"
             label="লেখা পড়ুন"
             subLabel="কাগজ বা সাইনবোর্ডের লেখা"
             status={toolRegistry.readText.status}
@@ -437,6 +455,7 @@ export default function Home() {
 
           {/* Recognize Person (পরিচিত মুখ চেনা) */}
           <ActionButton
+            icon="👤"
             label="পরিচিত মুখ"
             subLabel="পরিবার ও কেয়ারগিভার সনাক্ত"
             status={toolRegistry.recognizePerson.status}
@@ -446,6 +465,7 @@ export default function Home() {
 
           {/* Visual Q&A (দৃষ্টি সহকারী - Multimodal Assistant) */}
           <ActionButton
+            icon="🤖"
             label="দৃষ্টি সহকারী"
             subLabel="ওষুধ, টাকা ও দৃশ্যপটের প্রশ্নোত্তর"
             status={toolRegistry.askVision.status}
@@ -455,6 +475,7 @@ export default function Home() {
 
           {/* Bangladeshi Currency Reader & Total Counter (টাকা চেনা ও গণনা) */}
           <ActionButton
+            icon="💵"
             label="টাকা চেনা"
             subLabel="নোট চেনা ও মোট টাকা গণনা"
             status={toolRegistry.readCurrency.status}
@@ -464,6 +485,7 @@ export default function Home() {
 
           {/* Safe-Zone & Geofencing Sentinel (নিরাপদ এলাকা ও সেফ জোন) */}
           <ActionButton
+            icon="🛡️"
             label="নিরাপদ এলাকা"
             subLabel="সেফ জোন ও লাইভ ট্র্যাকিং"
             status={toolRegistry.checkSafeZone.status}
@@ -473,6 +495,7 @@ export default function Home() {
 
           {/* Spatial Audio Echolocation & 3D Obstacle Radar (ইকো রাডার ও ৩ডি সাউন্ড) */}
           <ActionButton
+            icon="📡"
             label="ইকো রাডার"
             subLabel="৩ডি সাউন্ড ও বাধা সনাক্ত"
             status={toolRegistry.echolocationRadar.status}
@@ -482,6 +505,7 @@ export default function Home() {
 
           {/* Safety Test */}
           <ActionButton
+            icon="🚨"
             label="নিরাপত্তা পরীক্ষা"
             subLabel="জরুরি অ্যালার্ট ও ফল ডিটেকশন"
             status={toolRegistry.safetyTest.status}
@@ -491,6 +515,7 @@ export default function Home() {
 
           {/* Walk With Me (হাঁটার সঙ্গী - Vision + GPS) */}
           <ActionButton
+            icon="🚶"
             label="হাঁটার সঙ্গী"
             subLabel="ভিশন + জিপিএস দিকনির্দেশনা"
             status={toolRegistry.walkWithMe.status}
@@ -500,6 +525,7 @@ export default function Home() {
 
           {/* Location */}
           <ActionButton
+            icon="📍"
             label="লোকেশন"
             subLabel="বর্তমান জিপিএস অবস্থান"
             status={toolRegistry.getLocation.status}
@@ -509,6 +535,7 @@ export default function Home() {
 
           {/* Proximity Warning (SIMULATION ONLY) */}
           <ActionButton
+            icon="📏"
             label="নিকটবর্তী দূরত্ব"
             subLabel="বাধা পরিমাপ (সিমুলেশন)"
             status={toolRegistry.readProximity.status}

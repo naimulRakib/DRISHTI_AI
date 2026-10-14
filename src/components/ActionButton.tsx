@@ -11,6 +11,7 @@ interface ActionButtonProps {
   variant?: "primary" | "secondary" | "danger" | "action";
   ariaLabel?: string;
   disabled?: boolean;
+  icon?: string;
 }
 
 export default function ActionButton({
@@ -21,6 +22,7 @@ export default function ActionButton({
   variant = "action",
   ariaLabel,
   disabled = false,
+  icon,
 }: ActionButtonProps) {
   // Status icon + text representation (never relies on color alone)
   const renderStatusBadge = () => {
@@ -94,9 +96,27 @@ export default function ActionButton({
       aria-label={computedAriaLabel}
     >
       <div className="button-inner">
-        <div className="button-titles">
-          <span className="button-primary-label">{label}</span>
-          {subLabel && <span className="button-sub-label">{subLabel}</span>}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
+          {icon && (
+            <span
+              className="button-icon"
+              aria-hidden="true"
+              style={{
+                fontSize: "1.5rem",
+                lineHeight: 1,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              {icon}
+            </span>
+          )}
+          <div className="button-titles">
+            <span className="button-primary-label">{label}</span>
+            {subLabel && <span className="button-sub-label">{subLabel}</span>}
+          </div>
         </div>
         {renderStatusBadge()}
       </div>
