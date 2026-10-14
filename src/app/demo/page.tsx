@@ -25,6 +25,7 @@ import {
   cancelFallAlert,
   getSmartCaneServerUrl,
 } from "@/lib/native/bridge";
+import { prepareOfflineAssets } from "@/lib/storage/offline";
 
 // Modal Components
 import EcholocationRadarModal from "@/components/EcholocationRadarModal";
@@ -71,6 +72,10 @@ export default function DemoPage() {
   const [simulatedDistanceCm, setSimulatedDistanceCm] = useState<number>(45);
   const [lastSpeechInput, setLastSpeechInput] = useState<string>("দৃষ্টি এআই বাংলা ভয়েস ও অ্যাক্সেসিবিলিটি সহচর।");
   const [isSpeakingActive, setIsSpeakingActive] = useState<boolean>(false);
+
+  // Offline Caching State
+  const [isCachingAssets, setIsCachingAssets] = useState<boolean>(false);
+  const [cacheProgressText, setCacheProgressText] = useState<string | null>(null);
 
   // Diagnostic Checklist State
   const [cameraStatus, setCameraStatus] = useState<ChecklistItem>({
@@ -336,7 +341,7 @@ export default function DemoPage() {
         titleBn: "ডিভাইসে বাংলা কণ্ঠস্বর (TTS)",
         titleEn: "Bengali Voice Found",
         status: "fail",
-        detail: "ডিভাইসে কোনো বাংলা কণ্ঠস্বর নেই (টেক্সট ফলব্যাক কার্যকর)",
+        detail: "সিস্টেমে বাংলা ভয়েস নেই (টেক্সট ও অডিও ফলব্যাক সক্রিয়। অ্যান্ড্রয়েডে এটি বিল্ট-ইন থাকে)",
       });
     }
   }, []);
@@ -372,7 +377,7 @@ export default function DemoPage() {
           titleBn: "অবজেক্ট ডিটেকশন মডেল ক্যাশ",
           titleEn: "Model Cached (efficientdet_lite0)",
           status: "pass",
-          detail: "মডেল ফাইল সফলভাবে ক্যাশে সংরক্ষিত আছে (6.9 MB)",
+          detail: "মডেল ফাইল সফলভাবে ক্যাশে সংরক্ষিত আছে (7.25 MB)",
         });
       } else {
         setModelStatus({
@@ -380,7 +385,7 @@ export default function DemoPage() {
           titleBn: "অবজেক্ট ডিটেকশন মডেল ক্যাশ",
           titleEn: "Model Cached (efficientdet_lite0)",
           status: "fail",
-          detail: "মডেল ফাইল ক্যাশে পাওয়া যায়নি (সেটিংসে গিয়ে ক্যাশ করুন)",
+          detail: "মডেল ফাইল ক্যাশে পাওয়া যায়নি (নিচের '📥 অফলাইনে ক্যাশ করুন' বাটনে চাপুন)",
         });
       }
     } catch (err) {
@@ -438,7 +443,7 @@ export default function DemoPage() {
           titleBn: "বাংলা ও ইংরেজি OCR ডেটা ক্যাশ",
           titleEn: "OCR Data Cached (Tessdata)",
           status: "fail",
-          detail: `অনুপস্থিত: ${!benMatched ? "ben.traineddata " : ""}${!engMatched ? "eng.traineddata" : ""}`,
+          detail: `অনুপস্থিত: ${!benMatched ? "ben.traineddata " : ""}${!engMatched ? "eng.traineddata" : ""} (নিচের '📥 অফলাইনে ক্যাশ করুন' বাটনে চাপুন)`,
         });
       }
     } catch (err) {
@@ -491,6 +496,35 @@ export default function DemoPage() {
     });
     announceAction("সবগুলো সিস্টেম ডায়াগনস্টিক পুনরায় সফলভাবে পরীক্ষা করা হয়েছে।", false);
   }, [checkCamera, checkMic, checkVoice, checkModelCache, checkOcrCache, updateNetworkState]);
+
+  // 1-Click Offline Caching Handler
+  const handleCacheAllAssets = async () => {
+    setIsCachingAssets(true);
+    setCacheProgressText("অফলাইন মডেল ও OCR ফাইল ক্যাশ করা শুরু হচ্ছে...");
+    announceAction("অফলাইন মডেল ও OCR ফাইল ক্যাশ করা শুরু হচ্ছে...", false);
+    try {
+      const report = await prepareOfflineAssets((current, total, result) => {
+        setCacheProgressText(`ফাইল ডাউনলোড ও ক্যাশ হচ্ছে (${current}/${total}): ${result.name}`);
+      });
+      if (report.overallSuccess) {
+        setCacheProgressText("সবগুলো এআই মডেল এবং ওসিআর ডেটা সফলভাবে ক্যাশে সংরক্ষিত হয়েছে!");
+        announceAction("সবগুলো এআই মডেল এবং ওসিআর ডেটা অফলাইনে ক্যাশ সম্পন্ন হয়েছে।", true);
+      } else {
+        const failedCount = report.results.filter((r) => !r.success).length;
+        setCacheProgressText(`${failedCount}টি ফাইল ক্যাশ হতে ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।`);
+      }
+      await checkModelCache();
+      await checkOcrCache();
+    } catch (err) {
+      setCacheProgressText(`ক্যাশ ত্রুটি: ${err instanceof Error ? err.message : "অজানা ত্রুটি"}`);
+    } finally {
+      setIsCachingAssets(false);
+    }
+  };
+
+  const handleTestFallbackVoice = () => {
+    announceAction("দৃষ্টি এআই বাংলা ভয়েস ও অ্যাক্সেসিবিলিটি সিস্টেম সক্রিয় রয়েছে।", true);
+  };
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -781,14 +815,74 @@ export default function DemoPage() {
       {/* ======================================================== */}
       {(activeTab === "all" || activeTab === "checklist") && (
         <section aria-labelledby="checklist-heading" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h2 id="checklist-heading" style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--accent-cyan)" }}>
-              ১. সিস্টেম হার্ডওয়্যার, মডেল ও অফলাইন প্রস্তুতি চেকলিস্ট
-            </h2>
-            <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
-              ব্রাউজার মেমরি ও ক্যাশ থেকে সরাসরি সংগৃহীত
-            </span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+            <div>
+              <h2 id="checklist-heading" style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--accent-cyan)" }}>
+                ১. সিস্টেম হার্ডওয়্যার, মডেল ও অফলাইন প্রস্তুতি চেকলিস্ট
+              </h2>
+              <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
+                ব্রাউজার মেমরি ও ক্যাশ থেকে সরাসরি সংগৃহীত লাইভ স্থিতি
+              </span>
+            </div>
+            <div style={{ display: "flex", gap: "0.6rem" }}>
+              <button
+                type="button"
+                onClick={runAllChecks}
+                className="demo-quick-btn"
+                style={{ fontSize: "0.85rem", padding: "0.4rem 0.8rem" }}
+              >
+                🔄 রিফ্রেশ চেকলিস্ট
+              </button>
+            </div>
           </div>
+
+          {/* 1-Click Offline Caching Banner */}
+          {(modelStatus.status !== "pass" || ocrStatus.status !== "pass") && (
+            <div
+              style={{
+                background: "linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(6, 78, 59, 0.22))",
+                border: "2px solid var(--accent-amber)",
+                borderRadius: "12px",
+                padding: "1.1rem 1.25rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "1rem",
+              }}
+            >
+              <div style={{ flex: 1, minWidth: "280px" }}>
+                <strong style={{ fontSize: "1.05rem", color: "var(--accent-amber)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <span>📥</span> অবজেক্ট ডিটেকশন মডেল ও ওসিআর ফাইল এক ক্লিকে ক্যাশ করুন
+                </strong>
+                <p style={{ margin: "0.35rem 0 0 0", fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  মডেল ফাইল (<code style={{ color: "var(--accent-cyan)" }}>efficientdet_lite0.tflite</code>) এবং ওসিআর ডেটা (<code style={{ color: "var(--accent-cyan)" }}>ben.traineddata</code> ও <code style={{ color: "var(--accent-cyan)" }}>eng.traineddata</code>) প্রজেক্টের লোকাল ফোল্ডারে সম্পূর্ণ প্রস্তুত আছে। নিচের বাটনে ক্লিক করলেই এক ক্লিকে অফলাইন ব্যবহারের জন্য ব্রাউজারের Cache Storage-এ সংরক্ষিত হয়ে যাবে।
+                </p>
+                {cacheProgressText && (
+                  <p style={{ margin: "0.5rem 0 0 0", fontSize: "0.85rem", color: "#6ee7b7", fontWeight: 700 }}>
+                    ⏳ {cacheProgressText}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={handleCacheAllAssets}
+                disabled={isCachingAssets}
+                className="demo-quick-btn primary"
+                style={{
+                  fontSize: "0.95rem",
+                  padding: "0.65rem 1.35rem",
+                  background: isCachingAssets ? "var(--bg-muted)" : "var(--accent-cyan)",
+                  color: "#0f172a",
+                  fontWeight: 800,
+                  cursor: isCachingAssets ? "wait" : "pointer",
+                  boxShadow: "0 4px 14px rgba(6, 182, 212, 0.35)",
+                }}
+              >
+                {isCachingAssets ? "⏳ ক্যাশ করা হচ্ছে..." : "📥 এখনই অফলাইনে ক্যাশ করুন"}
+              </button>
+            </div>
+          )}
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
             {checklistItems.map((item) => {
@@ -852,7 +946,7 @@ export default function DemoPage() {
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", flexWrap: "wrap" }}>
                     <span
                       className={`status-badge ${isPass ? "badge-live" : "badge-planned"}`}
                       style={{
@@ -871,14 +965,64 @@ export default function DemoPage() {
                         type="button"
                         onClick={item.id === "camera" ? requestCamera : requestMic}
                         className="demo-quick-btn primary"
+                        style={{ fontWeight: 700 }}
                       >
-                        অনুমতি দিন
+                        {item.id === "camera" ? "📷 অনুমতি দিন" : "🎙️ অনুমতি দিন"}
+                      </button>
+                    )}
+
+                    {(item.id === "model" || item.id === "ocr") && !isPass && (
+                      <button
+                        type="button"
+                        onClick={handleCacheAllAssets}
+                        disabled={isCachingAssets}
+                        className="demo-quick-btn primary"
+                        style={{ fontWeight: 700, background: "var(--accent-amber)", color: "#000" }}
+                      >
+                        {isCachingAssets ? "⏳ ক্যাশ হচ্ছে..." : "📥 অফলাইনে ক্যাশ করুন"}
+                      </button>
+                    )}
+
+                    {item.id === "voice" && (
+                      <button
+                        type="button"
+                        onClick={handleTestFallbackVoice}
+                        className="demo-quick-btn secondary"
+                        style={{ fontSize: "0.85rem" }}
+                      >
+                        🔊 টেস্ট শুনুন
                       </button>
                     )}
                   </div>
                 </div>
               );
             })}
+          </div>
+
+          {/* Quick Troubleshooting Guide */}
+          <div
+            style={{
+              background: "var(--bg-surface)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "10px",
+              padding: "0.85rem 1.15rem",
+              fontSize: "0.85rem",
+              color: "var(--text-secondary)",
+              lineHeight: 1.5,
+            }}
+          >
+            <strong style={{ color: "var(--accent-cyan)" }}>💡 সহায়তা ও নির্দেশিকা:</strong>
+            <ul style={{ margin: "0.4rem 0 0 1.25rem", padding: 0 }}>
+              <li>
+                <strong>মাইক্রোফোন:</strong> &quot;🎙️ অনুমতি দিন&quot; বাটনে চাপলে ব্রাউজারে অনুমতি চাইবে, &quot;Allow&quot; ক্লিক করলেই এটি PASS হয়ে যাবে।
+              </li>
+              <li>
+                <strong>মডেল ও ওসিআর ক্যাশ:</strong> &quot;📥 এখনই অফলাইনে ক্যাশ করুন&quot; বাটনে চাপলে লোকাল ফাইলগুলো ব্রাউজার ক্যাশে সংরক্ষিত হয়ে যাবে।
+              </li>
+              <li>
+                <strong>বাংলা কণ্ঠস্বর:</strong> ম্যাক/উইন্ডোজ ডেস্কটপ ব্রাউজারে ডিফল্ট বাংলা ভয়েস প্যাক ইনস্টল না থাকলেও দৃষ্টি এআই-এর উচ্চ-কন্ট্রাস্ট ভিজ্যুয়াল টেক্সট ব্যানার এবং বিপ অডিও সর্বদাই সচল থাকে। অ্যান্ড্রয়েড ফোনে এটি স্বয়ংক্রিয়ভাবে গুগল বাংলা টিটিএস ইঞ্জিন ব্যবহার করে।
+              </li>
+            </ul>
           </div>
         </section>
       )}
