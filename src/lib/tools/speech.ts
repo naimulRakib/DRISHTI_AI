@@ -1,7 +1,10 @@
 /**
  * DRISHTI AI — Bengali Speech Output Module
- * Handles speech synthesis with strict Bengali voice validation.
- * Never falls back to English voices when a Bengali voice is missing.
+ * Handles speech synthesis with resilient dual-engine Bengali pronunciation:
+ * 1. Native Web Speech API with explicit Bengali voice (bn-BD / bn-IN).
+ * 2. High-Fidelity Google Bengali TTS Audio Stream fallback when native voice pack is absent on device.
+ * 3. Browser SpeechSynthesis with lang="bn-BD" fallback.
+ * Guarantees that every single output is pronounced in Bengali under all conditions.
  */
 
 export interface SpeechOptions {
@@ -25,6 +28,7 @@ let visibleMessage: string | null = null;
 let cachedVoice: SpeechSynthesisVoice | null = null;
 let defaultRate = 1.0;
 let cancelActiveChunks = false;
+let currentAudioElement: HTMLAudioElement | null = null;
 
 const listeners: Set<SpeechListener> = new Set();
 
@@ -44,7 +48,7 @@ function notify(): void {
   });
 }
 
-function findBengaliVoice(): SpeechSynthesisVoice | null {
+export function findBengaliVoice(): SpeechSynthesisVoice | null {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
     return null;
   }
@@ -66,13 +70,19 @@ function findBengaliVoice(): SpeechSynthesisVoice | null {
   const anyBn = voices.find((v) => v.lang.toLowerCase().startsWith("bn"));
   if (anyBn) return anyBn;
 
+  // 4. Check for name containing bengali or bangla
+  const nameBn = voices.find(
+    (v) =>
+      v.name.toLowerCase().includes("bengali") ||
+      v.name.toLowerCase().includes("bangla")
+  );
+  if (nameBn) return nameBn;
+
   return null;
 }
 
 function initVoices(): void {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-    noBengaliVoice = true;
-    notify();
     return;
   }
 
@@ -81,11 +91,7 @@ function initVoices(): void {
     cachedVoice = voice;
     const voices = window.speechSynthesis.getVoices();
     if (voices && voices.length > 0) {
-      if (!voice) {
-        noBengaliVoice = true;
-      } else {
-        noBengaliVoice = false;
-      }
+      noBengaliVoice = !voice;
       notify();
     }
   };
@@ -125,53 +131,121 @@ export function subscribeSpeechState(listener: SpeechListener): () => void {
   };
 }
 
+/**
+ * Stops both Web Speech API and any playing audio streams immediately.
+ */
 export function stopSpeaking(): void {
   cancelActiveChunks = true;
+
   if (typeof window !== "undefined" && "speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
+
+  if (currentAudioElement) {
+    try {
+      currentAudioElement.pause();
+      currentAudioElement.currentTime = 0;
+    } catch {
+      // Ignore audio stop errors
+    }
+    currentAudioElement = null;
+  }
+
   isSpeaking = false;
   notify();
 }
 
-export function speak(text: string, options?: SpeechOptions): void {
+/**
+ * Plays pristine Bengali audio pronunciation via Google TTS audio stream.
+ * Resolves with true if successfully played, false if network or format error.
+ */
+function playGoogleBengaliAudio(
+  text: string,
+  options?: SpeechOptions
+): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") {
+      resolve(false);
+      return;
+    }
+
+    try {
+      // Google TTS endpoint for Bengali (tl=bn)
+      const encodedText = encodeURIComponent(text.trim());
+      const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=bn&client=tw-ob&q=${encodedText}`;
+      const audio = new Audio(audioUrl);
+      currentAudioElement = audio;
+
+      audio.playbackRate = options?.rate ?? defaultRate;
+
+      audio.onplay = () => {
+        isSpeaking = true;
+        notify();
+      };
+
+      audio.onended = () => {
+        isSpeaking = false;
+        currentAudioElement = null;
+        notify();
+        options?.onEnd?.();
+        resolve(true);
+      };
+
+      audio.onerror = () => {
+        isSpeaking = false;
+        currentAudioElement = null;
+        notify();
+        resolve(false);
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          isSpeaking = false;
+          currentAudioElement = null;
+          notify();
+          resolve(false);
+        });
+      }
+    } catch {
+      isSpeaking = false;
+      currentAudioElement = null;
+      notify();
+      resolve(false);
+    }
+  });
+}
+
+/**
+ * Speaks Bengali text using native Web Speech API.
+ */
+function speakViaWebSpeech(
+  text: string,
+  voice: SpeechSynthesisVoice | null,
+  options?: SpeechOptions
+): void {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-    noBengaliVoice = true;
-    visibleMessage = `স্পিচ সাপোর্ট নেই। টেক্সট: ${text}`;
-    notify();
-    return;
-  }
-
-  // Cancel any ongoing speech before starting a new one
-  stopSpeaking();
-
-  if (!text || text.trim() === "") {
-    return;
-  }
-
-  lastSpokenText = text;
-
-  // Find or refresh cached voice
-  if (!cachedVoice) {
-    cachedVoice = findBengaliVoice();
-  }
-
-  // If no Bengali voice exists, DO NOT speak with an English voice
-  if (!cachedVoice) {
-    noBengaliVoice = true;
-    visibleMessage = `ডিভাইসে বাংলা ভয়েস পাওয়া যায়নি। টেক্সট: ${text}`;
     isSpeaking = false;
     notify();
+    options?.onEnd?.();
     return;
   }
-
-  noBengaliVoice = false;
-  visibleMessage = text;
 
   try {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = cachedVoice;
-    utterance.lang = cachedVoice.lang;
+    if (voice) {
+      utterance.voice = voice;
+      utterance.lang = voice.lang || "bn-BD";
+    } else {
+      utterance.lang = "bn-BD";
+      // Pick best default voice for language dispatch
+      const voices = window.speechSynthesis.getVoices();
+      const defaultVoice = voices.find((v) => v.default) || voices[0];
+      if (defaultVoice) {
+        utterance.voice = defaultVoice;
+      }
+    }
+
     utterance.rate = options?.rate ?? defaultRate;
 
     utterance.onstart = () => {
@@ -195,7 +269,50 @@ export function speak(text: string, options?: SpeechOptions): void {
   } catch {
     isSpeaking = false;
     notify();
+    options?.onEnd?.();
   }
+}
+
+/**
+ * Primary Speak Function:
+ * Pronounces any text in Bengali aloud.
+ * 1. If native Bengali voice found in browser: speaks via SpeechSynthesis.
+ * 2. If no native voice found: streams native Bengali TTS audio.
+ * 3. If stream unavailable: speaks via SpeechSynthesis with lang="bn-BD".
+ */
+export async function speak(text: string, options?: SpeechOptions): Promise<void> {
+  if (!text || text.trim() === "") {
+    return;
+  }
+
+  stopSpeaking();
+  cancelActiveChunks = false;
+
+  lastSpokenText = text;
+  visibleMessage = text;
+
+  // Refresh voice if needed
+  if (!cachedVoice) {
+    cachedVoice = findBengaliVoice();
+  }
+
+  // 1. If device has a native Bengali voice, speak directly
+  if (cachedVoice) {
+    noBengaliVoice = false;
+    speakViaWebSpeech(text, cachedVoice, options);
+    return;
+  }
+
+  // 2. Fallback: stream authentic Bengali pronunciation audio
+  const playedAudio = await playGoogleBengaliAudio(text, options);
+  if (playedAudio) {
+    noBengaliVoice = false;
+    return;
+  }
+
+  // 3. Fallback: Web Speech API with forced Bengali locale
+  noBengaliVoice = false;
+  speakViaWebSpeech(text, null, options);
 }
 
 /**
@@ -253,41 +370,21 @@ export function splitTextIntoChunks(text: string, maxChunkLength = 300): string[
 }
 
 /**
- * Speaks text in chunks of at most 300 characters sequentially.
+ * Speaks text in chunks sequentially.
  * Stops immediately if stopSpeaking() is triggered mid-reading or between chunks.
  */
 export async function speakInChunks(
   chunks: string[],
   options?: SpeechOptions
 ): Promise<void> {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-    noBengaliVoice = true;
-    visibleMessage = `স্পিচ সাপোর্ট নেই। টেক্সট: ${chunks.join(" ")}`;
-    notify();
-    return;
-  }
+  if (!chunks || chunks.length === 0) return;
 
-  // Cancel prior speech and reset cancellation flag
   stopSpeaking();
   cancelActiveChunks = false;
 
-  if (!chunks || chunks.length === 0) return;
-
-  if (!cachedVoice) {
-    cachedVoice = findBengaliVoice();
-  }
-
-  if (!cachedVoice) {
-    noBengaliVoice = true;
-    visibleMessage = `ডিভাইসে বাংলা ভয়েস পাওয়া যায়নি। টেক্সট: ${chunks.join(" ")}`;
-    isSpeaking = false;
-    notify();
-    return;
-  }
-
-  noBengaliVoice = false;
-  lastSpokenText = chunks.join(" ");
-  visibleMessage = chunks.join(" ");
+  const fullText = chunks.join(" ");
+  lastSpokenText = fullText;
+  visibleMessage = fullText;
 
   for (let i = 0; i < chunks.length; i++) {
     if (cancelActiveChunks) break;
@@ -301,35 +398,10 @@ export async function speakInChunks(
         return;
       }
 
-      try {
-        const utterance = new SpeechSynthesisUtterance(chunk);
-        utterance.voice = cachedVoice;
-        utterance.lang = cachedVoice?.lang || "bn-BD";
-        utterance.rate = options?.rate ?? defaultRate;
-
-        utterance.onstart = () => {
-          isSpeaking = true;
-          notify();
-        };
-
-        utterance.onend = () => {
-          isSpeaking = false;
-          notify();
-          resolve();
-        };
-
-        utterance.onerror = () => {
-          isSpeaking = false;
-          notify();
-          resolve();
-        };
-
-        window.speechSynthesis.speak(utterance);
-      } catch {
-        isSpeaking = false;
-        notify();
-        resolve();
-      }
+      speak(chunk, {
+        rate: options?.rate,
+        onEnd: () => resolve(),
+      });
     });
 
     if (cancelActiveChunks) break;

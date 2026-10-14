@@ -182,15 +182,7 @@ export default function Home() {
     if (tool) {
       const result = await tool.run();
       setCurrentMessage(result.message_bn);
-      if (
-        matchedTool !== "getLocation" &&
-        matchedTool !== "readProximity" &&
-        matchedTool !== "readCurrency" &&
-        matchedTool !== "checkSafeZone" &&
-        matchedTool !== "echolocationRadar"
-      ) {
-        speak(result.message_bn);
-      }
+      speak(result.message_bn);
     }
   };
 
@@ -278,15 +270,7 @@ export default function Home() {
 
     const result = await tool.run();
     setCurrentMessage(result.message_bn);
-    if (
-      toolName !== "getLocation" &&
-      toolName !== "readProximity" &&
-      toolName !== "readCurrency" &&
-      toolName !== "checkSafeZone" &&
-      toolName !== "echolocationRadar"
-    ) {
-      speak(result.message_bn);
-    }
+    speak(result.message_bn);
   };
 
   const handleStopSpeaking = () => {
