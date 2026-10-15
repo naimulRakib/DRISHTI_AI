@@ -67,14 +67,14 @@ export default function CameraPanel({
     setIsHazardDemoActive(true);
     setSelectedMode("objects");
     const warningMsg =
-      "সাবধান! সামনে মাত্র ৩ কদম দূরে ফুটপাতে একটি বিপজ্জনক খোলা গর্ত ও ভাঙা ম্যানহোল রয়েছে। অবিলম্বে সামান্য বাঁ ঘেঁষে সাবধানে চলুন।";
+      "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।";
     setAiResult({
       mode: "objects",
-      engineName: "MediaPipe TFLite + দৃষ্টি ঢাকা রোডহ্যাজার্ড স্পেশাল মডেল",
-      sourceBadge: "⚠️ রোডহ্যাজার্ড ও অবজেক্ট অ্যালার্ট",
+      engineName: "MediaPipe TFLite + Spatial Hazard Detector",
+      sourceBadge: "HAZARD ALERT",
       messageBn: warningMsg,
       confidence: 0.96,
-      detail: "সনাক্তকৃত অবজেক্ট: ১টি বিপজ্জনক খোলা গর্ত/ম্যানহোল (৩ কদম দূরে), ভাঙা ইট, রিকশা ও পথচারী",
+      detail: "সনাক্তকৃত অবজেক্ট: ১টি খোলা গর্ত (৩ কদম দূরে), ভাঙা ইট, রিকশা ও পথচারী",
       timestamp: Date.now(),
     });
     speak(warningMsg);
@@ -308,15 +308,25 @@ export default function CameraPanel({
             gap: "0.5rem",
           }}
         >
+        {/* AI Vision Mode Selector */}
+        <div
+          role="tablist"
+          aria-label="এআই মোড নির্বাচন"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+            gap: "0.5rem",
+          }}
+        >
           <button
             type="button"
             role="tab"
             aria-selected={selectedMode === "objects"}
             onClick={() => setSelectedMode("objects")}
             className={`demo-quick-btn ${selectedMode === "objects" ? "primary" : "secondary"}`}
-            style={{ fontSize: "0.88rem", padding: "0.5rem 0.6rem", textAlign: "center" }}
+            style={{ fontSize: "0.85rem", padding: "0.45rem 0.6rem", textAlign: "center" }}
           >
-            🔍 চারপাশের বস্তু (TFLite)
+            চারপাশের বস্তু (TFLite)
           </button>
           <button
             type="button"
@@ -324,9 +334,9 @@ export default function CameraPanel({
             aria-selected={selectedMode === "ocr"}
             onClick={() => setSelectedMode("ocr")}
             className={`demo-quick-btn ${selectedMode === "ocr" ? "primary" : "secondary"}`}
-            style={{ fontSize: "0.88rem", padding: "0.5rem 0.6rem", textAlign: "center" }}
+            style={{ fontSize: "0.85rem", padding: "0.45rem 0.6rem", textAlign: "center" }}
           >
-            📖 লেখা পড়া (OCR)
+            লেখা পড়া (OCR)
           </button>
           <button
             type="button"
@@ -334,9 +344,9 @@ export default function CameraPanel({
             aria-selected={selectedMode === "qa"}
             onClick={() => setSelectedMode("qa")}
             className={`demo-quick-btn ${selectedMode === "qa" ? "primary" : "secondary"}`}
-            style={{ fontSize: "0.88rem", padding: "0.5rem 0.6rem", textAlign: "center" }}
+            style={{ fontSize: "0.85rem", padding: "0.45rem 0.6rem", textAlign: "center" }}
           >
-            🤖 এআই প্রশ্ন (Gemini)
+            এআই প্রশ্ন (Gemini)
           </button>
           <button
             type="button"
@@ -344,15 +354,15 @@ export default function CameraPanel({
             aria-selected={selectedMode === "currency"}
             onClick={() => setSelectedMode("currency")}
             className={`demo-quick-btn ${selectedMode === "currency" ? "primary" : "secondary"}`}
-            style={{ fontSize: "0.88rem", padding: "0.5rem 0.6rem", textAlign: "center" }}
+            style={{ fontSize: "0.85rem", padding: "0.45rem 0.6rem", textAlign: "center" }}
           >
-            💵 টাকা চিনুন (BDT)
+            টাকা চিনুন (BDT)
           </button>
         </div>
 
         {/* Mode Selector & Quick Demo Launcher Bar */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
-          <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
+          <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
             এআই ভিশন প্রসেসিং মোড:
           </span>
           <button
@@ -365,18 +375,17 @@ export default function CameraPanel({
               }
             }}
             style={{
-              background: isHazardDemoActive ? "linear-gradient(135deg, #b91c1c, #ea580c)" : "#1e293b",
-              color: "#fff",
-              border: `2px solid ${isHazardDemoActive ? "#ef4444" : "#f59e0b"}`,
-              borderRadius: "8px",
-              padding: "0.35rem 0.75rem",
-              fontSize: "0.82rem",
+              background: isHazardDemoActive ? "#991b1b" : "#1e293b",
+              color: isHazardDemoActive ? "#fecaca" : "#38bdf8",
+              border: `1px solid ${isHazardDemoActive ? "#ef4444" : "#0284c7"}`,
+              borderRadius: "6px",
+              padding: "0.3rem 0.75rem",
+              fontSize: "0.8rem",
               fontWeight: 800,
               cursor: "pointer",
-              boxShadow: isHazardDemoActive ? "0 0 12px rgba(239, 68, 68, 0.6)" : "none",
             }}
           >
-            {isHazardDemoActive ? "🎬 রোডহ্যাজার্ড ডেমো সক্রিয় (বন্ধ করুন)" : "🎬 ঢাকা রোডহ্যাজার্ড ও গর্ত ডেমো (Pothole Scene)"}
+            {isHazardDemoActive ? "লাইভ ক্যামেরা ভিউ" : "রোডহ্যাজার্ড ভিডিও ডেমো"}
           </button>
         </div>
 
@@ -384,10 +393,12 @@ export default function CameraPanel({
         <div className="camera-preview-container" style={{ position: "relative", minHeight: "260px" }}>
           {isHazardDemoActive ? (
             <div style={{ position: "relative", width: "100%", height: "100%", minHeight: "280px", overflow: "hidden", borderRadius: "10px" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/demo/dhaka_road_hazard.jpg"
-                alt="ঢাকা রাস্তার গর্ত ও বাধার দৃশ্য"
+              <video
+                src="/demo/dhaka_hazard_live.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
                 style={{
                   width: "100%",
                   height: "100%",
@@ -405,28 +416,27 @@ export default function CameraPanel({
                   left: "32%",
                   width: "48%",
                   height: "36%",
-                  border: "3px solid #ef4444",
-                  boxShadow: "0 0 16px rgba(239, 68, 68, 0.8), inset 0 0 12px rgba(239, 68, 68, 0.4)",
-                  borderRadius: "8px",
+                  border: "2px solid #ef4444",
+                  boxShadow: "0 0 14px rgba(239, 68, 68, 0.8), inset 0 0 10px rgba(239, 68, 68, 0.4)",
+                  borderRadius: "6px",
                   pointerEvents: "none",
                 }}
               >
                 <span
                   style={{
                     position: "absolute",
-                    top: "-26px",
+                    top: "-22px",
                     left: 0,
-                    background: "#ef4444",
+                    background: "#b91c1c",
                     color: "#ffffff",
-                    fontSize: "11px",
+                    fontSize: "10px",
                     fontWeight: 800,
-                    padding: "2px 8px",
+                    padding: "1px 6px",
                     borderRadius: "4px",
                     whiteSpace: "nowrap",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
                   }}
                 >
-                  ⚠️ খোলা গর্ত ও ভাঙা ম্যানহোল (Pothole) - ৯৬%
+                  [খোলা গর্ত ৯৬%]
                 </span>
               </div>
 
@@ -446,18 +456,18 @@ export default function CameraPanel({
                 <span
                   style={{
                     position: "absolute",
-                    top: "-22px",
+                    top: "-20px",
                     left: 0,
-                    background: "#eab308",
-                    color: "#000000",
+                    background: "#854d0e",
+                    color: "#fef08a",
                     fontSize: "10px",
                     fontWeight: 800,
-                    padding: "1px 6px",
+                    padding: "1px 5px",
                     borderRadius: "4px",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  ⚠️ ভাঙা ইট (Bricks) - ৮৯%
+                  [ভাঙা ইট ৮৯%]
                 </span>
               </div>
 
@@ -477,18 +487,18 @@ export default function CameraPanel({
                 <span
                   style={{
                     position: "absolute",
-                    top: "-22px",
+                    top: "-20px",
                     left: 0,
-                    background: "#0284c7",
-                    color: "#ffffff",
+                    background: "#0369a1",
+                    color: "#e0f2fe",
                     fontSize: "10px",
                     fontWeight: 800,
-                    padding: "1px 6px",
+                    padding: "1px 5px",
                     borderRadius: "4px",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  🚶 পথচারী (Pedestrian) - ৯২%
+                  [পথচারী ৯২%]
                 </span>
               </div>
 
@@ -508,18 +518,18 @@ export default function CameraPanel({
                 <span
                   style={{
                     position: "absolute",
-                    top: "-22px",
+                    top: "-20px",
                     left: 0,
-                    background: "#ea580c",
-                    color: "#ffffff",
+                    background: "#c2410c",
+                    color: "#ffedd5",
                     fontSize: "10px",
                     fontWeight: 800,
-                    padding: "1px 6px",
+                    padding: "1px 5px",
                     borderRadius: "4px",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  🛺 রিকশা (Rickshaw) - ৯৫%
+                  [রিকশা ৯৫%]
                 </span>
               </div>
 
@@ -527,21 +537,19 @@ export default function CameraPanel({
               <div
                 style={{
                   position: "absolute",
-                  top: "12px",
-                  left: "12px",
+                  top: "10px",
+                  left: "10px",
                   background: "rgba(185, 28, 28, 0.9)",
                   border: "1px solid #ef4444",
-                  borderRadius: "20px",
-                  padding: "0.25rem 0.75rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.4rem",
-                  fontSize: "0.8rem",
+                  borderRadius: "4px",
+                  padding: "2px 8px",
+                  fontSize: "10px",
                   color: "#fecaca",
                   fontWeight: 800,
+                  letterSpacing: "0.5px",
                 }}
               >
-                <span>🚨</span> বিপদজনক বাধার সনাক্তকরণ (Dhaka Hazard Detector)
+                HAZARD DETECTED
               </div>
             </div>
           ) : (
@@ -570,18 +578,18 @@ export default function CameraPanel({
                     left: "12px",
                     background: "rgba(15, 23, 42, 0.85)",
                     border: "1px solid #10b981",
-                    borderRadius: "20px",
-                    padding: "0.25rem 0.75rem",
+                    borderRadius: "4px",
+                    padding: "0.2rem 0.6rem",
                     display: "flex",
                     alignItems: "center",
                     gap: "0.4rem",
-                    fontSize: "0.8rem",
+                    fontSize: "0.75rem",
                     color: "#6ee7b7",
                     fontWeight: 700,
                   }}
                 >
-                  <span className="camera-status-dot dot-active" style={{ width: "8px", height: "8px" }} />
-                  লাইভ ক্যামেরা সচল
+                  <span className="camera-status-dot dot-active" style={{ width: "6px", height: "6px" }} />
+                  LIVE CAMERA
                 </div>
               )}
             </>
@@ -591,27 +599,28 @@ export default function CameraPanel({
           <div
             style={{
               position: "absolute",
-              top: "12px",
-              right: "12px",
+              top: "10px",
+              right: "10px",
               background: "rgba(15, 23, 42, 0.85)",
               border: "1px solid var(--accent-cyan)",
-              borderRadius: "20px",
-              padding: "0.25rem 0.75rem",
-              fontSize: "0.8rem",
+              borderRadius: "4px",
+              padding: "0.2rem 0.6rem",
+              fontSize: "0.75rem",
               color: "var(--accent-cyan)",
               fontWeight: 700,
             }}
           >
             {isHazardDemoActive
-              ? "⚠️ অবজেক্ট ও গর্ত অ্যালার্ট"
+              ? "অবজেক্ট ও গর্ত অ্যালার্ট"
               : selectedMode === "objects"
-              ? "🔍 অবজেক্ট ডিটেকশন মোড"
+              ? "অবজেক্ট ডিটেকশন মোড"
               : selectedMode === "ocr"
-              ? "📖 ওসিআর রিডার মোড"
+              ? "ওসিআর রিডার মোড"
               : selectedMode === "qa"
-              ? "🤖 মাল্টিমোডাল এআই মোড"
-              : "💵 টাকা স্ক্যানার মোড"}
+              ? "মাল্টিমোডাল এআই মোড"
+              : "টাকা স্ক্যানার মোড"}
           </div>
+        </div>
         </div>
 
         {/* QA Question Prompt Field (Only shown in QA mode) */}

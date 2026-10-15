@@ -238,8 +238,9 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
             align-items: center;
             justify-content: center;
             color: #ffffff;
-            font-size: 14px;
-          ">🚶</div>`,
+            font-size: 11px;
+            font-weight: 800;
+          ">YOU</div>`,
           iconSize: [26, 26],
           iconAnchor: [13, 13],
         });
@@ -257,8 +258,9 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
             align-items: center;
             justify-content: center;
             color: #ffffff;
-            font-size: 16px;
-          ">📍</div>`,
+            font-size: 10px;
+            font-weight: 900;
+          ">DEST</div>`,
           iconSize: [30, 30],
           iconAnchor: [15, 30],
         });
@@ -564,11 +566,11 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
           <div>
-            <h2 id="pothchola-modal-title" style={{ fontSize: "22px", fontWeight: 800, margin: 0, color: "#38BDF8", display: "flex", alignItems: "center", gap: "8px" }}>
-              <span>🚶‍♂️</span> পথচলা (Pothchola) — দৃষ্টি এআই
+            <h2 id="pothchola-modal-title" style={{ fontSize: "20px", fontWeight: 800, margin: 0, color: "#38BDF8", display: "flex", alignItems: "center", gap: "8px" }}>
+              পথচলা (Pothchola) — দৃষ্টি এআই
             </h2>
-            <p id="pothchola-modal-desc" style={{ fontSize: "13px", color: "#94A3B8", marginTop: "3px" }}>
-              ক্যামেরা মাল্টিমোডাল ভিশন + গুগল ম্যাপস ও জিপিএস + জেমিনাই এআই বাংলা কমান্ড
+            <p id="pothchola-modal-desc" style={{ fontSize: "12px", color: "#94A3B8", marginTop: "3px" }}>
+              রিয়েল-টাইম ক্যামেরা ভিশন ও বাংলা অডিও নেভিগেশন
             </p>
           </div>
           <button
@@ -625,10 +627,10 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
               {aiTelemetry.model}
             </span>
             <span style={{ color: "#38BDF8", background: "rgba(56, 189, 248, 0.15)", padding: "2px 6px", borderRadius: "4px" }}>
-              ⚡ {aiTelemetry.latencyMs}ms
+              {aiTelemetry.latencyMs}ms
             </span>
             <span style={{ color: "#A7F3D0", background: "rgba(16, 185, 129, 0.15)", padding: "2px 6px", borderRadius: "4px" }}>
-              {aiTelemetry.hasVision ? "👁️ ভিশন সক্রিয়" : "📝 টেক্সট মোড"}
+              {aiTelemetry.hasVision ? "ভিশন সক্রিয়" : "টেক্সট মোড"}
             </span>
           </div>
 
@@ -651,7 +653,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
               gap: "4px",
             }}
           >
-            🛰️ লাইভ এআই ট্রেস ({traceEntries.length}) {isTraceOpen ? "▲" : "▼"}
+            লাইভ এআই ট্রেস ({traceEntries.length}) {isTraceOpen ? "▲" : "▼"}
           </button>
         </div>
 
@@ -669,7 +671,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px", borderBottom: "1px solid #1E293B", paddingBottom: "8px" }}>
               <span style={{ fontSize: "13px", fontWeight: 800, color: "#38BDF8" }}>
-                🛰️ এআই পাইপলাইন ট্রেসিং ও ভেরিফিকেশন কনসোল
+                এআই পাইপলাইন ট্রেসিং ও ভেরিফিকেশন কনসোল
               </span>
               <button
                 type="button"
@@ -685,7 +687,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                   cursor: "pointer",
                 }}
               >
-                🧪 টেস্ট এআই ট্রেস রান করুন
+                টেস্ট এআই ট্রেস রান করুন
               </button>
             </div>
 
@@ -693,7 +695,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
               {/* Snapshot of Vision Input to Gemini */}
               <div style={{ background: "#0F172A", padding: "10px", borderRadius: "8px", border: "1px solid #334155" }}>
                 <span style={{ fontSize: "11px", color: "#94A3B8", display: "block", marginBottom: "6px" }}>
-                  📷 জেমিনাই ভিশন ইনপুট ফ্রেম (Camera Snapshot)
+                  জেমিনাই ভিশন ইনপুট ফ্রেম (Camera Snapshot)
                 </span>
                 {lastCapturedFrame ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -715,7 +717,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
               {/* Map & Google Directions Context */}
               <div style={{ background: "#0F172A", padding: "10px", borderRadius: "8px", border: "1px solid #334155" }}>
                 <span style={{ fontSize: "11px", color: "#94A3B8", display: "block", marginBottom: "4px" }}>
-                  🗺️ গুগল ম্যাপস ও সড়কের অবস্থান
+                  গুগল ম্যাপস ও সড়কের অবস্থান
                 </span>
                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#F8FAFC", marginBottom: "2px" }}>
                   {currentStreet}
@@ -738,7 +740,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                     textDecoration: "none",
                   }}
                 >
-                  🗺️ গুগল ম্যাপে রুট খুলুন ↗
+                  গুগল ম্যাপে রুট খুলুন ↗
                 </a>
               </div>
             </div>
@@ -788,23 +790,22 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
           role="region"
           aria-live="assertive"
           style={{
-            background: "linear-gradient(135deg, rgba(2, 132, 199, 0.25), rgba(6, 78, 59, 0.35))",
-            border: "2px solid #38BDF8",
-            borderRadius: "14px",
-            padding: "14px 16px",
-            marginBottom: "16px",
-            boxShadow: "0 4px 16px rgba(56, 189, 248, 0.2)",
+            background: "rgba(15, 23, 42, 0.9)",
+            border: "1px solid #38BDF8",
+            borderRadius: "10px",
+            padding: "12px 14px",
+            marginBottom: "14px",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 700, color: "#38BDF8", display: "flex", alignItems: "center", gap: "6px" }}>
-              <span>📢</span> এআই লাইভ অডিও কমান্ড:
+            <span style={{ fontSize: "11px", fontWeight: 800, color: "#38BDF8", letterSpacing: "0.5px" }}>
+              AI AUDIO GUIDANCE
             </span>
-            <span style={{ fontSize: "11px", color: "#6EE7B7", background: "#064E3B", padding: "2px 8px", borderRadius: "10px" }}>
-              {isGeneratingGuidance ? "⏳ তৈরি হচ্ছে..." : "🔊 স্বয়ংক্রিয় ভয়েস সক্রিয়"}
+            <span style={{ fontSize: "10px", color: "#6EE7B7", background: "rgba(6, 78, 59, 0.7)", border: "1px solid #10B981", padding: "1px 6px", borderRadius: "4px" }}>
+              {isGeneratingGuidance ? "প্রসেসিং..." : "লাইভ ভয়েস"}
             </span>
           </div>
-          <p style={{ margin: 0, fontSize: "17px", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.5 }}>
+          <p style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.5 }}>
             {aiGuidanceBn}
           </p>
         </div>
@@ -813,10 +814,10 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
         <div style={{ marginBottom: "16px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
             <span style={{ fontSize: "13px", fontWeight: 600, color: "#CBD5E1" }}>
-              🗺️ লাইভ ম্যাপ ও রুট ট্র্যাকিং (Leaflet):
+              লাইভ ম্যাপ ও রুট ট্র্যাকিং (Leaflet):
             </span>
             <span style={{ fontSize: "11px", color: "#94A3B8" }}>
-              {nativeActive ? "🦯 কেইন ব্রিজ সক্রিয়" : "📱 ব্রাউজার জিপিএস"} • {currentStreet}
+              {nativeActive ? "কেইন ব্রিজ সক্রিয়" : "ব্রাউজার জিপিএস"} • {currentStreet}
             </span>
           </div>
           <div
@@ -871,8 +872,8 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
         {/* Vision Feed & Obstacle Detection Container */}
         <div style={{ marginBottom: "16px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 600, color: "#CBD5E1" }}>
-              👁️ ক্যামেরা ভিশন ও বাধা ডিটেক্টর:
+            <span style={{ fontSize: "12px", fontWeight: 700, color: "#94A3B8" }}>
+              ক্যামেরা ভিশন ও অবজেক্ট ট্র্যাকিং:
             </span>
             <button
               type="button"
@@ -884,9 +885,9 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                 }
               }}
               style={{
-                background: isRoadDemoActive ? "linear-gradient(135deg, #059669, #0284c7)" : "#1E293B",
-                color: "#FFF",
-                border: `1px solid ${isRoadDemoActive ? "#34D399" : "#38BDF8"}`,
+                background: isRoadDemoActive ? "#065f46" : "#1E293B",
+                color: isRoadDemoActive ? "#6ee7b7" : "#38BDF8",
+                border: `1px solid ${isRoadDemoActive ? "#10B981" : "#0284C7"}`,
                 borderRadius: "6px",
                 padding: "3px 8px",
                 fontSize: "11px",
@@ -894,7 +895,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                 cursor: "pointer",
               }}
             >
-              {isRoadDemoActive ? "🎬 ঢাকা সড়ক ডেমো সক্রিয় (বন্ধ করুন)" : "🎬 ঢাকা সড়ক দৃশ্য ডেমো (Dhaka Walk Scene)"}
+              {isRoadDemoActive ? "লাইভ ক্যামেরা ভিউ" : "রোড ভিডিও ডেমো"}
             </button>
           </div>
 
@@ -905,19 +906,21 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
               borderRadius: "12px",
               overflow: "hidden",
               border: "1px solid #334155",
-              minHeight: isRoadDemoActive ? "210px" : "150px",
+              minHeight: isRoadDemoActive ? "220px" : "150px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
             {isRoadDemoActive ? (
-              <div style={{ position: "relative", width: "100%", height: "210px" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/demo/dhaka_walk_scene.jpg"
-                  alt="ঢাকা ফুটপাত ও ফার্মেসি রোড সিনারিও"
-                  style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }}
+              <div style={{ position: "relative", width: "100%", height: "220px" }}>
+                <video
+                  src="/demo/dhaka_walk_live.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{ width: "100%", height: "220px", objectFit: "cover", display: "block" }}
                 />
 
                 {/* Box 1: Landmark Pharmacy Destination */}
@@ -943,13 +946,13 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                       color: "#6EE7B7",
                       fontSize: "10px",
                       fontWeight: 800,
-                      padding: "1px 5px",
+                      padding: "1px 6px",
                       borderRadius: "4px",
                       whiteSpace: "nowrap",
                       border: "1px solid #10B981",
                     }}
                   >
-                    🏥 [গন্তব্য: আয়েশা মেডিকেল হল (৪০মি সোজা)]
+                    [গন্তব্য: আয়েশা মেডিকেল হল (৪০মি সোজা)]
                   </span>
                 </div>
 
@@ -981,7 +984,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                       whiteSpace: "nowrap",
                     }}
                   >
-                    ✅ [নিরাপদ ফুটপাত: সামনে পথ পরিষ্কার]
+                    [নিরাপদ ফুটপাত: পথ পরিষ্কার]
                   </span>
                 </div>
 
@@ -1012,7 +1015,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                       whiteSpace: "nowrap",
                     }}
                   >
-                    🛺 [রিকশা: ডানপাশে সড়কে]
+                    [রিকশা: ডানপাশে সড়কে]
                   </span>
                 </div>
               </div>
@@ -1026,24 +1029,23 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
               />
             )}
 
-            {/* Overlay Vision Badge */}
+            {/* Overlay Vision Badge (No Emoji) */}
             <div
               style={{
                 position: "absolute",
                 top: "8px",
                 left: "8px",
-                background: "rgba(15, 23, 42, 0.85)",
+                background: "rgba(15, 23, 42, 0.9)",
+                border: "1px solid #38BDF8",
                 color: "#38BDF8",
-                padding: "4px 8px",
-                borderRadius: "6px",
-                fontSize: "11px",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
+                padding: "2px 7px",
+                borderRadius: "4px",
+                fontSize: "10px",
+                fontWeight: 800,
+                letterSpacing: "0.5px",
               }}
             >
-              <span>👁️</span> {isRoadDemoActive ? "ঢাকা সড়ক ভিশন ডেমো (Gemini 2.5 Flash)" : "ভিশন বাধা স্ক্যানার (MediaPipe + Gemini Vision)"}
+              {isRoadDemoActive ? "LIVE ROAD AI VISION" : "CAMERA VISION"}
             </div>
 
             {detectedObstacle && (
@@ -1053,16 +1055,16 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                   bottom: "8px",
                   left: "8px",
                   right: "8px",
-                  background: "rgba(0, 0, 0, 0.88)",
+                  background: "rgba(0, 0, 0, 0.92)",
                   border: "1px solid #F59E0B",
                   color: "#FDE68A",
-                  padding: "6px 10px",
-                  borderRadius: "8px",
-                  fontSize: "12px",
+                  padding: "5px 8px",
+                  borderRadius: "6px",
+                  fontSize: "11px",
                   fontWeight: 700,
                 }}
               >
-                ⚠️ {detectedObstacle}
+                [সতর্কতা: {detectedObstacle}]
               </div>
             )}
           </div>
@@ -1145,7 +1147,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                 minHeight: "44px",
               }}
             >
-              🔊 দিক শুনুন
+              দিক শুনুন
             </button>
             <button
               type="button"
@@ -1165,7 +1167,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                 minHeight: "44px",
               }}
             >
-              🔍 স্ক্যান ও গাইড
+              স্ক্যান ও গাইড
             </button>
             <button
               type="button"
@@ -1188,7 +1190,7 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
                 minHeight: "44px",
               }}
             >
-              🗺️ গুগল ম্যাপস
+              গুগল ম্যাপস
             </button>
           </div>
 

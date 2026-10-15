@@ -441,7 +441,7 @@ export default function FamilyMembersModal({
                 gap: "0.5rem",
               }}
             >
-              <span>👥</span> পরিচিত ও কেয়ারগিভার নেটওয়ার্ক
+              পরিচিত ও কেয়ারগিভার নেটওয়ার্ক
             </h2>
             <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>
               ArcFace ফেসিয়াল এমবেডিং দিয়ে পরিবার, বন্ধু ও চিকিৎসকদের লাইভ সনাক্তকরণ
@@ -609,7 +609,7 @@ export default function FamilyMembersModal({
                       boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
                     }}
                   >
-                    🟢 চেনা মুখ: রেশমা (৯৮% মিল • ArcFace: 0.94)
+                    [রেশমা ৯৮% • ArcFace: 0.94]
                   </span>
                 </div>
 
@@ -628,7 +628,7 @@ export default function FamilyMembersModal({
                     fontWeight: 700,
                   }}
                 >
-                  ✓ পরিচয় নিশ্চিত: রেশমা (যার সাথে গতকালও দেখা হয়েছিল)
+                  পরিচয় নিশ্চিত: রেশমা (যার সাথে গতকালও দেখা হয়েছিল)
                 </div>
 
                 {/* Switch back to live button */}
@@ -747,7 +747,7 @@ export default function FamilyMembersModal({
                       boxShadow: "0 4px 14px rgba(16, 185, 129, 0.5)",
                     }}
                   >
-                    {isRecognizing ? "⌛ মুখ বিশ্লেষণ চলছে..." : "🔍 এখন মুখ চিনুন (Identify Face)"}
+                    {isRecognizing ? "বিশ্লেষণ চলছে..." : "এখন মুখ চিনুন"}
                   </button>
                 </div>
               </div>
@@ -757,7 +757,7 @@ export default function FamilyMembersModal({
             <div style={{ marginTop: "0.6rem", marginBottom: "0.8rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
                 <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-                  দ্রুত ডেমো ও রেকর্ডিং টেস্ট বাটন:
+                  দ্রুত টেস্ট বাটন:
                 </span>
                 <button
                   type="button"
@@ -774,7 +774,7 @@ export default function FamilyMembersModal({
                     boxShadow: "0 0 10px rgba(52, 211, 153, 0.4)",
                   }}
                 >
-                  🎬 রেশমা (গতকাল দেখা হওয়া মুখ)
+                  রেশমা ডেমো ভিউ
                 </button>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.4rem" }}>
@@ -792,7 +792,7 @@ export default function FamilyMembersModal({
                     cursor: "pointer",
                   }}
                 >
-                  👤 ফাহিম (বন্ধু)
+                  ফাহিম (বন্ধু)
                 </button>
                 <button
                   type="button"
@@ -808,7 +808,7 @@ export default function FamilyMembersModal({
                     cursor: "pointer",
                   }}
                 >
-                  👤 আমেনা বেগম
+                  আমেনা বেগম
                 </button>
                 <button
                   type="button"
@@ -824,7 +824,7 @@ export default function FamilyMembersModal({
                     cursor: "pointer",
                   }}
                 >
-                  👤 রহিম (ভাই)
+                  রহিম (ভাই)
                 </button>
               </div>
             </div>

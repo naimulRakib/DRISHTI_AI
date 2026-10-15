@@ -70,6 +70,7 @@ export default function DemoPage() {
   const [isDemoRoadLaunch, setIsDemoRoadLaunch] = useState(false);
   const [isDemoHazardLaunch, setIsDemoHazardLaunch] = useState(false);
   const [isDemoReshmaLaunch, setIsDemoReshmaLaunch] = useState(false);
+  const [activeStudioFeed, setActiveStudioFeed] = useState<"walk" | "hazard" | "face" | "currency" | "radar" | "fall">("walk");
 
   // Live state tracking for showcase
   const [walletBills, setWalletBills] = useState<ScannedBill[]>(() => getWalletBills());
@@ -390,7 +391,7 @@ export default function DemoPage() {
           titleBn: "অবজেক্ট ডিটেকশন মডেল ক্যাশ",
           titleEn: "Model Cached (efficientdet_lite0)",
           status: "fail",
-          detail: "মডেল ফাইল ক্যাশে পাওয়া যায়নি (নিচের '📥 অফলাইনে ক্যাশ করুন' বাটনে চাপুন)",
+          detail: "মডেল ফাইল ক্যাশে পাওয়া যায়নি (নিচের 'অফলাইনে ক্যাশ করুন' বাটনে চাপুন)",
         });
       }
     } catch (err) {
@@ -448,7 +449,7 @@ export default function DemoPage() {
           titleBn: "বাংলা ও ইংরেজি OCR ডেটা ক্যাশ",
           titleEn: "OCR Data Cached (Tessdata)",
           status: "fail",
-          detail: `অনুপস্থিত: ${!benMatched ? "ben.traineddata " : ""}${!engMatched ? "eng.traineddata" : ""} (নিচের '📥 অফলাইনে ক্যাশ করুন' বাটনে চাপুন)`,
+          detail: `অনুপস্থিত: ${!benMatched ? "ben.traineddata " : ""}${!engMatched ? "eng.traineddata" : ""} (নিচের 'অফলাইনে ক্যাশ করুন' বাটনে চাপুন)`,
         });
       }
     } catch (err) {
@@ -744,31 +745,42 @@ export default function DemoPage() {
             className="action-button variant-primary"
             style={{ minHeight: "48px", padding: "0.75rem 1.25rem", fontWeight: 700 }}
           >
-            🔄 সব ডায়াগনস্টিক চালান
+            সব ডায়াগনস্টিক চালান
           </button>
         </div>
       </header>
 
-      {/* Live Announcement / Feedback Banner */}
+      {/* Live AI Guidance Banner (Minimal, No Emoji) */}
       {demoBanner && (
         <section
           role="status"
           aria-live="polite"
           style={{
-            background: "linear-gradient(135deg, rgba(6, 78, 59, 0.45) 0%, rgba(19, 27, 46, 0.95) 100%)",
-            border: "2px solid #10b981",
-            borderRadius: "12px",
-            padding: "1rem 1.25rem",
+            background: "rgba(15, 23, 42, 0.95)",
+            border: "1px solid #10b981",
+            borderRadius: "10px",
+            padding: "0.85rem 1.25rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: "1rem",
-            boxShadow: "0 10px 25px -5px rgba(16, 185, 129, 0.2)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <span style={{ fontSize: "1.5rem" }} aria-hidden="true">📢</span>
-            <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#e2e8f0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                color: "#10b981",
+                border: "1px solid #10b981",
+                padding: "2px 6px",
+                borderRadius: "4px",
+                letterSpacing: "0.5px",
+              }}
+            >
+              AI VOICE
+            </span>
+            <span style={{ fontSize: "1rem", fontWeight: 700, color: "#f8fafc" }}>
               {demoBanner}
             </span>
           </div>
@@ -776,289 +788,738 @@ export default function DemoPage() {
             type="button"
             onClick={() => speak(demoBanner)}
             className="demo-quick-btn success"
-            aria-label="বার্তাটি পুনরায় শুনুন"
+            style={{ fontSize: "0.82rem", padding: "0.35rem 0.75rem" }}
           >
-            🔊 পুনরায় শুনুন
+            পুনরায় শুনুন
           </button>
         </section>
       )}
 
       {/* ======================================================== */}
-      {/* 1-MINUTE VIDEO SHOWCASE STUDIO (SCRIPTED DEMO CONTROLS) */}
+      {/* 1-MINUTE LIVE DEMONSTRATION (LIVE VIDEO, MINIMAL TEXT)  */}
       {/* ======================================================== */}
       <section
         aria-labelledby="video-studio-heading"
         style={{
-          background: "linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)",
-          border: "2px solid #38bdf8",
-          borderRadius: "16px",
-          padding: "1.25rem 1.5rem",
-          boxShadow: "0 15px 35px -10px rgba(56, 189, 248, 0.3)",
+          background: "rgba(10, 15, 29, 0.95)",
+          border: "1px solid #0284c7",
+          borderRadius: "12px",
+          padding: "1.1rem 1.25rem",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.85rem" }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ fontSize: "1.5rem" }}>🎬</span>
-              <h2 id="video-studio-heading" style={{ margin: 0, fontSize: "1.35rem", fontWeight: 800, color: "#38bdf8" }}>
-                ১-মিনিট ভিডিও প্রেজেন্টেশন ও পিচ ডেমো স্টুডিও
-              </h2>
-            </div>
-            <p style={{ margin: "0.25rem 0 0", fontSize: "0.88rem", color: "#94a3b8" }}>
-              ভিডিও রেকর্ডিংয়ের জন্য প্রস্তুত প্রিবিল্ট এআই সিনারিও — ১-ক্লিকে প্রতিটি ফিচার লাইভ প্রজেক্টে এক্সিকিউট করুন
-            </p>
+            <h2 id="video-studio-heading" style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: "#38bdf8" }}>
+              ১ মিনিট লাইভ ডেমোনেস্ট্রেশন
+            </h2>
           </div>
           <span
             style={{
-              background: "rgba(56, 189, 248, 0.15)",
+              background: "rgba(2, 132, 199, 0.15)",
               color: "#38bdf8",
-              border: "1px solid #38bdf8",
-              borderRadius: "20px",
-              padding: "0.3rem 0.8rem",
-              fontSize: "0.8rem",
+              border: "1px solid #0284c7",
+              borderRadius: "4px",
+              padding: "2px 8px",
+              fontSize: "0.75rem",
               fontWeight: 800,
+              letterSpacing: "0.5px",
             }}
           >
-            ⚡ Scripted 1-Click Demos
+            AI GUIDANCE ENGINE
           </span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "0.85rem" }}>
-          {/* Card 1: Walk With Me Demo */}
-          <div
+        {/* 6 Selector Buttons */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "0.5rem", marginBottom: "0.85rem" }}>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("walk");
+              announceAction("সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে সোজা এগিয়ে চলুন।", true);
+            }}
             style={{
-              background: "#0f172a",
-              border: "1px solid #334155",
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "0.75rem",
+              background: activeStudioFeed === "walk" ? "rgba(2, 132, 199, 0.3)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "walk" ? "#38bdf8" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
             }}
           >
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>🚶‍♂️</span>
-                <strong style={{ fontSize: "1rem", color: "#f8fafc" }}>
-                  ১. পথচলা ও ঢাকা সড়ক দৃশ্য
-                </strong>
-              </div>
-              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
-                আয়েশা মেডিকেল হল সাইনবোর্ড, নিরাপদ ফুটপাত ও রিকশা সনাক্তকরণ সহ লাইভ বাংলা ভয়েস গাইডেন্স।
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setIsDemoRoadLaunch(true);
-                setIsWalkOpen(true);
-                announceAction("ঢাকা সড়ক দৃশ্য ও আয়েশা মেডিকেল হল অভিমুখে পথচলা ডেমো শুরু হয়েছে।", false);
-              }}
-              className="demo-quick-btn primary"
-              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
-            >
-              ▶️ পথচলা সিনারিও চালু করুন
-            </button>
-          </div>
+            <div style={{ fontSize: "0.72rem", color: "#38bdf8", fontWeight: 800 }}>[১] পথচলা লাইভ</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>রোড ও সাইনবোর্ড</div>
+          </button>
 
-          {/* Card 2: Road Hazard Demo */}
-          <div
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("hazard");
+              announceAction("সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।", true);
+            }}
             style={{
-              background: "#0f172a",
-              border: "1px solid #ef4444",
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "0.75rem",
+              background: activeStudioFeed === "hazard" ? "rgba(220, 38, 38, 0.25)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "hazard" ? "#f87171" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
             }}
           >
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>⚠️</span>
-                <strong style={{ fontSize: "1rem", color: "#fca5a5" }}>
-                  ২. ঢাকা রাস্তার গর্ত ও অবজেক্ট
-                </strong>
-              </div>
-              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
-                ফুটপাতের খোলা গর্ত, ভাঙা ম্যানহোল ও ইট সনাক্তকরণে লাল আয়তাকার বাউন্ডিং বক্স ও তাৎক্ষণিক অডিও সতর্কতা।
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setIsDemoHazardLaunch(true);
-                setIsCameraOpen(true);
-                announceAction("ঢাকা রোডহ্যাজার্ড ও বিপজ্জনক গর্ত ডিটেকশন ডেমো চালু হচ্ছে।", false);
-              }}
-              className="demo-quick-btn danger"
-              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
-            >
-              ▶️ গর্ত ও হ্যাজার্ড ডিটেকশন চালু
-            </button>
-          </div>
+            <div style={{ fontSize: "0.72rem", color: "#f87171", fontWeight: 800 }}>[২] হ্যাজার্ড ডিটেকশন</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>খোলা গর্ত ও অবজেক্ট</div>
+          </button>
 
-          {/* Card 3: Reshma Face Recognition */}
-          <div
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("face");
+              announceAction("ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।", true);
+            }}
             style={{
-              background: "#0f172a",
-              border: "1px solid #10b981",
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "0.75rem",
+              background: activeStudioFeed === "face" ? "rgba(16, 185, 129, 0.25)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "face" ? "#34d399" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
             }}
           >
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>👥</span>
-                <strong style={{ fontSize: "1rem", color: "#6ee7b7" }}>
-                  ৩. রেশমার মুখ সনাক্তকরণ
-                </strong>
-              </div>
-              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
-                ArcFace ফেসিয়াল এমবেডিং দিয়ে মুখ চিহ্নিতকরণ: &quot;ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।&quot;
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setIsDemoReshmaLaunch(true);
-                setIsFamilyOpen(true);
-                announceAction("রেশমার মুখ সনাক্তকরণ ডেমো চালু হচ্ছে।", false);
-              }}
-              className="demo-quick-btn success"
-              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
-            >
-              ▶️ রেশমার মুখ ডিটেকশন চালু
-            </button>
-          </div>
+            <div style={{ fontSize: "0.72rem", color: "#34d399", fontWeight: 800 }}>[৩] ফেস রিকগনিশন</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>রেশমা (পরিচিত মুখ)</div>
+          </button>
 
-          {/* Card 4: 10 Taka Note Demo */}
-          <div
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("currency");
+              handleAddDemoNote(10);
+              announceAction("এটি একটি দশ টাকার নোট।", true);
+            }}
             style={{
-              background: "#0f172a",
-              border: "1px solid #f59e0b",
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "0.75rem",
+              background: activeStudioFeed === "currency" ? "rgba(217, 119, 6, 0.25)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "currency" ? "#fbbf24" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
             }}
           >
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>💵</span>
-                <strong style={{ fontSize: "1rem", color: "#fde68a" }}>
-                  ৪. ১০ টাকার নোট সনাক্তকরণ
-                </strong>
+            <div style={{ fontSize: "0.72rem", color: "#fbbf24", fontWeight: 800 }}>[৪] কারেন্সি রিডার</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>১০ টাকার নোট</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("radar");
+              handleSweepTest();
+              announceAction("সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।", true);
+            }}
+            style={{
+              background: activeStudioFeed === "radar" ? "rgba(124, 58, 237, 0.25)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "radar" ? "#a78bfa" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
+            }}
+          >
+            <div style={{ fontSize: "0.72rem", color: "#a78bfa", fontWeight: 800 }}>[৫] ৩ডি অডিও রাডার</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>সোনার সুইপ</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("fall");
+              triggerFallSimulation();
+              announceAction("আপনি কি ঠিক আছেন? সহায়তা প্রয়োজন কি না বলুন।", true);
+            }}
+            style={{
+              background: activeStudioFeed === "fall" ? "rgba(225, 29, 72, 0.25)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "fall" ? "#fb7185" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
+            }}
+          >
+            <div style={{ fontSize: "0.72rem", color: "#fb7185", fontWeight: 800 }}>[৬] ফল অ্যালার্ট</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>পতন সনাক্তকরণ</div>
+          </button>
+        </div>
+
+        {/* Live Video / Vision Screen with Overlaid Bounding Boxes */}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            borderRadius: "10px",
+            overflow: "hidden",
+            backgroundColor: "#020617",
+            border: "1px solid #1e293b",
+            aspectRatio: "16 / 9",
+            maxHeight: "440px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {activeStudioFeed === "walk" && (
+            <>
+              <video
+                src="/demo/dhaka_walk_live.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #0284c7",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#38bdf8",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                LIVE ROAD AI VISION
               </div>
-              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
-                কালার হিস্টোগ্রাম ও টেক্সচার ম্যাচিংয়ে ১০ টাকার বাংলাদেশী নোট স্ক্যান ও ওয়ালেটে সরাসরি যোগ।
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                handleAddDemoNote(10);
-                announceAction("এটি একটি দশ টাকার নোট। ওয়ালেটে যোগ করা হয়েছে।", true);
-              }}
-              className="demo-quick-btn"
+
+              {/* Bounding box: Pharmacy destination */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "16%",
+                  left: "12%",
+                  width: "36%",
+                  height: "28%",
+                  border: "2px solid #38bdf8",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 12px rgba(56, 189, 248, 0.7)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-22px",
+                    left: 0,
+                    background: "#0369a1",
+                    color: "#f0fdf4",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [গন্তব্য: আয়েশা মেডিকেল হল (৪০মি সোজা)]
+                </span>
+              </div>
+
+              {/* Bounding box: Safe sidewalk */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "12%",
+                  left: "24%",
+                  width: "52%",
+                  height: "36%",
+                  border: "2px dashed #10b981",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 12px rgba(16, 185, 129, 0.5)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-20px",
+                    left: 0,
+                    background: "#064e3b",
+                    color: "#a7f3d0",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [নিরাপদ ফুটপাত: পথ পরিষ্কার]
+                </span>
+              </div>
+
+              {/* Bounding box: Rickshaw */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "34%",
+                  right: "12%",
+                  width: "24%",
+                  height: "44%",
+                  border: "2px solid #f59e0b",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 10px rgba(245, 158, 11, 0.6)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-20px",
+                    left: 0,
+                    background: "#78350f",
+                    color: "#fde68a",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [রিকশা: ডানপাশে সড়কে]
+                </span>
+              </div>
+            </>
+          )}
+
+          {activeStudioFeed === "hazard" && (
+            <>
+              <video
+                src="/demo/dhaka_hazard_live.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #dc2626",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#f87171",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                HAZARD DETECTED
+              </div>
+
+              {/* Hazard Box 1: Pothole */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "10%",
+                  left: "30%",
+                  width: "38%",
+                  height: "36%",
+                  border: "3px solid #dc2626",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 16px rgba(220, 38, 38, 0.85)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-22px",
+                    left: 0,
+                    background: "#7f1d1d",
+                    color: "#fecaca",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [খোলা গর্ত ৯৬%]
+                </span>
+              </div>
+
+              {/* Hazard Box 2: Broken Bricks */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "14%",
+                  left: "8%",
+                  width: "18%",
+                  height: "26%",
+                  border: "2px solid #ea580c",
+                  borderRadius: "4px",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-20px",
+                    left: 0,
+                    background: "#7c2d12",
+                    color: "#fed7aa",
+                    fontSize: "9px",
+                    fontWeight: 800,
+                    padding: "1px 5px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [ভাঙা ইট ৮৯%]
+                </span>
+              </div>
+            </>
+          )}
+
+          {activeStudioFeed === "face" && (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/demo/reshma_bd_girl.jpg"
+                alt="Face Scan"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #10b981",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#6ee7b7",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                ARCFACE 512-D RECOGNITION
+              </div>
+
+              {/* Face Tracking Bounding Box */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "14%",
+                  left: "28%",
+                  width: "44%",
+                  height: "66%",
+                  border: "3px solid #10b981",
+                  borderRadius: "8px",
+                  boxShadow: "0 0 18px rgba(16, 185, 129, 0.8)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-24px",
+                    left: 0,
+                    background: "#064e3b",
+                    color: "#6ee7b7",
+                    fontSize: "11px",
+                    fontWeight: 800,
+                    padding: "2px 8px",
+                    borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [রেশমা ৯৮% • ArcFace: 0.94]
+                </span>
+              </div>
+            </>
+          )}
+
+          {activeStudioFeed === "currency" && (
+            <div
               style={{
-                fontSize: "0.88rem",
-                padding: "0.6rem 0.8rem",
                 width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "#78350f",
-                borderColor: "#f59e0b",
-                color: "#fef3c7",
+                background: "linear-gradient(180deg, #022c22 0%, #064e3b 100%)",
+                position: "relative",
               }}
             >
-              ▶️ ১০ টাকা স্ক্যান টেস্ট
-            </button>
-          </div>
-
-          {/* Card 5: 3D Binaural Echolocation Radar */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #8b5cf6",
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "0.75rem",
-            }}
-          >
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>📡</span>
-                <strong style={{ fontSize: "1rem", color: "#c4b5fd" }}>
-                  ৫. ৩ডি অডিও সোনার রাডার
-                </strong>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #fbbf24",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#fbbf24",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                CURRENCY CLASSIFIER
               </div>
-              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
-                ৩৬০° বাইনরাল অডিও সোনার সুইপ — বাম ও ডান কানে দূরত্বের ফ্রিকোয়েন্সি-মডুলেটেড ইকো সাউন্ড।
-              </p>
+              <div
+                style={{
+                  border: "3px solid #34d399",
+                  borderRadius: "12px",
+                  padding: "1.5rem 2.5rem",
+                  textAlign: "center",
+                  background: "rgba(6, 78, 59, 0.7)",
+                  boxShadow: "0 0 24px rgba(52, 211, 153, 0.5)",
+                }}
+              >
+                <div style={{ fontSize: "1.8rem", fontWeight: 900, color: "#f0fdf4" }}>
+                  ৳ ১০
+                </div>
+                <div style={{ fontSize: "0.9rem", color: "#a7f3d0", fontWeight: 700, marginTop: "0.25rem" }}>
+                  বাংলাদেশ ব্যাংক • দশ টাকা
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "#6ee7b7", marginTop: "0.4rem" }}>
+                  কনফিডেন্স: ৯৯.২% • অফলাইন মোবাইলনেট ভি৩
+                </div>
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={handleSweepTest}
-              className="demo-quick-btn"
+          )}
+
+          {activeStudioFeed === "radar" && (
+            <div
               style={{
-                fontSize: "0.88rem",
-                padding: "0.6rem 0.8rem",
                 width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "#4c1d95",
-                borderColor: "#8b5cf6",
-                color: "#ede9fe",
+                background: "radial-gradient(circle, #1e1b4b 0%, #020617 100%)",
+                position: "relative",
               }}
             >
-              ▶️ ৩৬০° সোনার সুইপ শুনুন
-            </button>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #a78bfa",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#a78bfa",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                3D BINAURAL RADAR SWEEP
+              </div>
+              <div
+                style={{
+                  width: "180px",
+                  height: "180px",
+                  borderRadius: "50%",
+                  border: "2px solid #7c3aed",
+                  boxShadow: "0 0 25px rgba(124, 58, 237, 0.6)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                }}
+              >
+                <div style={{ width: "120px", height: "120px", borderRadius: "50%", border: "1px dashed #8b5cf6" }} />
+                <div style={{ width: "60px", height: "60px", borderRadius: "50%", border: "1px solid #a78bfa" }} />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "32px",
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: "#38bdf8",
+                    boxShadow: "0 0 10px #38bdf8",
+                  }}
+                />
+              </div>
+              <div style={{ marginTop: "0.75rem", fontSize: "0.85rem", color: "#c4b5fd", fontWeight: 700 }}>
+                [চেয়ার: ১.২ মিটার • সোজা সামনে]
+              </div>
+            </div>
+          )}
+
+          {activeStudioFeed === "fall" && (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "linear-gradient(180deg, #4c0519 0%, #1c050d 100%)",
+                position: "relative",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #fb7185",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#fb7185",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                FALL SENTINEL TELEMETRY
+              </div>
+              <div
+                style={{
+                  border: "2px solid #e11d48",
+                  borderRadius: "10px",
+                  padding: "1.25rem 2rem",
+                  textAlign: "center",
+                  background: "rgba(136, 19, 55, 0.5)",
+                  boxShadow: "0 0 24px rgba(225, 29, 72, 0.6)",
+                }}
+              >
+                <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#ffe4e6" }}>
+                  পতন সনাক্ত হয়েছে (৩.২G ইমপ্যাক্ট)
+                </div>
+                <div style={{ fontSize: "0.95rem", color: "#fecdd3", fontWeight: 700, marginTop: "0.5rem" }}>
+                  আপনি কি ঠিক আছেন?
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Minimal AI Spoken Guidance Bar */}
+        <div
+          style={{
+            marginTop: "0.85rem",
+            background: "#090d16",
+            border: "1px solid #1e293b",
+            borderRadius: "8px",
+            padding: "0.75rem 1rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "0.75rem",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flex: 1, minWidth: "240px" }}>
+            <span
+              style={{
+                fontSize: "0.7rem",
+                fontWeight: 800,
+                color: "#10b981",
+                border: "1px solid #10b981",
+                padding: "2px 6px",
+                borderRadius: "4px",
+                letterSpacing: "0.5px",
+              }}
+            >
+              AI GUIDANCE
+            </span>
+            <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "#f8fafc" }}>
+              {activeStudioFeed === "walk" && "সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে সোজা এগিয়ে চলুন।"}
+              {activeStudioFeed === "hazard" && "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।"}
+              {activeStudioFeed === "face" && "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।"}
+              {activeStudioFeed === "currency" && "এটি একটি দশ টাকার নোট।"}
+              {activeStudioFeed === "radar" && "সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।"}
+              {activeStudioFeed === "fall" && "আপনি কি ঠিক আছেন? সহায়তা প্রয়োজন কি না বলুন।"}
+            </span>
           </div>
 
-          {/* Card 6: Fall Detection & Emergency Response */}
-          <div
-            style={{
-              background: "#0f172a",
-              border: "1px solid #e11d48",
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: "0.75rem",
-            }}
-          >
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
-                <span style={{ fontSize: "1.2rem" }}>🚨</span>
-                <strong style={{ fontSize: "1rem", color: "#fda4af" }}>
-                  ৬. ফল অ্যালার্ট ও জরুরি সাহায্য
-                </strong>
-              </div>
-              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
-                পতন সনাক্ত হলে স্বয়ংক্রিয় জিজ্ঞাসা: &quot;আপনি কি ঠিক আছেন?&quot; — হ্যাঁ বললে শান্ত, না বললে কেয়ারগিভারকে এসএমএস।
-              </p>
-            </div>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
               type="button"
               onClick={() => {
-                triggerFallSimulation();
-                announceAction("পতন সনাক্তকরণ সিমুলেশন সক্রিয়। জিজ্ঞাসা করা হচ্ছে: আপনি কি ঠিক আছেন?", false);
+                const text =
+                  activeStudioFeed === "walk"
+                    ? "সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে সোজা এগিয়ে চলুন।"
+                    : activeStudioFeed === "hazard"
+                    ? "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।"
+                    : activeStudioFeed === "face"
+                    ? "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।"
+                    : activeStudioFeed === "currency"
+                    ? "এটি একটি দশ টাকার নোট।"
+                    : activeStudioFeed === "radar"
+                    ? "সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।"
+                    : "আপনি কি ঠিক আছেন? সহায়তা প্রয়োজন কি না বলুন।";
+                speak(text);
               }}
-              className="demo-quick-btn danger"
-              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
+              style={{
+                background: "#065f46",
+                color: "#a7f3d0",
+                border: "1px solid #10b981",
+                borderRadius: "6px",
+                padding: "0.4rem 0.8rem",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
             >
-              ▶️ ফল অ্যালার্ট সিমুলেট করুন
+              ভয়েস শুনুন
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (activeStudioFeed === "walk") {
+                  setIsDemoRoadLaunch(true);
+                  setIsWalkOpen(true);
+                } else if (activeStudioFeed === "hazard") {
+                  setIsDemoHazardLaunch(true);
+                  setIsCameraOpen(true);
+                } else if (activeStudioFeed === "face") {
+                  setIsDemoReshmaLaunch(true);
+                  setIsFamilyOpen(true);
+                } else if (activeStudioFeed === "currency") {
+                  setIsCurrencyOpen(true);
+                } else if (activeStudioFeed === "radar") {
+                  setIsRadarOpen(true);
+                } else {
+                  triggerFallSimulation();
+                }
+              }}
+              style={{
+                background: "#1e293b",
+                color: "#94a3b8",
+                border: "1px solid #334155",
+                borderRadius: "6px",
+                padding: "0.4rem 0.8rem",
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              ফুলস্ক্রিন মডাল
             </button>
           </div>
         </div>
@@ -1071,28 +1532,28 @@ export default function DemoPage() {
           onClick={() => setActiveTab("all")}
           className={`demo-tab-btn ${activeTab === "all" ? "active" : ""}`}
         >
-          🌟 সম্পূর্ণ ওভারভিউ (All)
+          সম্পূর্ণ ওভারভিউ (All)
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("checklist")}
           className={`demo-tab-btn ${activeTab === "checklist" ? "active" : ""}`}
         >
-          🩺 হার্ডওয়্যার চেকলিস্ট ({checklistItems.filter((i) => i.status === "pass").length}/{checklistItems.length})
+          হার্ডওয়্যার চেকলিস্ট ({checklistItems.filter((i) => i.status === "pass").length}/{checklistItems.length})
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("showcase")}
           className={`demo-tab-btn ${activeTab === "showcase" ? "active" : ""}`}
         >
-          🚀 ফিচার শোকেস ও সিমুলেটর (৮টি মডিউল)
+          ফিচার শোকেস ও সিমুলেটর (৮টি মডিউল)
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("speech")}
           className={`demo-tab-btn ${activeTab === "speech" ? "active" : ""}`}
         >
-          🎙️ বাংলা স্পিচ কনসোল (TTS)
+          বাংলা স্পিচ কনসোল (TTS)
         </button>
       </nav>
 
@@ -1117,7 +1578,7 @@ export default function DemoPage() {
                 className="demo-quick-btn"
                 style={{ fontSize: "0.85rem", padding: "0.4rem 0.8rem" }}
               >
-                🔄 রিফ্রেশ চেকলিস্ট
+                রিফ্রেশ চেকলিস্ট
               </button>
             </div>
           </div>
@@ -1139,14 +1600,14 @@ export default function DemoPage() {
             >
               <div style={{ flex: 1, minWidth: "280px" }}>
                 <strong style={{ fontSize: "1.05rem", color: "var(--accent-amber)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <span>📥</span> অবজেক্ট ডিটেকশন মডেল ও ওসিআর ফাইল এক ক্লিকে ক্যাশ করুন
+                  অবজেক্ট ডিটেকশন মডেল ও ওসিআর ফাইল এক ক্লিকে ক্যাশ করুন
                 </strong>
                 <p style={{ margin: "0.35rem 0 0 0", fontSize: "0.88rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
                   মডেল ফাইল (<code style={{ color: "var(--accent-cyan)" }}>efficientdet_lite0.tflite</code>) এবং ওসিআর ডেটা (<code style={{ color: "var(--accent-cyan)" }}>ben.traineddata</code> ও <code style={{ color: "var(--accent-cyan)" }}>eng.traineddata</code>) প্রজেক্টের লোকাল ফোল্ডারে সম্পূর্ণ প্রস্তুত আছে। নিচের বাটনে ক্লিক করলেই এক ক্লিকে অফলাইন ব্যবহারের জন্য ব্রাউজারের Cache Storage-এ সংরক্ষিত হয়ে যাবে।
                 </p>
                 {cacheProgressText && (
                   <p style={{ margin: "0.5rem 0 0 0", fontSize: "0.85rem", color: "#6ee7b7", fontWeight: 700 }}>
-                    ⏳ {cacheProgressText}
+                    {cacheProgressText}
                   </p>
                 )}
               </div>
@@ -1165,7 +1626,7 @@ export default function DemoPage() {
                   boxShadow: "0 4px 14px rgba(6, 182, 212, 0.35)",
                 }}
               >
-                {isCachingAssets ? "⏳ ক্যাশ করা হচ্ছে..." : "📥 এখনই অফলাইনে ক্যাশ করুন"}
+                {isCachingAssets ? "ক্যাশ করা হচ্ছে..." : "এখনই অফলাইনে ক্যাশ করুন"}
               </button>
             </div>
           )}
@@ -1253,7 +1714,7 @@ export default function DemoPage() {
                         className="demo-quick-btn primary"
                         style={{ fontWeight: 700 }}
                       >
-                        {item.id === "camera" ? "📷 অনুমতি দিন" : "🎙️ অনুমতি দিন"}
+                        {item.id === "camera" ? "ক্যামেরা অনুমতি দিন" : "মাইক্রোফোন অনুমতি দিন"}
                       </button>
                     )}
 
@@ -1265,7 +1726,7 @@ export default function DemoPage() {
                         className="demo-quick-btn primary"
                         style={{ fontWeight: 700, background: "var(--accent-amber)", color: "#000" }}
                       >
-                        {isCachingAssets ? "⏳ ক্যাশ হচ্ছে..." : "📥 অফলাইনে ক্যাশ করুন"}
+                        {isCachingAssets ? "ক্যাশ হচ্ছে..." : "অফলাইনে ক্যাশ করুন"}
                       </button>
                     )}
 
@@ -1276,7 +1737,7 @@ export default function DemoPage() {
                         className="demo-quick-btn secondary"
                         style={{ fontSize: "0.85rem" }}
                       >
-                        🔊 টেস্ট শুনুন
+                        টেস্ট শুনুন
                       </button>
                     )}
                   </div>
@@ -1297,13 +1758,13 @@ export default function DemoPage() {
               lineHeight: 1.5,
             }}
           >
-            <strong style={{ color: "var(--accent-cyan)" }}>💡 সহায়তা ও নির্দেশিকা:</strong>
+            <strong style={{ color: "var(--accent-cyan)" }}>সহায়তা ও নির্দেশিকা:</strong>
             <ul style={{ margin: "0.4rem 0 0 1.25rem", padding: 0 }}>
               <li>
-                <strong>মাইক্রোফোন:</strong> &quot;🎙️ অনুমতি দিন&quot; বাটনে চাপলে ব্রাউজারে অনুমতি চাইবে, &quot;Allow&quot; ক্লিক করলেই এটি PASS হয়ে যাবে।
+                <strong>মাইক্রোফোন:</strong> &quot;মাইক্রোফোন অনুমতি দিন&quot; বাটনে চাপলে ব্রাউজারে অনুমতি চাইবে, &quot;Allow&quot; ক্লিক করলেই এটি PASS হয়ে যাবে।
               </li>
               <li>
-                <strong>মডেল ও ওসিআর ক্যাশ:</strong> &quot;📥 এখনই অফলাইনে ক্যাশ করুন&quot; বাটনে চাপলে লোকাল ফাইলগুলো ব্রাউজার ক্যাশে সংরক্ষিত হয়ে যাবে।
+                <strong>মডেল ও ওসিআর ক্যাশ:</strong> &quot;এখনই অফলাইনে ক্যাশ করুন&quot; বাটনে চাপলে লোকাল ফাইলগুলো ব্রাউজার ক্যাশে সংরক্ষিত হয়ে যাবে।
               </li>
               <li>
                 <strong>বাংলা কণ্ঠস্বর:</strong> ম্যাক/উইন্ডোজ ডেস্কটপ ব্রাউজারে ডিফল্ট বাংলা ভয়েস প্যাক ইনস্টল না থাকলেও দৃষ্টি এআই-এর উচ্চ-কন্ট্রাস্ট ভিজ্যুয়াল টেক্সট ব্যানার এবং বিপ অডিও সর্বদাই সচল থাকে। অ্যান্ড্রয়েড ফোনে এটি স্বয়ংক্রিয়ভাবে গুগল বাংলা টিটিএস ইঞ্জিন ব্যবহার করে।
@@ -1339,7 +1800,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>📡</span> ৩ডি অডিও ইকোলোকেশন ও রাডার
+                    ৩ডি অডিও ইকোলোকেশন ও রাডার
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     3D Binaural Acoustic Radar & Spatial Sweep
@@ -1364,28 +1825,28 @@ export default function DemoPage() {
                   onClick={() => handlePingTest(-1.0, 1.2, "বাম দিক")}
                   className="demo-quick-btn"
                 >
-                  🎧 বাম কান
+                  বাম কান (-১.০)
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePingTest(0.0, 0.8, "সোজা সামনে")}
                   className="demo-quick-btn"
                 >
-                  🔊 সোজা সামনে
+                  সোজা সামনে (০.০)
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePingTest(1.0, 1.5, "ডান দিক")}
                   className="demo-quick-btn"
                 >
-                  🎧 ডান কান
+                  ডান কান (+১.০)
                 </button>
                 <button
                   type="button"
                   onClick={handleSweepTest}
                   className="demo-quick-btn primary"
                 >
-                  🌀 ৩৬০° সোনার সুইপ
+                  ৩৬০° সোনার সুইপ
                 </button>
               </div>
 
@@ -1395,7 +1856,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                📡 সম্পূর্ণ ইকো রাডার প্যানেল খুলুন
+                সম্পূর্ণ ইকো রাডার প্যানেল খুলুন
               </button>
             </article>
 
@@ -1404,7 +1865,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>💵</span> টাকা চেনা ও স্মার্ট ওয়ালেট
+                    টাকা চেনা ও স্মার্ট ওয়ালেট
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Bangladeshi Currency Reader & Running Tally
@@ -1468,7 +1929,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                💵 সম্পূর্ণ টাকা চেনা প্যানেল খুলুন
+                সম্পূর্ণ টাকা চেনা প্যানেল খুলুন
               </button>
             </article>
 
@@ -1477,7 +1938,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>🛡️</span> সেফ জোন ও লাইভ ট্র্যাকিং
+                    সেফ জোন ও লাইভ ট্র্যাকিং
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Caregiver Safe-Zone & Geofencing Sentinel
@@ -1502,14 +1963,14 @@ export default function DemoPage() {
                   onClick={() => handleSafeZoneTest(false)}
                   className="demo-quick-btn success"
                 >
-                  ✓ নিরাপদ এলাকা টেস্ট
+                  নিরাপদ এলাকা টেস্ট
                 </button>
                 <button
                   type="button"
                   onClick={() => handleSafeZoneTest(true)}
                   className="demo-quick-btn danger"
                 >
-                  🚨 ব্রীচ অ্যালার্ট টেস্ট
+                  ব্রীচ অ্যালার্ট টেস্ট
                 </button>
               </div>
 
@@ -1519,7 +1980,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                🛡️ সম্পূর্ণ সেফ জোন প্যানেল খুলুন
+                সম্পূর্ণ সেফ জোন প্যানেল খুলুন
               </button>
             </article>
 
@@ -1528,7 +1989,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>👥</span> পরিচিত মুখ ও পরিবার
+                    পরিচিত মুখ ও পরিবার
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     ArcFace 512-d Face Recognition
@@ -1553,21 +2014,21 @@ export default function DemoPage() {
                   onClick={() => handlePersonMatchTest("আমেনা বেগম", "মা", true)}
                   className="demo-quick-btn success"
                 >
-                  👤 মা (আমেনা বেগম)
+                  মা (আমেনা বেগম)
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePersonMatchTest("রহিম", "ছোট ভাই", true)}
                   className="demo-quick-btn success"
                 >
-                  👤 ভাই (রহিম)
+                  ভাই (রহিম)
                 </button>
                 <button
                   type="button"
                   onClick={() => handlePersonMatchTest("", "", false)}
                   className="demo-quick-btn"
                 >
-                  ❓ অপরিচিত মুখ
+                  অপরিচিত মুখ
                 </button>
               </div>
 
@@ -1577,7 +2038,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                👥 সম্পূর্ণ পরিবার ও কেয়ারগিভার তালিকা খুলুন
+                সম্পূর্ণ পরিবার ও কেয়ারগিভার তালিকা খুলুন
               </button>
             </article>
 
@@ -1586,7 +2047,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>🦯</span> স্মার্ট কেইন আইওটি হাব
+                    স্মার্ট কেইন আইওটি হাব
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Smart Cane IoT Vision & Telemetry Gateway
@@ -1611,21 +2072,21 @@ export default function DemoPage() {
                   onClick={() => handleUltrasonicDistanceTest(40)}
                   className="demo-quick-btn danger"
                 >
-                  📏 নিকটবর্তী বাধা (৪০ সেমি)
+                  নিকটবর্তী বাধা (৪০ সেমি)
                 </button>
                 <button
                   type="button"
                   onClick={() => handleUltrasonicDistanceTest(120)}
                   className="demo-quick-btn success"
                 >
-                  📏 নিরাপদ দূরত্ব (১২০ সেমি)
+                  নিরাপদ দূরত্ব (১২০ সেমি)
                 </button>
                 <button
                   type="button"
                   onClick={handleStopAlarmFromCane}
                   className="demo-quick-btn"
                 >
-                  🛑 কেইন বাটন অ্যালার্ম স্টপ
+                  কেইন বাটন অ্যালার্ম স্টপ
                 </button>
               </div>
 
@@ -1635,7 +2096,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                📷 কেইন লাইভ ক্যামেরা প্যানেল খুলুন
+                কেইন লাইভ ক্যামেরা প্যানেল খুলুন
               </button>
             </article>
 
@@ -1644,7 +2105,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>🚶‍♂️</span> পথচলা (Pothchola) — লাইভ ম্যাপ ও এআই নির্দেশনা
+                    পথচলা (Pothchola) — লাইভ ম্যাপ ও এআই নির্দেশনা
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Pothchola — Live Leaflet Map + Gemini AI Audio Guidance
@@ -1671,7 +2132,7 @@ export default function DemoPage() {
                   onMouseEnter={() => speakTouch("একদম সোজা সামনে চলুন")}
                   className="demo-quick-btn primary"
                 >
-                  🧭 সোজা সামনে চলুন
+                  সোজা সামনে চলুন
                 </button>
                 <button
                   type="button"
@@ -1680,7 +2141,7 @@ export default function DemoPage() {
                   onMouseEnter={() => speakTouch("সামান্য ডান ঘেঁষে এগিয়ে চলুন")}
                   className="demo-quick-btn"
                 >
-                  🧭 সামান্য ডান ঘেঁষে চলুন
+                  সামান্য ডান ঘেঁষে চলুন
                 </button>
                 <button
                   type="button"
@@ -1689,7 +2150,7 @@ export default function DemoPage() {
                   onMouseEnter={() => speakTouch("সামান্য বাঁ ঘেঁষে এগিয়ে চলুন")}
                   className="demo-quick-btn"
                 >
-                  🧭 সামান্য বাঁ ঘেঁষে চলুন
+                  সামান্য বাঁ ঘেঁষে চলুন
                 </button>
               </div>
 
@@ -1701,7 +2162,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                🚶‍♂️ সম্পূর্ণ পথচলা প্যানেল খুলুন
+                সম্পূর্ণ পথচলা প্যানেল খুলুন
               </button>
             </article>
 
@@ -1710,7 +2171,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>🤖</span> দৃষ্টি সহকারী (Visual Q&A)
+                    দৃষ্টি সহকারী (Visual Q&A)
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Multimodal Vision Reasoning Assistant
@@ -1740,7 +2201,7 @@ export default function DemoPage() {
                   }
                   className="demo-quick-btn primary"
                 >
-                  💊 ওষুধের সেবনবিধি টেস্ট
+                  ওষুধের সেবনবিধি টেস্ট
                 </button>
                 <button
                   type="button"
@@ -1752,7 +2213,7 @@ export default function DemoPage() {
                   }
                   className="demo-quick-btn"
                 >
-                  🚪 পথের বাধা টেস্ট
+                   পথের বাধা টেস্ট
                 </button>
               </div>
 
@@ -1765,7 +2226,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                🤖 লাইভ ভিশন প্রশ্নোত্তর শুরু করুন
+                লাইভ ভিশন প্রশ্নোত্তর শুরু করুন
               </button>
             </article>
 
@@ -1774,7 +2235,7 @@ export default function DemoPage() {
               <div className="demo-card-header">
                 <div>
                   <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span>🚨</span> ফল ডিটেকশন ও ইমার্জেন্সি অ্যালার্ম
+                    ফল ডিটেকশন ও ইমার্জেন্সি অ্যালার্ম
                   </h3>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                     Fall Detection, Countdown & Loud Siren
@@ -1799,7 +2260,7 @@ export default function DemoPage() {
                   onClick={handleTriggerFallDemo}
                   className="demo-quick-btn danger"
                 >
-                  ⚠️ পতন অ্যালার্ট টেস্ট চালান
+                  পতন অ্যালার্ট টেস্ট চালান
                 </button>
                 <button
                   type="button"
@@ -1810,7 +2271,7 @@ export default function DemoPage() {
                   }}
                   className="demo-quick-btn success"
                 >
-                  ✅ &quot;হ্যাঁ, ঠিক আছি&quot;
+                  &quot;হ্যাঁ, ঠিক আছি&quot;
                 </button>
                 <button
                   type="button"
@@ -1820,7 +2281,7 @@ export default function DemoPage() {
                   }}
                   className="demo-quick-btn danger"
                 >
-                  🆘 &quot;না, সাহায্য চাই&quot;
+                  &quot;না, সাহায্য চাই&quot;
                 </button>
               </div>
 
@@ -1830,7 +2291,7 @@ export default function DemoPage() {
                 className="action-button variant-action"
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
-                🚨 সম্পূর্ণ সেফটি প্যানেল খুলুন
+                সম্পূর্ণ সেফটি প্যানেল খুলুন
               </button>
             </article>
           </div>
@@ -1881,7 +2342,7 @@ export default function DemoPage() {
               className="action-button variant-primary"
               style={{ minHeight: "48px", padding: "0.5rem 1.5rem", fontWeight: 700 }}
             >
-              {isSpeakingActive ? "🔊 বাজছে..." : "🔊 উচ্চারণ করুন"}
+              {isSpeakingActive ? "বাজছে..." : "উচ্চারণ করুন"}
             </button>
             <button
               type="button"
@@ -1892,7 +2353,7 @@ export default function DemoPage() {
               className="action-button variant-danger"
               style={{ minHeight: "48px", padding: "0.5rem 1.25rem", fontWeight: 700 }}
             >
-              ⏹ থামুন
+              থামুন
             </button>
           </div>
 
