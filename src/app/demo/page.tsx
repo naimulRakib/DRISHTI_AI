@@ -1542,45 +1542,11 @@ export default function DemoPage() {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
-              <h2 id="live-map-section-heading" style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: "#38bdf8" }}>
-                লাইভ জিপিএস নেভিগেশন ও রোড ম্যাপ
-              </h2>
-              <span
-                style={{
-                  background: "rgba(16, 185, 129, 0.15)",
-                  color: "#34d399",
-                  border: "1px solid #059669",
-                  borderRadius: "4px",
-                  padding: "2px 8px",
-                  fontSize: "0.72rem",
-                  fontWeight: 800,
-                  letterSpacing: "0.5px",
-                }}
-              >
-                ১০০% অফলাইন ডামি সিস্টেম
-              </span>
-            </div>
-            <p style={{ margin: "0.3rem 0 0", fontSize: "0.82rem", color: "#94a3b8" }}>
-              সম্পূর্ণ স্বয়ংক্রিয় সিমুলেটেড রুট — কোনো গুগল ম্যাপস এপিআই কী ছাড়াই রিয়েল-টাইম টার্ন-বাই-টার্ন ট্র্যাকিং ও স্প্লিট ভিউ
-            </p>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span
-              style={{
-                fontSize: "0.72rem",
-                color: "#38bdf8",
-                background: "rgba(2, 132, 199, 0.15)",
-                border: "1px solid #0284c7",
-                padding: "3px 8px",
-                borderRadius: "4px",
-                fontWeight: 700,
-              }}
-            >
-              নো গুগল ম্যাপস এপিআই কী রিকোয়ার্ড
-            </span>
+          <h2 id="live-map-section-heading" style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: "#38bdf8" }}>
+            লাইভ নেভিগেশন ম্যাপ
+          </h2>
+          <div style={{ fontSize: "0.8rem", color: "#94a3b8" }}>
+            তোপখানা রোড → আয়েশা মেডিকেল হল (ঢাকা)
           </div>
         </div>
 
