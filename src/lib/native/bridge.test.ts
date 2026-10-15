@@ -49,18 +49,18 @@ describe('Drishti Kotlin Bridge & Compass Calculations', () => {
     expect(calculateBearing(0, 1, 0, 0)).toBe(270);
   });
 
-  it('translates heading and bearing differences into Bengali clock face directions', () => {
-    // Facing North (0°), Destination is North (0°) -> 12 o'clock straight
-    expect(calculateClockDirection(0, 0)).toContain('১২টার দিকে সোজা চলুন');
+  it('translates heading and bearing differences into natural Bengali directions', () => {
+    // Facing North (0°), Destination is North (0°) -> straight ahead
+    expect(calculateClockDirection(0, 0)).toBe('একদম সোজা সামনে চলুন');
 
-    // Facing North (0°), Destination is East (90°) -> 3 o'clock right
-    expect(calculateClockDirection(0, 90)).toContain('৩টার দিকে ডানপাশে ঘুরুন');
+    // Facing North (0°), Destination is East (90°) -> turn right
+    expect(calculateClockDirection(0, 90)).toBe('ডান দিকে ঘুরে চলুন');
 
-    // Facing North (0°), Destination is West (270°) -> 9 o'clock left
-    expect(calculateClockDirection(0, 270)).toContain('৯টার দিকে বামপাশে ঘুরুন');
+    // Facing North (0°), Destination is West (270°) -> turn left
+    expect(calculateClockDirection(0, 270)).toBe('বাঁ দিকে ঘুরে চলুন');
 
-    // Facing North (0°), Destination is South (180°) -> 6 o'clock full behind
-    expect(calculateClockDirection(0, 180)).toContain('৬টার দিকে সম্পূর্ণ পেছনে ঘুরুন');
+    // Facing North (0°), Destination is South (180°) -> turn behind
+    expect(calculateClockDirection(0, 180)).toBe('সম্পূর্ণ পেছনে ঘুরুন');
   });
 
   it('detects native Kotlin bridge when window.DrishtiBridge is present', () => {
@@ -99,7 +99,7 @@ describe('Drishti Kotlin Bridge & Compass Calculations', () => {
       destLng: 90.4020,
       destName: 'ফার্মেসি',
       distanceMeters: 65,
-      clockDirection: '১২টার দিকে সোজা চলুন',
+      clockDirection: 'একদম সোজা সামনে চলুন',
       accuracy: 3.5,
     };
 

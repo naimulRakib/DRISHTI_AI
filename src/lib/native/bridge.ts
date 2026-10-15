@@ -94,35 +94,29 @@ export function calculateClockDirection(currentHeading: number, targetBearing: n
   let clockHour = (12 + hoursOffset) % 12;
   if (clockHour === 0) clockHour = 12;
 
-  const bengaliDigits: Record<number, string> = {
-    1: "১", 2: "২", 3: "৩", 4: "৪", 5: "৫", 6: "৬",
-    7: "৭", 8: "৮", 9: "৯", 10: "১০", 11: "১১", 12: "১২"
-  };
-
-  const bnHour = bengaliDigits[clockHour] || `${clockHour}`;
   switch (clockHour) {
     case 12:
-      return "১২টার দিকে সোজা চলুন";
+      return "একদম সোজা সামনে চলুন";
     case 1:
     case 2:
-      return `${bnHour}টার দিকে সামান্য ডানে এগোন`;
+      return "সামান্য ডান ঘেঁষে এগিয়ে চলুন";
     case 3:
-      return "৩টার দিকে ডানপাশে ঘুরুন";
+      return "ডান দিকে ঘুরে চলুন";
     case 4:
     case 5:
-      return `${bnHour}টার দিকে পেছন-ডানে ঘুরুন`;
+      return "ডান দিক দিয়ে পেছনে ঘুরুন";
     case 6:
-      return "৬টার দিকে সম্পূর্ণ পেছনে ঘুরুন";
+      return "সম্পূর্ণ পেছনে ঘুরুন";
     case 7:
     case 8:
-      return `${bnHour}টার দিকে পেছন-বাঁয়ে ঘুরুন`;
+      return "বাঁ দিক দিয়ে পেছনে ঘুরুন";
     case 9:
-      return "৯টার দিকে বামপাশে ঘুরুন";
+      return "বাঁ দিকে ঘুরে চলুন";
     case 10:
     case 11:
-      return `${bnHour}টার দিকে সামান্য বাঁয়ে এগোন`;
+      return "সামান্য বাঁ ঘেঁষে এগিয়ে চলুন";
     default:
-      return "সোজা চলুন";
+      return "একদম সোজা সামনে চলুন";
   }
 }
 

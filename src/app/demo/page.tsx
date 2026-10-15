@@ -1068,28 +1068,28 @@ export default function DemoPage() {
               <div className="demo-metric-box">
                 <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>সিমুলেটেড বাধা:</span>
                 <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--accent-cyan)" }}>
-                  চেয়ার (১২টা, ১.২মি) | মানুষ (১০টা, ২.১মি)
+                  চেয়ার (সোজা সামনে, ১.২মি) | মানুষ (সামান্য বাঁয়ে, ২.১মি)
                 </span>
               </div>
 
               <div className="demo-btn-group">
                 <button
                   type="button"
-                  onClick={() => handlePingTest(-1.0, 1.2, "বাম পাশ (১০টা)")}
+                  onClick={() => handlePingTest(-1.0, 1.2, "বাম দিক")}
                   className="demo-quick-btn"
                 >
                   🎧 বাম কান
                 </button>
                 <button
                   type="button"
-                  onClick={() => handlePingTest(0.0, 0.8, "সামনে ১২টা")}
+                  onClick={() => handlePingTest(0.0, 0.8, "সোজা সামনে")}
                   className="demo-quick-btn"
                 >
-                  🔊 সামনে ১২টা
+                  🔊 সোজা সামনে
                 </button>
                 <button
                   type="button"
-                  onClick={() => handlePingTest(1.0, 1.5, "ডান পাশ (২টা)")}
+                  onClick={() => handlePingTest(1.0, 1.5, "ডান দিক")}
                   className="demo-quick-btn"
                 >
                   🎧 ডান কান
@@ -1380,30 +1380,30 @@ export default function DemoPage() {
               <div className="demo-btn-group">
                 <button
                   type="button"
-                  onClick={() => handleNavDirectionTest(12, "১২টার দিকে সোজা চলুন")}
-                  onTouchStart={() => speakTouch("১২টার দিকে সোজা চলুন")}
-                  onMouseEnter={() => speakTouch("১২টার দিকে সোজা চলুন")}
+                  onClick={() => handleNavDirectionTest(12, "একদম সোজা সামনে চলুন")}
+                  onTouchStart={() => speakTouch("একদম সোজা সামনে চলুন")}
+                  onMouseEnter={() => speakTouch("একদম সোজা সামনে চলুন")}
                   className="demo-quick-btn primary"
                 >
-                  🧭 ১২টা সোজা চলুন
+                  🧭 সোজা সামনে চলুন
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleNavDirectionTest(2, "২টার দিকে সামান্য ডানে এগোন")}
-                  onTouchStart={() => speakTouch("২টায় ডানে মোড়")}
-                  onMouseEnter={() => speakTouch("২টায় ডানে মোড়")}
+                  onClick={() => handleNavDirectionTest(2, "সামান্য ডান ঘেঁষে এগিয়ে চলুন")}
+                  onTouchStart={() => speakTouch("সামান্য ডান ঘেঁষে এগিয়ে চলুন")}
+                  onMouseEnter={() => speakTouch("সামান্য ডান ঘেঁষে এগিয়ে চলুন")}
                   className="demo-quick-btn"
                 >
-                  🧭 ২টায় ডানে মোড়
+                  🧭 সামান্য ডান ঘেঁষে চলুন
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleNavDirectionTest(10, "১০টার দিকে সামান্য বাঁয়ে এগোন")}
-                  onTouchStart={() => speakTouch("১০টায় বাঁয়ে মোড়")}
-                  onMouseEnter={() => speakTouch("১০টায় বাঁয়ে মোড়")}
+                  onClick={() => handleNavDirectionTest(10, "সামান্য বাঁ ঘেঁষে এগিয়ে চলুন")}
+                  onTouchStart={() => speakTouch("সামান্য বাঁ ঘেঁষে এগিয়ে চলুন")}
+                  onMouseEnter={() => speakTouch("সামান্য বাঁ ঘেঁষে এগিয়ে চলুন")}
                   className="demo-quick-btn"
                 >
-                  🧭 ১০টায় বাঁয়ে মোড়
+                  🧭 সামান্য বাঁ ঘেঁষে চলুন
                 </button>
               </div>
 

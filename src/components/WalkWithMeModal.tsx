@@ -249,7 +249,7 @@ export default function WalkWithMeModal({ isOpen, onClose }: WalkWithMeModalProp
       const destName = selectedPreset.nameBn;
       const distance = navData ? Math.round(navData.distanceMeters) : 45;
       const steps = navData ? Math.round(navData.distanceMeters * 1.3) : 60;
-      const clockDir = navData?.clockDirection || "১২টার দিকে সোজা চলুন";
+      const clockDir = navData?.clockDirection || "একদম সোজা সামনে চলুন";
 
       const apiKey =
         (typeof window !== "undefined" && localStorage.getItem("drishti.gemini_api_key.v1")) ||
@@ -265,7 +265,7 @@ Distance: ${distance} meters (${steps} steps).
 Direction: ${clockDir}.
 Camera obstacles detected in front: ${obstacleText || "সামনে কোনো বাধা নেই, পথ পরিষ্কার"}.
 
-Respond with exactly ONE concise, spoken sentence in polite natural Bengali giving direct, safe step-by-step walking guidance (e.g., 'সোজা ২০ কদম এগিয়ে চলুন, বামে একটি চেয়ার রয়েছে তাই সামান্য ডানদিক ঘেঁষে হাঁটুন।'). Do NOT use markdown asterisks or quotes.`;
+Respond with exactly ONE concise, spoken sentence in polite natural Bengali giving direct, safe step-by-step walking guidance (e.g., 'একদম সোজা ২০ কদম এগিয়ে চলুন, বামে একটি চেয়ার রয়েছে তাই সামান্য ডানদিক ঘেঁষে হাঁটুন।'). Do NOT use clock numbers like ১২টা or ৩টা. Use pure, natural Bengali directional phrases like 'সোজা সামনে চলুন', 'সামান্য ডান ঘেঁষে চলুন', 'বাঁয়ে ঘুরুন', 'ডানে ঘুরুন'. Do NOT use markdown asterisks or quotes.`;
 
           const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -630,7 +630,7 @@ Respond with exactly ONE concise, spoken sentence in polite natural Bengali givi
           <div>
             <span style={{ fontSize: "11px", color: "#94A3B8", display: "block" }}>দিকনির্দেশনা</span>
             <strong style={{ fontSize: "15px", color: "#F8FAFC" }}>
-              {navData?.clockDirection || "১২টার দিকে সোজা"}
+              {navData?.clockDirection || "একদম সোজা সামনে"}
             </strong>
           </div>
           <div>
