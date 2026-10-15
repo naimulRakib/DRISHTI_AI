@@ -37,7 +37,7 @@ import SafetyPanel from "@/components/SafetyPanel";
 import CameraPanel from "@/components/CameraPanel";
 import ProximityPanel from "@/components/ProximityPanel";
 import SettingsPanel from "@/components/SettingsPanel";
-import UberNavigationMap from "@/components/UberNavigationMap";
+import LiveNavigationMap from "@/components/LiveNavigationMap";
 
 interface ChecklistItem {
   id: string;
@@ -957,42 +957,148 @@ export default function DemoPage() {
         </div>
 
         {/* Live Video / Vision Screen with Overlaid Bounding Boxes */}
-        {activeStudioFeed === "walk" ? (
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              borderRadius: "10px",
-              overflow: "hidden",
-              backgroundColor: "#020617",
-              border: "1px solid #1e293b",
-            }}
-          >
-            <UberNavigationMap
-              initialAutoPlay={true}
-              onGuidanceChange={(g) => announceAction(g, false)}
-              height="440px"
-              showCameraToggle={true}
-              videoSrc="/demo/dhaka_walk_live.mp4"
-            />
-          </div>
-        ) : (
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              borderRadius: "10px",
-              overflow: "hidden",
-              backgroundColor: "#020617",
-              border: "1px solid #1e293b",
-              aspectRatio: "16 / 9",
-              maxHeight: "440px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {activeStudioFeed === "hazard" && (
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            borderRadius: "10px",
+            overflow: "hidden",
+            backgroundColor: "#020617",
+            border: "1px solid #1e293b",
+            aspectRatio: "16 / 9",
+            maxHeight: "440px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {activeStudioFeed === "walk" && (
+            <>
+              <video
+                src="/demo/dhaka_walk_live.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(15, 23, 42, 0.88)",
+                  border: "1px solid #0284c7",
+                  borderRadius: "4px",
+                  padding: "3px 8px",
+                  fontSize: "0.75rem",
+                  color: "#38bdf8",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                LIVE ROAD AI VISION
+              </div>
+
+              {/* Bounding box: Pharmacy destination */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "16%",
+                  left: "12%",
+                  width: "36%",
+                  height: "28%",
+                  border: "2px solid #38bdf8",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 12px rgba(56, 189, 248, 0.7)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-22px",
+                    left: 0,
+                    background: "#0369a1",
+                    color: "#f0fdf4",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [গন্তব্য: আয়েশা মেডিকেল হল (৪০মি সোজা)]
+                </span>
+              </div>
+
+              {/* Bounding box: Safe sidewalk */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "12%",
+                  left: "24%",
+                  width: "52%",
+                  height: "36%",
+                  border: "2px dashed #10b981",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 12px rgba(16, 185, 129, 0.5)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-20px",
+                    left: 0,
+                    background: "#064e3b",
+                    color: "#a7f3d0",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [নিরাপদ ফুটপাত: পথ পরিষ্কার]
+                </span>
+              </div>
+
+              {/* Bounding box: Rickshaw */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "34%",
+                  right: "12%",
+                  width: "24%",
+                  height: "44%",
+                  border: "2px solid #f59e0b",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 10px rgba(245, 158, 11, 0.6)",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-20px",
+                    left: 0,
+                    background: "#78350f",
+                    color: "#fde68a",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  [রিকশা: ডানপাশে সড়কে]
+                </span>
+              </div>
+            </>
+          )}
+
+          {activeStudioFeed === "hazard" && (
             <>
               <video
                 src="/demo/dhaka_hazard_live.mp4"
@@ -1311,7 +1417,6 @@ export default function DemoPage() {
             </div>
           )}
         </div>
-        )}
 
         {/* Minimal AI Spoken Guidance Bar */}
         <div
@@ -1419,6 +1524,74 @@ export default function DemoPage() {
             </button>
           </div>
         </div>
+      </section>
+
+      {/* ======================================================== */}
+      {/* SEPARATE DEDICATED PART: LIVE GPS & ROAD MAP SIMULATOR   */}
+      {/* ======================================================== */}
+      <section
+        aria-labelledby="live-map-section-heading"
+        style={{
+          background: "rgba(10, 15, 29, 0.95)",
+          border: "1px solid #0284c7",
+          borderRadius: "12px",
+          padding: "1.1rem 1.25rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.85rem",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+              <h2 id="live-map-section-heading" style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: "#38bdf8" }}>
+                লাইভ জিপিএস নেভিগেশন ও রোড ম্যাপ
+              </h2>
+              <span
+                style={{
+                  background: "rgba(16, 185, 129, 0.15)",
+                  color: "#34d399",
+                  border: "1px solid #059669",
+                  borderRadius: "4px",
+                  padding: "2px 8px",
+                  fontSize: "0.72rem",
+                  fontWeight: 800,
+                  letterSpacing: "0.5px",
+                }}
+              >
+                ১০০% অফলাইন ডামি সিস্টেম
+              </span>
+            </div>
+            <p style={{ margin: "0.3rem 0 0", fontSize: "0.82rem", color: "#94a3b8" }}>
+              সম্পূর্ণ স্বয়ংক্রিয় সিমুলেটেড রুট — কোনো গুগল ম্যাপস এপিআই কী ছাড়াই রিয়েল-টাইম টার্ন-বাই-টার্ন ট্র্যাকিং ও স্প্লিট ভিউ
+            </p>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span
+              style={{
+                fontSize: "0.72rem",
+                color: "#38bdf8",
+                background: "rgba(2, 132, 199, 0.15)",
+                border: "1px solid #0284c7",
+                padding: "3px 8px",
+                borderRadius: "4px",
+                fontWeight: 700,
+              }}
+            >
+              নো গুগল ম্যাপস এপিআই কী রিকোয়ার্ড
+            </span>
+          </div>
+        </div>
+
+        {/* Live Navigation Map Component (Zero API Key, Dummy Offline Simulation) */}
+        <LiveNavigationMap
+          initialAutoPlay={true}
+          onGuidanceChange={(g) => announceAction(g, false)}
+          height="420px"
+          showCameraToggle={true}
+          videoSrc="/demo/dhaka_walk_live.mp4"
+        />
       </section>
 
       {/* Navigation Tab Bar */}

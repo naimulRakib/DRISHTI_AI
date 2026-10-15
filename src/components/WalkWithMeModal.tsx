@@ -14,7 +14,7 @@ import { detectObjects } from "@/lib/tools/objects";
 import { speak, speakTouch } from "@/lib/tools/speech";
 import { toBengaliDigits } from "@/lib/storage/geofenceStore";
 import { convertSourceToBase64 } from "@/lib/tools/visualQa";
-import UberNavigationMap from "./UberNavigationMap";
+import LiveNavigationMap from "./LiveNavigationMap";
 
 interface WalkWithMeModalProps {
   isOpen: boolean;
@@ -811,9 +811,9 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
           </p>
         </div>
 
-        {/* Uber-Style Live Location & Turn-by-Turn Map Container */}
+        {/* Live Location & Turn-by-Turn Map Container (Offline Dummy Simulation) */}
         <div style={{ marginBottom: "16px" }}>
-          <UberNavigationMap
+          <LiveNavigationMap
             initialAutoPlay={isRoadDemoActive}
             onGuidanceChange={(g) => setAiGuidanceBn(g)}
             height="260px"

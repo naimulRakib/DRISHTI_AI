@@ -62,15 +62,17 @@ export async function POST(req: NextRequest) {
       "";
 
     if (!apiKey) {
-      addTrace("AUTH", "কোনো Gemini API Key পাওয়া যায়নি, অফলাইন ইঞ্জিনে সুইচ করা হচ্ছে", "warn");
+      addTrace("OFFLINE_ENGINE", "অফলাইন ডামি এআই ও রুট ইঞ্জিন সক্রিয় (নো এপিআই কী রিকোয়ার্ড)", "success");
       const fallback = `${direction} প্রায় ${distanceMeters} মিটার বা ${steps} কদম এগিয়ে চলুন। সামনে পথ পরিষ্কার।`;
+      const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${destLat},${destLng}&travelmode=walking`;
       return NextResponse.json({
-        success: false,
-        source: "local-rule-engine",
+        success: true,
+        source: "drishti-offline-simulated-engine",
         guidanceBn: fallback,
+        street: currentStreet || "তোপখানা রোড, ঢাকা",
+        googleMapsUrl,
         traceLog,
         latencyMs: Date.now() - startTime,
-        error: "API key missing",
       });
     }
 
