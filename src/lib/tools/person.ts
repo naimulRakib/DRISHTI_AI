@@ -171,8 +171,12 @@ export function formatPersonRecognitionBengali(
   if (match) {
     const { person, similarity } = match;
     const relationPhrase = person.relationBn ? ` (${person.relationBn})` : "";
+    const messageBn =
+      person.name === "ফাহিম"
+        ? "সে হচ্ছে ফাহিম, আপনার বন্ধু।"
+        : `আপনার সামনে ${person.name}${relationPhrase} দাঁড়িয়ে আছেন।`;
     return {
-      messageBn: `আপনার সামনে ${person.name}${relationPhrase} দাঁড়িয়ে আছেন।`,
+      messageBn,
       detail: `Identified: ${person.name} with similarity ${(similarity * 100).toFixed(1)}%`,
       confidence: Math.min(Math.max(similarity, 0.5), 0.99),
     };

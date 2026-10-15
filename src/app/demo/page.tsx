@@ -690,7 +690,7 @@ export default function DemoPage() {
   // 8. Fall Detection Tests
   const handleTriggerFallDemo = () => {
     triggerFallSimulation();
-    announceAction("পতন সনাক্ত হয়েছে! ১০ সেকেন্ড কাউন্টডাউন ও সাইরেন অ্যালার্ম চালু হয়েছে...", true);
+    announceAction("পতন সনাক্ত হয়েছে! আপনি কি ঠিক আছেন?", true);
     setIsSafetyOpen(true);
   };
 
@@ -1520,11 +1520,21 @@ export default function DemoPage() {
                   onClick={() => {
                     cancelFallAlert();
                     stopSpeaking();
-                    announceAction("ফল অ্যালার্ম বাতিল করা হয়েছে।", true);
+                    announceAction("পতন সতর্কতা বাতিল করা হয়েছে। আপনি নিরাপদ আছেন।", true);
                   }}
-                  className="demo-quick-btn"
+                  className="demo-quick-btn success"
                 >
-                  🛑 অ্যালার্ম বাতিল করুন
+                  ✅ &quot;হ্যাঁ, ঠিক আছি&quot;
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    stopSpeaking();
+                    announceAction("জরুরি অ্যালার্ট ও লাইভ লোকেশন কেয়ারগিভারকে পাঠানো হচ্ছে!", true);
+                  }}
+                  className="demo-quick-btn danger"
+                >
+                  🆘 &quot;না, সাহায্য চাই&quot;
                 </button>
               </div>
 

@@ -78,11 +78,11 @@ export const DEFAULT_SEED_MEMBERS: PersonProfile[] = [
     enrolledAt: 1710000001000,
   },
   {
-    id: "member-3",
-    name: "ডা. তানভীর",
-    relationBn: "পারিবারিক চিকিৎসক",
-    vector: generateSeedVector(303),
-    enrolledAt: 1710000002000,
+    id: "member-fahim",
+    name: "ফাহিম",
+    relationBn: "আপনার বন্ধু",
+    vector: generateSeedVector(404),
+    enrolledAt: 1710000003000,
   },
 ];
 

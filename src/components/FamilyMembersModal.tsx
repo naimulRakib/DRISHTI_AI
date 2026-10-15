@@ -76,12 +76,28 @@ export default function FamilyMembersModal({
     }
   }, []);
 
-  // Cleanup hardware on unmount
+  // Auto-start live test scanner when modal opens for frictionless demo
   useEffect(() => {
-    return () => {
+    if (isOpen) {
+      startTestScanner();
+    } else {
       stopHardwareStreams();
-    };
-  }, [stopHardwareStreams]);
+      setIsEnrollCameraActive(false);
+      setIsTestScannerActive(false);
+    }
+  }, [isOpen, stopHardwareStreams]);
+
+  const handleSimulateMemberRecognition = (memberName: string, relationBn: string) => {
+    let msg = "";
+    if (memberName === "ফাহিম") {
+      msg = "সে হচ্ছে ফাহিম, আপনার বন্ধু।";
+    } else {
+      msg = `তিনি হচ্ছেন ${memberName}, ${relationBn}।`;
+    }
+    setLastRecognitionResult(msg);
+    setFeedback(msg);
+    speak(msg);
+  };
 
   const handleClose = () => {
     stopHardwareStreams();
@@ -623,6 +639,63 @@ export default function FamilyMembersModal({
                 </div>
               </div>
             )}
+
+            {/* Quick Demo Simulator Buttons */}
+            <div style={{ marginTop: "0.6rem", marginBottom: "0.8rem" }}>
+              <span style={{ fontSize: "0.75rem", color: "#94a3b8", display: "block", marginBottom: "0.3rem" }}>
+                দ্রুত ডেমো ও রেকর্ডিং টেস্ট বাটন:
+              </span>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.4rem" }}>
+                <button
+                  type="button"
+                  onClick={() => handleSimulateMemberRecognition("ফাহিম", "আপনার বন্ধু")}
+                  style={{
+                    backgroundColor: "#1e3a8a",
+                    color: "#bfdbfe",
+                    border: "1px solid #3b82f6",
+                    borderRadius: "0.4rem",
+                    padding: "0.5rem 0.2rem",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  👤 ফাহিম (বন্ধু)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSimulateMemberRecognition("আমেনা বেগম", "মা")}
+                  style={{
+                    backgroundColor: "#065f46",
+                    color: "#a7f3d0",
+                    border: "1px solid #10b981",
+                    borderRadius: "0.4rem",
+                    padding: "0.5rem 0.2rem",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  👤 আমেনা বেগম
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSimulateMemberRecognition("রহিম", "ছোট ভাই")}
+                  style={{
+                    backgroundColor: "#4c1d95",
+                    color: "#e9d5ff",
+                    border: "1px solid #8b5cf6",
+                    borderRadius: "0.4rem",
+                    padding: "0.5rem 0.2rem",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  👤 রহিম (ভাই)
+                </button>
+              </div>
+            </div>
 
             {/* Last Recognition Result Banner */}
             {lastRecognitionResult && (

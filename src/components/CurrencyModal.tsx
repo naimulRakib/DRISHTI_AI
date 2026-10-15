@@ -6,6 +6,8 @@ import {
   getWalletTotal,
   clearWallet,
   removeBillFromWallet,
+  addBillToWallet,
+  DENOMINATION_NAMES_BN,
   formatBengaliNumber,
   ScannedBill,
 } from "@/lib/storage/walletStore";
@@ -111,6 +113,27 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
       setIsScanning(false);
     }
   };
+
+  const handleQuickNote = (denom: number) => {
+    const result = addBillToWallet(denom);
+    setBills(getWalletBills());
+    setTotalTaka(result.totalTaka);
+    const denomBn = DENOMINATION_NAMES_BN[denom] || `${denom} টাকা`;
+    const msg = `চিহ্নিত হয়েছে ${denomBn}র নোট। মোট জমা হয়েছে: ${formatBengaliNumber(result.totalTaka)} টাকা।`;
+    setStatusFeedback(msg);
+    speak(msg);
+  };
+
+  // Auto-scan after camera opens for frictionless demo
+  useEffect(() => {
+    if (!isOpen) return;
+    const timer = setTimeout(() => {
+      if (videoRef.current && videoRef.current.readyState >= 2) {
+        handleScanNow();
+      }
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, [isOpen]);
 
   const handleSpeakTotal = () => {
     const totalBn = formatBengaliNumber(totalTaka);
@@ -319,6 +342,63 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
               >
                 নোটটি এখানে রাখুন
               </span>
+            </div>
+          </div>
+
+          {/* Quick Banknote Simulator for Demo & Hands-free testing */}
+          <div style={{ marginBottom: "1rem" }}>
+            <span style={{ fontSize: "0.8rem", color: "#94a3b8", display: "block", marginBottom: "0.4rem" }}>
+              নোট সিমুলেশন বাটন (দ্রুত টেস্ট ও ডেমো রেকর্ডিং):
+            </span>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+              <button
+                type="button"
+                onClick={() => handleQuickNote(10)}
+                style={{
+                  backgroundColor: "#065f46",
+                  color: "#a7f3d0",
+                  border: "1px solid #10b981",
+                  borderRadius: "0.5rem",
+                  padding: "0.5rem",
+                  fontSize: "0.9rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                💵 ১০ টাকা
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickNote(100)}
+                style={{
+                  backgroundColor: "#1e3a8a",
+                  color: "#bfdbfe",
+                  border: "1px solid #3b82f6",
+                  borderRadius: "0.5rem",
+                  padding: "0.5rem",
+                  fontSize: "0.9rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                💵 ১০০ টাকা
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickNote(500)}
+                style={{
+                  backgroundColor: "#701a75",
+                  color: "#fbcfe8",
+                  border: "1px solid #ec4899",
+                  borderRadius: "0.5rem",
+                  padding: "0.5rem",
+                  fontSize: "0.9rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                💵 ৫০০ টাকা
+              </button>
             </div>
           </div>
 

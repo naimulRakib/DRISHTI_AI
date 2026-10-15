@@ -127,21 +127,41 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
 
     if (!hasSpokenRef.current[DEFAULT_COUNTDOWN_SECONDS]) {
       hasSpokenRef.current[DEFAULT_COUNTDOWN_SECONDS] = true;
-      speak("পতন সনাক্তকরণের সতর্কতা। বাতিল করতে বাতিল বোতাম চাপুন।");
+      speak("পতন সনাক্ত হয়েছে! আপনি কি ঠিক আছেন?");
     }
 
-    // Voice cancel listener
+    // Voice response listener: "হ্যাঁ" (safe) or "না" (emergency)
     if (isSpeechRecognitionSupported()) {
       startListening({
         onResult: (transcript) => {
           const lower = transcript.toLowerCase();
+          // User says YES / I'm okay -> Cancel
           if (
+            lower.includes("হ্যাঁ") ||
+            lower.includes("হ্যা") ||
+            lower.includes("হাঁ") ||
+            lower.includes("yes") ||
+            lower.includes("ঠিক আছি") ||
+            lower.includes("ভালো আছি") ||
             lower.includes("বাতিল") ||
             lower.includes("থামো") ||
             lower.includes("থামুন") ||
             lower.includes("cancel")
           ) {
             handleCancel();
+          } else if (
+            lower.includes("না") ||
+            lower.includes("no") ||
+            lower.includes("না ঠিক নেই") ||
+            lower.includes("সাহায্য") ||
+            lower.includes("জরুরি") ||
+            lower.includes("help")
+          ) {
+            // User says NO / Help -> Immediately trigger emergency
+            stopListening();
+            stopSpeaking();
+            dispatch({ type: "TIMEOUT" });
+            speak("জরুরি অ্যালার্ট ও লাইভ লোকেশন কেয়ারগিভারকে পাঠানো হচ্ছে!");
           }
         },
         onError: () => {},
@@ -361,12 +381,47 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
             <div className="countdown-number" aria-label={`কাউন্টডাউন ${context.countdownSeconds} সেকেন্ড`}>
               {context.countdownSeconds}
             </div>
-            <p style={{ fontSize: "1.05rem", fontWeight: 700, color: "#ffffff" }}>
-              বাতিল করতে বড় লাল বোতামটি চাপুন অথবা মুখে &quot;বাতিল&quot; বলুন।
-            </p>
-            <p style={{ fontSize: "0.85rem", color: "#fef08a" }}>
-              কাউন্টডাউন শেষ হলে স্বয়ংক্রিয়ভাবে {activeContactText} নম্বরে জরুরি কল ও জিপিএস এসএমএস যাবে।
-            </p>
+            {/* Voice Response Simulator Buttons for Easy Demo */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", width: "100%", marginBottom: "0.75rem" }}>
+              <button
+                type="button"
+                onClick={handleCancel}
+                style={{
+                  background: "#059669",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  fontWeight: 800,
+                  fontSize: "0.95rem",
+                  cursor: "pointer",
+                }}
+              >
+                ✅ &quot;হ্যাঁ, ঠিক আছি&quot; (Safe)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stopListening();
+                  stopSpeaking();
+                  dispatch({ type: "TIMEOUT" });
+                  speak("জরুরি অ্যালার্ট ও লাইভ লোকেশন কেয়ারগিভারকে পাঠানো হচ্ছে!");
+                }}
+                style={{
+                  background: "#b91c1c",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  fontWeight: 800,
+                  fontSize: "0.95rem",
+                  cursor: "pointer",
+                }}
+              >
+                🆘 &quot;না, সাহায্য চাই&quot; (SOS)
+              </button>
+            </div>
+
             <button
               ref={cancelBtnRef}
               type="button"

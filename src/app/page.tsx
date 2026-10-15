@@ -158,26 +158,32 @@ export default function Home() {
 
     if (matchedTool === "safetyTest") {
       setIsSafetyOpen(true);
+      return;
     }
 
     if (matchedTool === "readProximity") {
       setIsProximityOpen(true);
+      return;
     }
 
     if (matchedTool === "walkWithMe") {
       setIsWalkOpen(true);
+      return;
     }
 
     if (matchedTool === "readCurrency") {
       setIsCurrencyOpen(true);
+      return;
     }
 
     if (matchedTool === "checkSafeZone") {
       setIsGeofenceOpen(true);
+      return;
     }
 
     if (matchedTool === "echolocationRadar") {
       setIsRadarOpen(true);
+      return;
     }
 
     const tool = toolRegistry[matchedTool];
