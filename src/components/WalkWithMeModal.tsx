@@ -14,6 +14,7 @@ import { detectObjects } from "@/lib/tools/objects";
 import { speak, speakTouch } from "@/lib/tools/speech";
 import { toBengaliDigits } from "@/lib/storage/geofenceStore";
 import { convertSourceToBase64 } from "@/lib/tools/visualQa";
+import UberNavigationMap from "./UberNavigationMap";
 
 interface WalkWithMeModalProps {
   isOpen: boolean;
@@ -810,27 +811,13 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
           </p>
         </div>
 
-        {/* Leaflet Live Location Map Container */}
+        {/* Uber-Style Live Location & Turn-by-Turn Map Container */}
         <div style={{ marginBottom: "16px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 600, color: "#CBD5E1" }}>
-              লাইভ ম্যাপ ও রুট ট্র্যাকিং (Leaflet):
-            </span>
-            <span style={{ fontSize: "11px", color: "#94A3B8" }}>
-              {nativeActive ? "কেইন ব্রিজ সক্রিয়" : "ব্রাউজার জিপিএস"} • {currentStreet}
-            </span>
-          </div>
-          <div
-            id="pothchola-map"
-            ref={mapContainerRef}
-            style={{
-              width: "100%",
-              height: "190px",
-              borderRadius: "12px",
-              border: "2px solid #334155",
-              overflow: "hidden",
-              background: "#020617",
-            }}
+          <UberNavigationMap
+            initialAutoPlay={isRoadDemoActive}
+            onGuidanceChange={(g) => setAiGuidanceBn(g)}
+            height="260px"
+            showCameraToggle={true}
           />
         </div>
 
