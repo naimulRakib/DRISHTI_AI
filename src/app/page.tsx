@@ -47,6 +47,7 @@ export default function Home() {
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const [isGeofenceOpen, setIsGeofenceOpen] = useState(false);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
+  const [showOptionalFeatures, setShowOptionalFeatures] = useState(false);
   const [commandText, setCommandText] = useState("");
   const [micState, setMicState] = useState<MicState>("idle");
   const [speechState, setSpeechState] = useState<SpeechStatusState>({
@@ -429,33 +430,41 @@ export default function Home() {
         />
       </nav>
 
-      {/* Main Action Grid */}
-      <section aria-labelledby="main-actions-heading">
-        <h2 id="main-actions-heading" className="sr-only">
-          প্রধান সুবিধাসমূহ
-        </h2>
-        <div className="button-grid">
-          {/* Understand Surroundings */}
+      {/* 1. Core 4 AI Features (প্রধান ৪টি মূল এআই ফিচার) */}
+      <section aria-labelledby="main-actions-heading" style={{ marginBottom: "1.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.85rem", flexWrap: "wrap", gap: "0.5rem" }}>
+          <h2 id="main-actions-heading" style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--accent-cyan)", display: "flex", alignItems: "center", gap: "0.5rem", margin: 0 }}>
+            <span>🌟</span> প্রধান ৪টি এআই ফিচার
+          </h2>
+          <span style={{ fontSize: "0.78rem", color: "var(--text-muted)", background: "rgba(56, 189, 248, 0.1)", padding: "3px 10px", borderRadius: "999px", border: "1px solid rgba(56, 189, 248, 0.25)" }}>
+            🛡️ লোকাল-ফার্স্ট ও সেফটি-ফার্স্ট
+          </span>
+        </div>
+
+        <div className="button-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+          {/* 1. Pothchola (পথচলা - Live Leaflet Map + Camera Vision + Gemini Guidance) */}
+          <ActionButton
+            icon="🚶‍♂️"
+            label="পথচলা"
+            subLabel="লাইভ ম্যাপ ও এআই দৃষ্টি সহচর"
+            status={toolRegistry.walkWithMe.status}
+            onClick={() => handleExecuteTool("walkWithMe")}
+            variant="action"
+            touchPronounceText="পথচলা, লাইভ ম্যাপ ও এআই দৃষ্টি সহচর বোতাম"
+          />
+
+          {/* 2. Object Detection (অবজেক্ট ডিটেকশন - On-device MediaPipe AI) */}
           <ActionButton
             icon="👁️"
-            label="চারপাশ বুঝুন"
-            subLabel="সামনের পরিবেশ পর্যবেক্ষণ"
+            label="অবজেক্ট ডিটেকশন"
+            subLabel="সামনে বাধা ও চারপাশ সনাক্তকরণ"
             status={toolRegistry.describeSurroundings.status}
             onClick={() => handleExecuteTool("describeSurroundings")}
             variant="action"
+            touchPronounceText="অবজেক্ট ডিটেকশন, সামনে বাধা ও চারপাশ সনাক্তকরণ বোতাম"
           />
 
-          {/* Read Text */}
-          <ActionButton
-            icon="📖"
-            label="লেখা পড়ুন"
-            subLabel="কাগজ বা সাইনবোর্ডের লেখা"
-            status={toolRegistry.readText.status}
-            onClick={() => handleExecuteTool("readText")}
-            variant="action"
-          />
-
-          {/* Recognize Person (পরিচিত মুখ চেনা) */}
+          {/* 3. Familiar Face Recognition (পরিচিত মুখ চেনা - On-device ArcFace Similarity) */}
           <ActionButton
             icon="👤"
             label="পরিচিত মুখ"
@@ -463,88 +472,141 @@ export default function Home() {
             status={toolRegistry.recognizePerson.status}
             onClick={() => handleExecuteTool("recognizePerson")}
             variant="action"
+            touchPronounceText="পরিচিত মুখ, পরিবার ও কেয়ারগিভার সনাক্তকরণ বোতাম"
           />
 
-          {/* Visual Q&A (দৃষ্টি সহকারী - Multimodal Assistant) */}
-          <ActionButton
-            icon="🤖"
-            label="দৃষ্টি সহকারী"
-            subLabel="ওষুধ, টাকা ও দৃশ্যপটের প্রশ্নোত্তর"
-            status={toolRegistry.askVision.status}
-            onClick={() => handleExecuteTool("askVision")}
-            variant="action"
-          />
-
-          {/* Bangladeshi Currency Reader & Total Counter (টাকা চেনা ও গণনা) */}
-          <ActionButton
-            icon="💵"
-            label="টাকা চেনা"
-            subLabel="নোট চেনা ও মোট টাকা গণনা"
-            status={toolRegistry.readCurrency.status}
-            onClick={() => handleExecuteTool("readCurrency")}
-            variant="action"
-          />
-
-          {/* Safe-Zone & Geofencing Sentinel (নিরাপদ এলাকা ও সেফ জোন) */}
-          <ActionButton
-            icon="🛡️"
-            label="নিরাপদ এলাকা"
-            subLabel="সেফ জোন ও লাইভ ট্র্যাকিং"
-            status={toolRegistry.checkSafeZone.status}
-            onClick={() => handleExecuteTool("checkSafeZone")}
-            variant="action"
-          />
-
-          {/* Spatial Audio Echolocation & 3D Obstacle Radar (ইকো রাডার ও ৩ডি সাউন্ড) */}
-          <ActionButton
-            icon="📡"
-            label="ইকো রাডার"
-            subLabel="৩ডি সাউন্ড ও বাধা সনাক্ত"
-            status={toolRegistry.echolocationRadar.status}
-            onClick={() => handleExecuteTool("echolocationRadar")}
-            variant="action"
-          />
-
-          {/* Safety Test */}
+          {/* 4. Fall Alert & Safety Sentinel (পতন সতর্কতা - Accelerometer Machine & Smart Cane) */}
           <ActionButton
             icon="🚨"
-            label="নিরাপত্তা পরীক্ষা"
-            subLabel="জরুরি অ্যালার্ট ও ফল ডিটেকশন"
+            label="পতন সতর্কতা"
+            subLabel="স্মার্ট ফল সেন্সর ও জরুরি অ্যালার্ট"
             status={toolRegistry.safetyTest.status}
             onClick={() => handleExecuteTool("safetyTest")}
             variant="action"
-          />
-
-          {/* Walk With Me -> Pothchola (পথচলা - Vision + GPS + Gemini Guidance) */}
-          <ActionButton
-            icon="🚶‍♂️"
-            label="পথচলা"
-            subLabel="লাইভ ম্যাপ ও এআই অন্ধ সহচর"
-            status={toolRegistry.walkWithMe.status}
-            onClick={() => handleExecuteTool("walkWithMe")}
-            variant="action"
-          />
-
-          {/* Location */}
-          <ActionButton
-            icon="📍"
-            label="লোকেশন"
-            subLabel="বর্তমান জিপিএস অবস্থান"
-            status={toolRegistry.getLocation.status}
-            onClick={() => handleExecuteTool("getLocation")}
-            variant="action"
-          />
-
-          {/* Proximity Warning (SIMULATION ONLY) */}
-          <ActionButton
-            icon="📏"
-            label="নিকটবর্তী দূরত্ব"
-            subLabel="বাধা পরিমাপ (সিমুলেশন)"
-            status={toolRegistry.readProximity.status}
-            onClick={() => handleExecuteTool("readProximity")}
-            variant="action"
+            touchPronounceText="পতন সতর্কতা, স্মার্ট ফল সেন্সর ও জরুরি অ্যালার্ট বোতাম"
           />
         </div>
+      </section>
+
+      {/* 2. Optional & Advanced Features (ঐচ্ছিক সুবিধাসমূহ) */}
+      <section aria-label="অন্যান্য ঐচ্ছিক সুবিধাসমূহ" style={{ marginBottom: "1.5rem" }}>
+        <button
+          type="button"
+          onClick={() => setShowOptionalFeatures((prev) => !prev)}
+          onTouchStart={() => speakTouch(showOptionalFeatures ? "ঐচ্ছিক সুবিধাসমূহ বন্ধ করুন" : "অন্যান্য ঐচ্ছিক সুবিধাসমূহ খুলুন")}
+          onMouseEnter={() => speakTouch(showOptionalFeatures ? "ঐচ্ছিক সুবিধাসমূহ বন্ধ করুন" : "অন্যান্য ঐচ্ছিক সুবিধাসমূহ খুলুন")}
+          onFocus={() => speakTouch(showOptionalFeatures ? "ঐচ্ছিক সুবিধাসমূহ বন্ধ করুন" : "অন্যান্য ঐচ্ছিক সুবিধাসমূহ খুলুন")}
+          className="action-button variant-secondary"
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0.85rem 1.25rem",
+            borderRadius: "12px",
+            border: "1px solid var(--border-subtle)",
+            background: "rgba(15, 23, 42, 0.65)",
+            cursor: "pointer",
+            marginBottom: showOptionalFeatures ? "1rem" : "0",
+          }}
+          aria-expanded={showOptionalFeatures}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ fontSize: "1.2rem" }}>✨</span>
+            <div style={{ textAlign: "left" }}>
+              <span style={{ fontWeight: 700, fontSize: "0.95rem", display: "block", color: "var(--text-primary)" }}>
+                অন্যান্য ঐচ্ছিক সুবিধাসমূহ (Optional Tools)
+              </span>
+              <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                টাকা চেনা, লেখা পড়া, দৃষ্টি সহকারী, ইকো রাডার, লোকেশন...
+              </span>
+            </div>
+          </div>
+          <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--accent-cyan)", background: "rgba(56, 189, 248, 0.12)", padding: "4px 10px", borderRadius: "8px" }}>
+            {showOptionalFeatures ? "▲ লুকাতে চাপুন" : "▼ দেখতে চাপুন"}
+          </span>
+        </button>
+
+        {showOptionalFeatures && (
+          <div className="button-grid" style={{ marginTop: "1rem" }}>
+            {/* Read Text (বাংলা ও ইংরেজি OCR) */}
+            <ActionButton
+              icon="📖"
+              label="লেখা পড়ুন"
+              subLabel="কাগজ বা সাইনবোর্ডের লেখা"
+              status={toolRegistry.readText.status}
+              onClick={() => handleExecuteTool("readText")}
+              variant="action"
+              touchPronounceText="লেখা পড়ুন, সাইনবোর্ড বা কাগজের লেখা পড়ার বোতাম"
+            />
+
+            {/* Visual Q&A (দৃষ্টি সহকারী - Multimodal Reasoning) */}
+            <ActionButton
+              icon="🤖"
+              label="দৃষ্টি সহকারী"
+              subLabel="ওষুধ, টাকা ও দৃশ্যপটের প্রশ্নোত্তর"
+              status={toolRegistry.askVision.status}
+              onClick={() => handleExecuteTool("askVision")}
+              variant="action"
+              touchPronounceText="দৃষ্টি সহকারী, যেকোনো দৃশ্য বা ওষুধের প্রশ্নোত্তর বোতাম"
+            />
+
+            {/* Bangladeshi Currency Reader (টাকা চেনা ও গণনা) */}
+            <ActionButton
+              icon="💵"
+              label="টাকা চেনা"
+              subLabel="নোট চেনা ও মোট টাকা গণনা"
+              status={toolRegistry.readCurrency.status}
+              onClick={() => handleExecuteTool("readCurrency")}
+              variant="action"
+              touchPronounceText="টাকা চেনা, বাংলাদেশি নোট চেনা ও মোট টাকা গণনার বোতাম"
+            />
+
+            {/* Safe-Zone & Geofencing Sentinel (নিরাপদ এলাকা) */}
+            <ActionButton
+              icon="🛡️"
+              label="নিরাপদ এলাকা"
+              subLabel="সেফ জোন ও লাইভ ট্র্যাকিং"
+              status={toolRegistry.checkSafeZone.status}
+              onClick={() => handleExecuteTool("checkSafeZone")}
+              variant="action"
+              touchPronounceText="নিরাপদ এলাকা, সেফ জোন ও স্বয়ংক্রিয় অ্যালার্ট বোতাম"
+            />
+
+            {/* Spatial Audio Echolocation (ইকো রাডার ও ৩ডি সাউন্ড) */}
+            <ActionButton
+              icon="📡"
+              label="ইকো রাডার"
+              subLabel="৩ডি সাউন্ড ও বাধা সনাক্ত"
+              status={toolRegistry.echolocationRadar.status}
+              onClick={() => handleExecuteTool("echolocationRadar")}
+              variant="action"
+              touchPronounceText="ইকো রাডার, ৩ডি স্পেশিয়াল অডিও দিয়ে বাধা সনাক্তকরণ বোতাম"
+            />
+
+            {/* Location (বর্তমান জিপিএস অবস্থান) */}
+            <ActionButton
+              icon="📍"
+              label="লোকেশন"
+              subLabel="বর্তমান জিপিএস অবস্থান"
+              status={toolRegistry.getLocation.status}
+              onClick={() => handleExecuteTool("getLocation")}
+              variant="action"
+              touchPronounceText="লোকেশন, বর্তমান জিপিএস অবস্থান জানার বোতাম"
+            />
+
+            {/* Proximity Warning (নিকটবর্তী দূরত্ব) */}
+            <ActionButton
+              icon="📏"
+              label="নিকটবর্তী দূরত্ব"
+              subLabel="বাধা পরিমাপ (কেইন সেন্সর)"
+              status={toolRegistry.readProximity.status}
+              onClick={() => handleExecuteTool("readProximity")}
+              variant="action"
+              touchPronounceText="নিকটবর্তী দূরত্ব, স্মার্ট কেইন দূরত্ব সেন্সর বোতাম"
+            />
+          </div>
+        )}
       </section>
 
       {/* Fallback Command Input Form */}

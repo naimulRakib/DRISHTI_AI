@@ -11,7 +11,7 @@ import { describeSurroundings } from "@/lib/tools/objects";
 import { readTextFromImage } from "@/lib/tools/ocr";
 import { askVisualQuestion } from "@/lib/tools/visualQa";
 import { readCurrency } from "@/lib/tools/currency";
-import { speak } from "@/lib/tools/speech";
+import { speak, speakTouch } from "@/lib/tools/speech";
 import { toBengaliDigits } from "@/lib/storage/geofenceStore";
 
 export type CameraAiMode = "objects" | "ocr" | "qa" | "currency";
@@ -580,6 +580,8 @@ export default function CameraPanel({
             <button
               type="button"
               onClick={handleStart}
+              onTouchStart={() => speakTouch("ক্যামেরা চালু করুন বোতাম")}
+              onMouseEnter={() => speakTouch("ক্যামেরা চালু করুন বোতাম")}
               className="camera-action-btn btn-start"
             >
               📷 ক্যামেরা চালু করুন
@@ -588,6 +590,8 @@ export default function CameraPanel({
             <button
               type="button"
               onClick={handleStop}
+              onTouchStart={() => speakTouch("ক্যামেরা বন্ধ করুন বোতাম")}
+              onMouseEnter={() => speakTouch("ক্যামেরা বন্ধ করুন বোতাম")}
               className="camera-action-btn btn-stop"
             >
               ✕ ক্যামেরা বন্ধ করুন
@@ -597,6 +601,8 @@ export default function CameraPanel({
           <button
             type="button"
             onClick={() => runAiAnalysis()}
+            onTouchStart={() => speakTouch("ছবি তুলুন ও এআই সনাক্তকরণ বোতাম")}
+            onMouseEnter={() => speakTouch("ছবি তুলুন ও এআই সনাক্তকরণ বোতাম")}
             disabled={cameraStatus !== "active" || isAnalyzing}
             className="camera-action-btn btn-capture"
             style={{

@@ -10,7 +10,7 @@ import {
   requestDeviceMotionPermission,
   subscribeToDeviceMotion,
 } from "@/lib/safety/fallDetection";
-import { speak, stopSpeaking } from "@/lib/tools/speech";
+import { speak, stopSpeaking, speakTouch } from "@/lib/tools/speech";
 import {
   startListening,
   stopListening,
@@ -329,6 +329,8 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
             <button
               type="button"
               onClick={handleSaveContact}
+              onTouchStart={() => speakTouch("জরুরি যোগাযোগ নম্বর সংরক্ষণ বোতাম")}
+              onMouseEnter={() => speakTouch("জরুরি যোগাযোগ নম্বর সংরক্ষণ বোতাম")}
               style={{
                 padding: "0.6rem 1rem",
                 borderRadius: "0.5rem",
@@ -369,6 +371,8 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
               ref={cancelBtnRef}
               type="button"
               onClick={handleCancel}
+              onTouchStart={() => speakTouch("পতন সতর্কতা ও সাইরেন অ্যালার্ম বাতিল করার বোতাম")}
+              onMouseEnter={() => speakTouch("পতন সতর্কতা ও সাইরেন অ্যালার্ম বাতিল করার বোতাম")}
               className="cancel-emergency-btn"
               aria-label="পতন সতর্কতা বাতিল করতে চাপ দিন"
             >
@@ -464,6 +468,8 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
                   <button
                     type="button"
                     onClick={handleStartMonitoring}
+                    onTouchStart={() => speakTouch("পতন পর্যবেক্ষণ চালু করার বোতাম")}
+                    onMouseEnter={() => speakTouch("পতন পর্যবেক্ষণ চালু করার বোতাম")}
                     className="safety-btn-monitor"
                   >
                     পতন পর্যবেক্ষণ চালু করুন
@@ -472,6 +478,8 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
                   <button
                     type="button"
                     onClick={handleStopMonitoring}
+                    onTouchStart={() => speakTouch("পতন পর্যবেক্ষণ বন্ধ করার বোতাম")}
+                    onMouseEnter={() => speakTouch("পতন পর্যবেক্ষণ বন্ধ করার বোতাম")}
                     className="safety-btn-stop"
                   >
                     পতন পর্যবেক্ষণ বন্ধ করুন
@@ -482,6 +490,8 @@ export default function SafetyPanel({ isOpen, onClose }: SafetyPanelProps) {
               <button
                 type="button"
                 onClick={handleSimulateFall}
+                onTouchStart={() => speakTouch("পতন অনুকরণ ও সাইরেন পরীক্ষা করার বোতাম")}
+                onMouseEnter={() => speakTouch("পতন অনুকরণ ও সাইরেন পরীক্ষা করার বোতাম")}
                 className="safety-btn-simulate"
               >
                 ⚡ পতন অনুকরণ করুন (Simulate Fall & Test Siren)

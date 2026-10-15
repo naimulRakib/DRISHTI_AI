@@ -10,7 +10,7 @@ import {
   generateSeedVector,
 } from "@/lib/storage/personStore";
 import { recognizePerson, extractFaceEmbeddingFromImageData } from "@/lib/tools/person";
-import { speak } from "@/lib/tools/speech";
+import { speak, speakTouch } from "@/lib/tools/speech";
 
 interface FamilyMembersModalProps {
   isOpen: boolean;
@@ -99,6 +99,9 @@ export default function FamilyMembersModal({
     enrollVideoRef.current = node;
     if (node && enrollStreamRef.current) {
       node.srcObject = enrollStreamRef.current;
+      node.onloadedmetadata = () => {
+        node.play().catch((err) => console.warn("Enroll video play warning:", err));
+      };
       node.play().catch((err) => console.warn("Enroll video play warning:", err));
     }
   }, []);
@@ -250,6 +253,9 @@ export default function FamilyMembersModal({
     testVideoRef.current = node;
     if (node && testStreamRef.current) {
       node.srcObject = testStreamRef.current;
+      node.onloadedmetadata = () => {
+        node.play().catch((err) => console.warn("Test video play warning:", err));
+      };
       node.play().catch((err) => console.warn("Test video play warning:", err));
     }
   }, []);
@@ -478,6 +484,8 @@ export default function FamilyMembersModal({
                 <button
                   type="button"
                   onClick={startTestScanner}
+                  onTouchStart={() => speakTouch("লাইভ মুখ সনাক্তকরণ স্ক্যানার চালু করার বোতাম")}
+                  onMouseEnter={() => speakTouch("লাইভ মুখ সনাক্তকরণ স্ক্যানার চালু করার বোতাম")}
                   style={{
                     backgroundColor: "#0284c7",
                     color: "#ffffff",
@@ -498,6 +506,8 @@ export default function FamilyMembersModal({
                 <button
                   type="button"
                   onClick={stopTestScanner}
+                  onTouchStart={() => speakTouch("ক্যামেরা বন্ধ করার বোতাম")}
+                  onMouseEnter={() => speakTouch("ক্যামেরা বন্ধ করার বোতাম")}
                   style={{
                     backgroundColor: "#475569",
                     color: "#ffffff",
@@ -531,6 +541,9 @@ export default function FamilyMembersModal({
                   autoPlay
                   playsInline
                   muted
+                  onLoadedMetadata={(e) => {
+                    e.currentTarget.play().catch(() => {});
+                  }}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -590,6 +603,8 @@ export default function FamilyMembersModal({
                   <button
                     type="button"
                     onClick={handleRecognizeLiveFace}
+                    onTouchStart={() => speakTouch("এখন মুখ চিনুন বোতাম")}
+                    onMouseEnter={() => speakTouch("এখন মুখ চিনুন বোতাম")}
                     disabled={isRecognizing}
                     style={{
                       backgroundColor: "#10b981",
@@ -767,6 +782,9 @@ export default function FamilyMembersModal({
                         autoPlay
                         playsInline
                         muted
+                        onLoadedMetadata={(e) => {
+                          e.currentTarget.play().catch(() => {});
+                        }}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -816,6 +834,8 @@ export default function FamilyMembersModal({
                       <button
                         type="button"
                         onClick={handleCaptureSnapshot}
+                        onTouchStart={() => speakTouch("ছবি তোলার বোতাম")}
+                        onMouseEnter={() => speakTouch("ছবি তোলার বোতাম")}
                         style={{
                           flex: 1,
                           backgroundColor: "#10b981",
@@ -833,6 +853,8 @@ export default function FamilyMembersModal({
                       <button
                         type="button"
                         onClick={stopEnrollCamera}
+                        onTouchStart={() => speakTouch("ক্যামেরা বন্ধ করার বোতাম")}
+                        onMouseEnter={() => speakTouch("ক্যামেরা বন্ধ করার বোতাম")}
                         style={{
                           backgroundColor: "#475569",
                           color: "#fff",
@@ -906,6 +928,8 @@ export default function FamilyMembersModal({
                     <button
                       type="button"
                       onClick={startEnrollCamera}
+                      onTouchStart={() => speakTouch("ক্যামেরা খোলার বোতাম")}
+                      onMouseEnter={() => speakTouch("ক্যামেরা খোলার বোতাম")}
                       style={{
                         backgroundColor: "#0369a1",
                         border: "1px solid #38bdf8",
@@ -925,6 +949,8 @@ export default function FamilyMembersModal({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
+                      onTouchStart={() => speakTouch("ছবি ফাইল আপলোড করার বোতাম")}
+                      onMouseEnter={() => speakTouch("ছবি ফাইল আপলোড করার বোতাম")}
                       style={{
                         backgroundColor: "#1e293b",
                         border: "1px solid #475569",

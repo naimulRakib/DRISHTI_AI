@@ -13,6 +13,7 @@ interface ActionButtonProps {
   ariaLabel?: string;
   disabled?: boolean;
   icon?: string;
+  touchPronounceText?: string;
 }
 
 export default function ActionButton({
@@ -24,6 +25,7 @@ export default function ActionButton({
   ariaLabel,
   disabled = false,
   icon,
+  touchPronounceText: customTouchPronounce,
 }: ActionButtonProps) {
   // Status icon + text representation (never relies on color alone)
   const renderStatusBadge = () => {
@@ -85,7 +87,8 @@ export default function ActionButton({
     );
   };
 
-  const touchPronounceText = subLabel ? `${label}, ${subLabel}` : label;
+  const touchPronounceText =
+    customTouchPronounce || (subLabel ? `${label}, ${subLabel}` : label);
   const computedAriaLabel =
     ariaLabel || (status ? `${label}, স্ট্যাটাস ${status}` : label);
 
