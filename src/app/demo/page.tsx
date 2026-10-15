@@ -66,6 +66,11 @@ export default function DemoPage() {
   const [isProximityOpen, setIsProximityOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  // Scripted Demo Video Showcase Launchers (Road, Hazard, Reshma)
+  const [isDemoRoadLaunch, setIsDemoRoadLaunch] = useState(false);
+  const [isDemoHazardLaunch, setIsDemoHazardLaunch] = useState(false);
+  const [isDemoReshmaLaunch, setIsDemoReshmaLaunch] = useState(false);
+
   // Live state tracking for showcase
   const [walletBills, setWalletBills] = useState<ScannedBill[]>(() => getWalletBills());
   const [walletTotal, setWalletTotal] = useState<number>(() => getWalletTotal());
@@ -777,6 +782,287 @@ export default function DemoPage() {
           </button>
         </section>
       )}
+
+      {/* ======================================================== */}
+      {/* 1-MINUTE VIDEO SHOWCASE STUDIO (SCRIPTED DEMO CONTROLS) */}
+      {/* ======================================================== */}
+      <section
+        aria-labelledby="video-studio-heading"
+        style={{
+          background: "linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)",
+          border: "2px solid #38bdf8",
+          borderRadius: "16px",
+          padding: "1.25rem 1.5rem",
+          boxShadow: "0 15px 35px -10px rgba(56, 189, 248, 0.3)",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <span style={{ fontSize: "1.5rem" }}>🎬</span>
+              <h2 id="video-studio-heading" style={{ margin: 0, fontSize: "1.35rem", fontWeight: 800, color: "#38bdf8" }}>
+                ১-মিনিট ভিডিও প্রেজেন্টেশন ও পিচ ডেমো স্টুডিও
+              </h2>
+            </div>
+            <p style={{ margin: "0.25rem 0 0", fontSize: "0.88rem", color: "#94a3b8" }}>
+              ভিডিও রেকর্ডিংয়ের জন্য প্রস্তুত প্রিবিল্ট এআই সিনারিও — ১-ক্লিকে প্রতিটি ফিচার লাইভ প্রজেক্টে এক্সিকিউট করুন
+            </p>
+          </div>
+          <span
+            style={{
+              background: "rgba(56, 189, 248, 0.15)",
+              color: "#38bdf8",
+              border: "1px solid #38bdf8",
+              borderRadius: "20px",
+              padding: "0.3rem 0.8rem",
+              fontSize: "0.8rem",
+              fontWeight: 800,
+            }}
+          >
+            ⚡ Scripted 1-Click Demos
+          </span>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "0.85rem" }}>
+          {/* Card 1: Walk With Me Demo */}
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid #334155",
+              borderRadius: "12px",
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
+                <span style={{ fontSize: "1.2rem" }}>🚶‍♂️</span>
+                <strong style={{ fontSize: "1rem", color: "#f8fafc" }}>
+                  ১. পথচলা ও ঢাকা সড়ক দৃশ্য
+                </strong>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                আয়েশা মেডিকেল হল সাইনবোর্ড, নিরাপদ ফুটপাত ও রিকশা সনাক্তকরণ সহ লাইভ বাংলা ভয়েস গাইডেন্স।
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsDemoRoadLaunch(true);
+                setIsWalkOpen(true);
+                announceAction("ঢাকা সড়ক দৃশ্য ও আয়েশা মেডিকেল হল অভিমুখে পথচলা ডেমো শুরু হয়েছে।", false);
+              }}
+              className="demo-quick-btn primary"
+              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
+            >
+              ▶️ পথচলা সিনারিও চালু করুন
+            </button>
+          </div>
+
+          {/* Card 2: Road Hazard Demo */}
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid #ef4444",
+              borderRadius: "12px",
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
+                <span style={{ fontSize: "1.2rem" }}>⚠️</span>
+                <strong style={{ fontSize: "1rem", color: "#fca5a5" }}>
+                  ২. ঢাকা রাস্তার গর্ত ও অবজেক্ট
+                </strong>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                ফুটপাতের খোলা গর্ত, ভাঙা ম্যানহোল ও ইট সনাক্তকরণে লাল আয়তাকার বাউন্ডিং বক্স ও তাৎক্ষণিক অডিও সতর্কতা।
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsDemoHazardLaunch(true);
+                setIsCameraOpen(true);
+                announceAction("ঢাকা রোডহ্যাজার্ড ও বিপজ্জনক গর্ত ডিটেকশন ডেমো চালু হচ্ছে।", false);
+              }}
+              className="demo-quick-btn danger"
+              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
+            >
+              ▶️ গর্ত ও হ্যাজার্ড ডিটেকশন চালু
+            </button>
+          </div>
+
+          {/* Card 3: Reshma Face Recognition */}
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid #10b981",
+              borderRadius: "12px",
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
+                <span style={{ fontSize: "1.2rem" }}>👥</span>
+                <strong style={{ fontSize: "1rem", color: "#6ee7b7" }}>
+                  ৩. রেশমার মুখ সনাক্তকরণ
+                </strong>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                ArcFace ফেসিয়াল এমবেডিং দিয়ে মুখ চিহ্নিতকরণ: &quot;ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।&quot;
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsDemoReshmaLaunch(true);
+                setIsFamilyOpen(true);
+                announceAction("রেশমার মুখ সনাক্তকরণ ডেমো চালু হচ্ছে।", false);
+              }}
+              className="demo-quick-btn success"
+              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
+            >
+              ▶️ রেশমার মুখ ডিটেকশন চালু
+            </button>
+          </div>
+
+          {/* Card 4: 10 Taka Note Demo */}
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid #f59e0b",
+              borderRadius: "12px",
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
+                <span style={{ fontSize: "1.2rem" }}>💵</span>
+                <strong style={{ fontSize: "1rem", color: "#fde68a" }}>
+                  ৪. ১০ টাকার নোট সনাক্তকরণ
+                </strong>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                কালার হিস্টোগ্রাম ও টেক্সচার ম্যাচিংয়ে ১০ টাকার বাংলাদেশী নোট স্ক্যান ও ওয়ালেটে সরাসরি যোগ।
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                handleAddDemoNote(10);
+                announceAction("এটি একটি দশ টাকার নোট। ওয়ালেটে যোগ করা হয়েছে।", true);
+              }}
+              className="demo-quick-btn"
+              style={{
+                fontSize: "0.88rem",
+                padding: "0.6rem 0.8rem",
+                width: "100%",
+                justifyContent: "center",
+                backgroundColor: "#78350f",
+                borderColor: "#f59e0b",
+                color: "#fef3c7",
+              }}
+            >
+              ▶️ ১০ টাকা স্ক্যান টেস্ট
+            </button>
+          </div>
+
+          {/* Card 5: 3D Binaural Echolocation Radar */}
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid #8b5cf6",
+              borderRadius: "12px",
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
+                <span style={{ fontSize: "1.2rem" }}>📡</span>
+                <strong style={{ fontSize: "1rem", color: "#c4b5fd" }}>
+                  ৫. ৩ডি অডিও সোনার রাডার
+                </strong>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                ৩৬০° বাইনরাল অডিও সোনার সুইপ — বাম ও ডান কানে দূরত্বের ফ্রিকোয়েন্সি-মডুলেটেড ইকো সাউন্ড।
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleSweepTest}
+              className="demo-quick-btn"
+              style={{
+                fontSize: "0.88rem",
+                padding: "0.6rem 0.8rem",
+                width: "100%",
+                justifyContent: "center",
+                backgroundColor: "#4c1d95",
+                borderColor: "#8b5cf6",
+                color: "#ede9fe",
+              }}
+            >
+              ▶️ ৩৬০° সোনার সুইপ শুনুন
+            </button>
+          </div>
+
+          {/* Card 6: Fall Detection & Emergency Response */}
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid #e11d48",
+              borderRadius: "12px",
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: "0.75rem",
+            }}
+          >
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.25rem" }}>
+                <span style={{ fontSize: "1.2rem" }}>🚨</span>
+                <strong style={{ fontSize: "1rem", color: "#fda4af" }}>
+                  ৬. ফল অ্যালার্ট ও জরুরি সাহায্য
+                </strong>
+              </div>
+              <p style={{ margin: 0, fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.4 }}>
+                পতন সনাক্ত হলে স্বয়ংক্রিয় জিজ্ঞাসা: &quot;আপনি কি ঠিক আছেন?&quot; — হ্যাঁ বললে শান্ত, না বললে কেয়ারগিভারকে এসএমএস।
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                triggerFallSimulation();
+                announceAction("পতন সনাক্তকরণ সিমুলেশন সক্রিয়। জিজ্ঞাসা করা হচ্ছে: আপনি কি ঠিক আছেন?", false);
+              }}
+              className="demo-quick-btn danger"
+              style={{ fontSize: "0.88rem", padding: "0.6rem 0.8rem", width: "100%", justifyContent: "center" }}
+            >
+              ▶️ ফল অ্যালার্ট সিমুলেট করুন
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Navigation Tab Bar */}
       <nav aria-label="ডেমো সেকশন সুইচ করুন" className="demo-tab-bar">
@@ -1693,12 +1979,20 @@ export default function DemoPage() {
 
       <FamilyMembersModal
         isOpen={isFamilyOpen}
-        onClose={() => setIsFamilyOpen(false)}
+        onClose={() => {
+          setIsFamilyOpen(false);
+          setIsDemoReshmaLaunch(false);
+        }}
+        initialReshmaDemo={isDemoReshmaLaunch}
       />
 
       <WalkWithMeModal
         isOpen={isWalkOpen}
-        onClose={() => setIsWalkOpen(false)}
+        onClose={() => {
+          setIsWalkOpen(false);
+          setIsDemoRoadLaunch(false);
+        }}
+        initialRoadDemo={isDemoRoadLaunch}
       />
 
       <SafetyPanel
@@ -1708,7 +2002,11 @@ export default function DemoPage() {
 
       <CameraPanel
         isOpen={isCameraOpen}
-        onClose={() => setIsCameraOpen(false)}
+        onClose={() => {
+          setIsCameraOpen(false);
+          setIsDemoHazardLaunch(false);
+        }}
+        initialHazardDemo={isDemoHazardLaunch}
       />
 
       <ProximityPanel

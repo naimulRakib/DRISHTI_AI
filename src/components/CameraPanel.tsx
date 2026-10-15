@@ -21,6 +21,7 @@ interface CameraPanelProps {
   onClose: () => void;
   onCapture?: (imageData: ImageData) => void;
   initialMode?: CameraAiMode;
+  initialHazardDemo?: boolean;
 }
 
 interface AiAnalysisResult {
@@ -38,6 +39,7 @@ export default function CameraPanel({
   onClose,
   onCapture,
   initialMode = "objects",
+  initialHazardDemo = false,
 }: CameraPanelProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -57,6 +59,29 @@ export default function CameraPanel({
     spokenSummaryBn: string;
     timestamp: number;
   } | null>(null);
+
+  // Scripted Dhaka Road Hazard Demo state (pothole, bricks, rickshaw, pedestrian)
+  const [isHazardDemoActive, setIsHazardDemoActive] = useState<boolean>(false);
+
+  const triggerHazardDemo = useCallback(() => {
+    setIsHazardDemoActive(true);
+    setSelectedMode("objects");
+    const warningMsg =
+      "সাবধান! সামনে মাত্র ৩ কদম দূরে ফুটপাতে একটি বিপজ্জনক খোলা গর্ত ও ভাঙা ম্যানহোল রয়েছে। অবিলম্বে সামান্য বাঁ ঘেঁষে সাবধানে চলুন।";
+    setAiResult({
+      mode: "objects",
+      engineName: "MediaPipe TFLite + দৃষ্টি ঢাকা রোডহ্যাজার্ড স্পেশাল মডেল",
+      sourceBadge: "⚠️ রোডহ্যাজার্ড ও অবজেক্ট অ্যালার্ট",
+      messageBn: warningMsg,
+      confidence: 0.96,
+      detail: "সনাক্তকৃত অবজেক্ট: ১টি বিপজ্জনক খোলা গর্ত/ম্যানহোল (৩ কদম দূরে), ভাঙা ইট, রিকশা ও পথচারী",
+      timestamp: Date.now(),
+    });
+    speak(warningMsg);
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate([200, 100, 200, 100, 400]);
+    }
+  }, []);
 
   // Sync mode with initialMode prop when modal opens without setState in effect
   const [prevProps, setPrevProps] = useState({ initialMode, isOpen });
@@ -139,6 +164,16 @@ export default function CameraPanel({
       return () => clearTimeout(timer);
     }
   }, [isOpen, cameraStatus, handleStart]);
+
+  // Auto-trigger hazard demo if requested
+  useEffect(() => {
+    if (isOpen && initialHazardDemo) {
+      const timer = setTimeout(() => {
+        triggerHazardDemo();
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, initialHazardDemo, triggerHazardDemo]);
 
   const handleClose = () => {
     handleStop();
@@ -315,69 +350,268 @@ export default function CameraPanel({
           </button>
         </div>
 
-        {/* Video Preview Container */}
-        <div className="camera-preview-container" style={{ position: "relative" }}>
-          <video
-            ref={videoRef}
-            muted
-            playsInline
-            autoPlay
-            className={`camera-video ${cameraStatus === "active" ? "video-active" : "video-hidden"}`}
-            aria-label="লাইভ ক্যামেরা প্রিভিউ"
-          />
-          {cameraStatus !== "active" && (
-            <div className="camera-placeholder" aria-hidden="true">
-              <span className="placeholder-icon">📷</span>
-              <p>{statusMessage}</p>
-            </div>
-          )}
+        {/* Mode Selector & Quick Demo Launcher Bar */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+          <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
+            এআই ভিশন প্রসেসিং মোড:
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              if (isHazardDemoActive) {
+                setIsHazardDemoActive(false);
+              } else {
+                triggerHazardDemo();
+              }
+            }}
+            style={{
+              background: isHazardDemoActive ? "linear-gradient(135deg, #b91c1c, #ea580c)" : "#1e293b",
+              color: "#fff",
+              border: `2px solid ${isHazardDemoActive ? "#ef4444" : "#f59e0b"}`,
+              borderRadius: "8px",
+              padding: "0.35rem 0.75rem",
+              fontSize: "0.82rem",
+              fontWeight: 800,
+              cursor: "pointer",
+              boxShadow: isHazardDemoActive ? "0 0 12px rgba(239, 68, 68, 0.6)" : "none",
+            }}
+          >
+            {isHazardDemoActive ? "🎬 রোডহ্যাজার্ড ডেমো সক্রিয় (বন্ধ করুন)" : "🎬 ঢাকা রোডহ্যাজার্ড ও গর্ত ডেমো (Pothole Scene)"}
+          </button>
+        </div>
 
-          {/* Overlay Status Badge */}
-          {cameraStatus === "active" && (
-            <div
-              style={{
-                position: "absolute",
-                top: "12px",
-                left: "12px",
-                background: "rgba(15, 23, 42, 0.85)",
-                border: "1px solid #10b981",
-                borderRadius: "20px",
-                padding: "0.25rem 0.75rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                fontSize: "0.8rem",
-                color: "#6ee7b7",
-                fontWeight: 700,
-              }}
-            >
-              <span className="camera-status-dot dot-active" style={{ width: "8px", height: "8px" }} />
-              লাইভ ক্যামেরা সচল
+        {/* Video Preview Container */}
+        <div className="camera-preview-container" style={{ position: "relative", minHeight: "260px" }}>
+          {isHazardDemoActive ? (
+            <div style={{ position: "relative", width: "100%", height: "100%", minHeight: "280px", overflow: "hidden", borderRadius: "10px" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/demo/dhaka_road_hazard.jpg"
+                alt="ঢাকা রাস্তার গর্ত ও বাধার দৃশ্য"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  maxHeight: "360px",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+
+              {/* Bounding Box 1: Open Pothole / Manhole Hazard (Pulsing Red) */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "54%",
+                  left: "32%",
+                  width: "48%",
+                  height: "36%",
+                  border: "3px solid #ef4444",
+                  boxShadow: "0 0 16px rgba(239, 68, 68, 0.8), inset 0 0 12px rgba(239, 68, 68, 0.4)",
+                  borderRadius: "8px",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-26px",
+                    left: 0,
+                    background: "#ef4444",
+                    color: "#ffffff",
+                    fontSize: "11px",
+                    fontWeight: 800,
+                    padding: "2px 8px",
+                    borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  ⚠️ খোলা গর্ত ও ভাঙা ম্যানহোল (Pothole) - ৯৬%
+                </span>
+              </div>
+
+              {/* Bounding Box 2: Broken Bricks / Rubble (Yellow) */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "74%",
+                  left: "54%",
+                  width: "22%",
+                  height: "18%",
+                  border: "2px solid #eab308",
+                  borderRadius: "6px",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-22px",
+                    left: 0,
+                    background: "#eab308",
+                    color: "#000000",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "1px 6px",
+                    borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  ⚠️ ভাঙা ইট (Bricks) - ৮৯%
+                </span>
+              </div>
+
+              {/* Bounding Box 3: Pedestrian (Cyan) */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "22%",
+                  left: "14%",
+                  width: "18%",
+                  height: "52%",
+                  border: "2px solid #38bdf8",
+                  borderRadius: "6px",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-22px",
+                    left: 0,
+                    background: "#0284c7",
+                    color: "#ffffff",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "1px 6px",
+                    borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  🚶 পথচারী (Pedestrian) - ৯২%
+                </span>
+              </div>
+
+              {/* Bounding Box 4: Rickshaw (Orange) */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "26%",
+                  left: "66%",
+                  width: "26%",
+                  height: "46%",
+                  border: "2px solid #f97316",
+                  borderRadius: "6px",
+                  pointerEvents: "none",
+                }}
+              >
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "-22px",
+                    left: 0,
+                    background: "#ea580c",
+                    color: "#ffffff",
+                    fontSize: "10px",
+                    fontWeight: 800,
+                    padding: "1px 6px",
+                    borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  🛺 রিকশা (Rickshaw) - ৯৫%
+                </span>
+              </div>
+
+              {/* Hazard Banner Tag */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "12px",
+                  background: "rgba(185, 28, 28, 0.9)",
+                  border: "1px solid #ef4444",
+                  borderRadius: "20px",
+                  padding: "0.25rem 0.75rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                  fontSize: "0.8rem",
+                  color: "#fecaca",
+                  fontWeight: 800,
+                }}
+              >
+                <span>🚨</span> বিপদজনক বাধার সনাক্তকরণ (Dhaka Hazard Detector)
+              </div>
             </div>
+          ) : (
+            <>
+              <video
+                ref={videoRef}
+                muted
+                playsInline
+                autoPlay
+                className={`camera-video ${cameraStatus === "active" ? "video-active" : "video-hidden"}`}
+                aria-label="লাইভ ক্যামেরা প্রিভিউ"
+              />
+              {cameraStatus !== "active" && (
+                <div className="camera-placeholder" aria-hidden="true">
+                  <span className="placeholder-icon">📷</span>
+                  <p>{statusMessage}</p>
+                </div>
+              )}
+
+              {/* Overlay Status Badge */}
+              {cameraStatus === "active" && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "12px",
+                    left: "12px",
+                    background: "rgba(15, 23, 42, 0.85)",
+                    border: "1px solid #10b981",
+                    borderRadius: "20px",
+                    padding: "0.25rem 0.75rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
+                    fontSize: "0.8rem",
+                    color: "#6ee7b7",
+                    fontWeight: 700,
+                  }}
+                >
+                  <span className="camera-status-dot dot-active" style={{ width: "8px", height: "8px" }} />
+                  লাইভ ক্যামেরা সচল
+                </div>
+              )}
+            </>
           )}
 
           {/* Active AI Mode Banner */}
-          {cameraStatus === "active" && (
-            <div
-              style={{
-                position: "absolute",
-                top: "12px",
-                right: "12px",
-                background: "rgba(15, 23, 42, 0.85)",
-                border: "1px solid var(--accent-cyan)",
-                borderRadius: "20px",
-                padding: "0.25rem 0.75rem",
-                fontSize: "0.8rem",
-                color: "var(--accent-cyan)",
-                fontWeight: 700,
-              }}
-            >
-              {selectedMode === "objects" && "🔍 অবজেক্ট ডিটেকশন মোড"}
-              {selectedMode === "ocr" && "📖 ওসিআর রিডার মোড"}
-              {selectedMode === "qa" && "🤖 মাল্টিমোডাল এআই মোড"}
-              {selectedMode === "currency" && "💵 টাকা স্ক্যানার মোড"}
-            </div>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              top: "12px",
+              right: "12px",
+              background: "rgba(15, 23, 42, 0.85)",
+              border: "1px solid var(--accent-cyan)",
+              borderRadius: "20px",
+              padding: "0.25rem 0.75rem",
+              fontSize: "0.8rem",
+              color: "var(--accent-cyan)",
+              fontWeight: 700,
+            }}
+          >
+            {isHazardDemoActive
+              ? "⚠️ অবজেক্ট ও গর্ত অ্যালার্ট"
+              : selectedMode === "objects"
+              ? "🔍 অবজেক্ট ডিটেকশন মোড"
+              : selectedMode === "ocr"
+              ? "📖 ওসিআর রিডার মোড"
+              : selectedMode === "qa"
+              ? "🤖 মাল্টিমোডাল এআই মোড"
+              : "💵 টাকা স্ক্যানার মোড"}
+          </div>
         </div>
 
         {/* QA Question Prompt Field (Only shown in QA mode) */}

@@ -18,6 +18,7 @@ import { convertSourceToBase64 } from "@/lib/tools/visualQa";
 interface WalkWithMeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialRoadDemo?: boolean;
 }
 
 interface DestinationPreset {
@@ -47,13 +48,13 @@ export interface AiTelemetry {
 }
 
 const PRESETS: DestinationPreset[] = [
-  { id: "pharmacy", nameBn: "নিকটস্থ ফার্মেসি", nameEn: "Pharmacy", lat: 23.7285, lng: 90.4025 },
+  { id: "pharmacy", nameBn: "নিকটস্থ ফার্মেসি (আয়েশা মেডিকেল)", nameEn: "Pharmacy", lat: 23.7285, lng: 90.4025 },
   { id: "bus_stop", nameBn: "বাস স্টপেজ", nameEn: "Bus Stop", lat: 23.7292, lng: 90.3995 },
   { id: "hospital", nameBn: "হাসপাতাল", nameEn: "Hospital", lat: 23.7310, lng: 90.4030 },
   { id: "home", nameBn: "বাসস্থান (Home)", nameEn: "Home", lat: 23.7270, lng: 90.4010 },
 ];
 
-export default function WalkWithMeModal({ isOpen, onClose }: WalkWithMeModalProps) {
+export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = false }: WalkWithMeModalProps) {
   const [isWalking, setIsWalking] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<DestinationPreset>(PRESETS[0]);
   const [navData, setNavData] = useState<NavTickData | null>(null);
@@ -63,6 +64,9 @@ export default function WalkWithMeModal({ isOpen, onClose }: WalkWithMeModalProp
     "পথচলা সহকারী প্রস্তুত। গন্তব্য নির্বাচন করে 'পথচলা শুরু করুন' বাটনে চাপ দিন।"
   );
   const [isGeneratingGuidance, setIsGeneratingGuidance] = useState(false);
+
+  // Scripted Dhaka Real Road Walk Demo Mode
+  const [isRoadDemoActive, setIsRoadDemoActive] = useState<boolean>(false);
 
   // Live GPS Coords (Defaults to central Dhaka until GPS locks)
   const [userCoords, setUserCoords] = useState<[number, number]>([23.728, 90.401]);
@@ -115,6 +119,41 @@ export default function WalkWithMeModal({ isOpen, onClose }: WalkWithMeModalProp
     };
     setTraceEntries((prev) => [newEntry, ...prev].slice(0, 30));
   }, []);
+
+  // Scripted Road Demo Trigger Handler
+  const triggerRoadDemo = useCallback(() => {
+    setIsRoadDemoActive(true);
+    setIsWalking(true);
+    setSelectedPreset(PRESETS[0]);
+    const demoGuidance =
+      "সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে একদম সোজা ৩০ কদম এগিয়ে চলুন, ডানে সড়কে রিকশা চলাচল রয়েছে।";
+    setAiGuidanceBn(demoGuidance);
+    speak(demoGuidance);
+    setDetectedObstacle(null);
+    appendTrace("VISION_GEMINI", "আয়েশা মেডিকেল হল ফার্মেসি ও ফুটপাত সনাক্ত - নিরাপদ নেভিগেশন প্রম্পট প্রস্তুত", "success");
+    appendTrace("OBSTACLE_CHECK", "ফুটপাত পরিষ্কার; ডানে সড়কে রিকশা চলমান", "info");
+    setNavData({
+      lat: 23.728,
+      lng: 90.401,
+      heading: 0,
+      destLat: PRESETS[0].lat,
+      destLng: PRESETS[0].lng,
+      destName: PRESETS[0].nameBn,
+      clockDirection: "একদম সোজা সামনে",
+      distanceMeters: 40,
+      accuracy: 5,
+    });
+  }, [appendTrace]);
+
+  // Auto-trigger Road Demo when initialRoadDemo prop is true
+  useEffect(() => {
+    if (isOpen && initialRoadDemo) {
+      const timer = setTimeout(() => {
+        triggerRoadDemo();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, initialRoadDemo, triggerRoadDemo]);
 
   // 1. Live Camera Stream for Vision Obstacle Detection & Multimodal Gemini Vision
   useEffect(() => {
@@ -830,67 +869,203 @@ export default function WalkWithMeModal({ isOpen, onClose }: WalkWithMeModalProp
         </div>
 
         {/* Vision Feed & Obstacle Detection Container */}
-        <div
-          style={{
-            position: "relative",
-            background: "#000",
-            borderRadius: "12px",
-            overflow: "hidden",
-            marginBottom: "16px",
-            border: "1px solid #334155",
-            height: "150px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            style={{ width: "100%", height: "150px", objectFit: "cover" }}
-          />
-
-          {/* Overlay Vision Badge */}
-          <div
-            style={{
-              position: "absolute",
-              top: "8px",
-              left: "8px",
-              background: "rgba(15, 23, 42, 0.85)",
-              color: "#38BDF8",
-              padding: "4px 8px",
-              borderRadius: "6px",
-              fontSize: "11px",
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <span>👁️</span> ভিশন বাধা স্ক্যানার (MediaPipe + Gemini Vision)
+        <div style={{ marginBottom: "16px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+            <span style={{ fontSize: "13px", fontWeight: 600, color: "#CBD5E1" }}>
+              👁️ ক্যামেরা ভিশন ও বাধা ডিটেক্টর:
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                if (isRoadDemoActive) {
+                  setIsRoadDemoActive(false);
+                } else {
+                  triggerRoadDemo();
+                }
+              }}
+              style={{
+                background: isRoadDemoActive ? "linear-gradient(135deg, #059669, #0284c7)" : "#1E293B",
+                color: "#FFF",
+                border: `1px solid ${isRoadDemoActive ? "#34D399" : "#38BDF8"}`,
+                borderRadius: "6px",
+                padding: "3px 8px",
+                fontSize: "11px",
+                fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              {isRoadDemoActive ? "🎬 ঢাকা সড়ক ডেমো সক্রিয় (বন্ধ করুন)" : "🎬 ঢাকা সড়ক দৃশ্য ডেমো (Dhaka Walk Scene)"}
+            </button>
           </div>
 
-          {detectedObstacle && (
+          <div
+            style={{
+              position: "relative",
+              background: "#000",
+              borderRadius: "12px",
+              overflow: "hidden",
+              border: "1px solid #334155",
+              minHeight: isRoadDemoActive ? "210px" : "150px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {isRoadDemoActive ? (
+              <div style={{ position: "relative", width: "100%", height: "210px" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/demo/dhaka_walk_scene.jpg"
+                  alt="ঢাকা ফুটপাত ও ফার্মেসি রোড সিনারিও"
+                  style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }}
+                />
+
+                {/* Box 1: Landmark Pharmacy Destination */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "22%",
+                    left: "18%",
+                    width: "28%",
+                    height: "28%",
+                    border: "2px solid #10B981",
+                    borderRadius: "6px",
+                    boxShadow: "0 0 10px rgba(16, 185, 129, 0.7)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-20px",
+                      left: 0,
+                      background: "#064E3B",
+                      color: "#6EE7B7",
+                      fontSize: "10px",
+                      fontWeight: 800,
+                      padding: "1px 5px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                      border: "1px solid #10B981",
+                    }}
+                  >
+                    🏥 [গন্তব্য: আয়েশা মেডিকেল হল (৪০মি সোজা)]
+                  </span>
+                </div>
+
+                {/* Box 2: Safe Sidewalk Walkway */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "54%",
+                    left: "22%",
+                    width: "46%",
+                    height: "40%",
+                    border: "2px dashed #38BDF8",
+                    borderRadius: "6px",
+                    boxShadow: "0 0 10px rgba(56, 189, 248, 0.5)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-18px",
+                      left: 0,
+                      background: "#0369A1",
+                      color: "#E0F2FE",
+                      fontSize: "9px",
+                      fontWeight: 800,
+                      padding: "1px 5px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    ✅ [নিরাপদ ফুটপাত: সামনে পথ পরিষ্কার]
+                  </span>
+                </div>
+
+                {/* Box 3: Rickshaw in road lane */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "30%",
+                    left: "70%",
+                    width: "24%",
+                    height: "44%",
+                    border: "2px solid #F97316",
+                    borderRadius: "6px",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-18px",
+                      left: 0,
+                      background: "#C2410C",
+                      color: "#FFEDD5",
+                      fontSize: "9px",
+                      fontWeight: 800,
+                      padding: "1px 5px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    🛺 [রিকশা: ডানপাশে সড়কে]
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                style={{ width: "100%", height: "150px", objectFit: "cover" }}
+              />
+            )}
+
+            {/* Overlay Vision Badge */}
             <div
               style={{
                 position: "absolute",
-                bottom: "8px",
+                top: "8px",
                 left: "8px",
-                right: "8px",
-                background: "rgba(0, 0, 0, 0.88)",
-                border: "1px solid #F59E0B",
-                color: "#FDE68A",
-                padding: "6px 10px",
-                borderRadius: "8px",
-                fontSize: "12px",
-                fontWeight: 700,
+                background: "rgba(15, 23, 42, 0.85)",
+                color: "#38BDF8",
+                padding: "4px 8px",
+                borderRadius: "6px",
+                fontSize: "11px",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
               }}
             >
-              ⚠️ {detectedObstacle}
+              <span>👁️</span> {isRoadDemoActive ? "ঢাকা সড়ক ভিশন ডেমো (Gemini 2.5 Flash)" : "ভিশন বাধা স্ক্যানার (MediaPipe + Gemini Vision)"}
             </div>
-          )}
+
+            {detectedObstacle && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "8px",
+                  left: "8px",
+                  right: "8px",
+                  background: "rgba(0, 0, 0, 0.88)",
+                  border: "1px solid #F59E0B",
+                  color: "#FDE68A",
+                  padding: "6px 10px",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                }}
+              >
+                ⚠️ {detectedObstacle}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Navigation Telemetry Cards */}

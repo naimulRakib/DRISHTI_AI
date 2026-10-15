@@ -15,6 +15,7 @@ import { speak, speakTouch } from "@/lib/tools/speech";
 interface FamilyMembersModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialReshmaDemo?: boolean;
 }
 
 const RELATION_PRESETS = [
@@ -34,6 +35,7 @@ const RELATION_PRESETS = [
 export default function FamilyMembersModal({
   isOpen,
   onClose,
+  initialReshmaDemo = false,
 }: FamilyMembersModalProps) {
   const [members, setMembers] = useState<PersonProfile[]>(() => getEnrolledPersons());
   const [name, setName] = useState("");
@@ -46,6 +48,9 @@ export default function FamilyMembersModal({
   const [isTestScannerActive, setIsTestScannerActive] = useState(false);
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [lastRecognitionResult, setLastRecognitionResult] = useState<string | null>(null);
+
+  // Scripted Reshma Demo Mode
+  const [isReshmaDemoActive, setIsReshmaDemoActive] = useState(false);
 
   // Enrollment Camera
   const [isEnrollCameraActive, setIsEnrollCameraActive] = useState(false);
@@ -76,20 +81,11 @@ export default function FamilyMembersModal({
     }
   }, []);
 
-  // Auto-start live test scanner when modal opens for frictionless demo
-  useEffect(() => {
-    if (isOpen) {
-      startTestScanner();
-    } else {
-      stopHardwareStreams();
-      setIsEnrollCameraActive(false);
-      setIsTestScannerActive(false);
-    }
-  }, [isOpen, stopHardwareStreams]);
-
-  const handleSimulateMemberRecognition = (memberName: string, relationBn: string) => {
+  const handleSimulateMemberRecognition = useCallback((memberName: string, relationBn: string) => {
     let msg = "";
-    if (memberName === "ফাহিম") {
+    if (memberName === "রেশমা") {
+      msg = "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।";
+    } else if (memberName === "ফাহিম") {
       msg = "সে হচ্ছে ফাহিম, আপনার বন্ধু।";
     } else {
       msg = `তিনি হচ্ছেন ${memberName}, ${relationBn}।`;
@@ -97,7 +93,31 @@ export default function FamilyMembersModal({
     setLastRecognitionResult(msg);
     setFeedback(msg);
     speak(msg);
-  };
+  }, []);
+
+  const triggerReshmaDemo = useCallback(() => {
+    setIsReshmaDemoActive(true);
+    handleSimulateMemberRecognition("রেশমা", "যার সাথে গতকালও আপনার দেখা হয়েছিল");
+  }, [handleSimulateMemberRecognition]);
+
+  // Auto-start live test scanner or Reshma demo when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      if (initialReshmaDemo) {
+        const timer = setTimeout(() => {
+          triggerReshmaDemo();
+        }, 300);
+        return () => clearTimeout(timer);
+      } else {
+        startTestScanner();
+      }
+    } else {
+      stopHardwareStreams();
+      setIsEnrollCameraActive(false);
+      setIsTestScannerActive(false);
+      setIsReshmaDemoActive(false);
+    }
+  }, [isOpen, initialReshmaDemo, stopHardwareStreams, triggerReshmaDemo]);
 
   const handleClose = () => {
     stopHardwareStreams();
@@ -540,8 +560,101 @@ export default function FamilyMembersModal({
               )}
             </div>
 
-            {/* Live Test Camera Viewfinder */}
-            {isTestScannerActive && (
+            {/* Live Test Camera Viewfinder / Scripted Reshma Demo */}
+            {isReshmaDemoActive ? (
+              <div
+                style={{
+                  position: "relative",
+                  borderRadius: "0.5rem",
+                  overflow: "hidden",
+                  backgroundColor: "#000",
+                  height: "230px",
+                  border: "2px solid #10b981",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/demo/reshma_bd_girl.jpg"
+                  alt="রেশমার মুখাবয়ব (Reshma Portrait)"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+
+                {/* Face Tracking Bounding Box */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "14%",
+                    left: "26%",
+                    width: "48%",
+                    height: "66%",
+                    border: "3px solid #10b981",
+                    borderRadius: "8px",
+                    boxShadow: "0 0 18px rgba(16, 185, 129, 0.8), inset 0 0 12px rgba(16, 185, 129, 0.3)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-26px",
+                      left: 0,
+                      background: "#064e3b",
+                      color: "#6ee7b7",
+                      border: "1px solid #10b981",
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    🟢 চেনা মুখ: রেশমা (৯৮% মিল • ArcFace: 0.94)
+                  </span>
+                </div>
+
+                {/* Info Badge */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "10px",
+                    background: "rgba(6, 78, 59, 0.92)",
+                    color: "#a7f3d0",
+                    border: "1px solid #10b981",
+                    borderRadius: "15px",
+                    padding: "3px 10px",
+                    fontSize: "11px",
+                    fontWeight: 700,
+                  }}
+                >
+                  ✓ পরিচয় নিশ্চিত: রেশমা (যার সাথে গতকালও দেখা হয়েছিল)
+                </div>
+
+                {/* Switch back to live button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsReshmaDemoActive(false);
+                    startTestScanner();
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    background: "rgba(15, 23, 42, 0.85)",
+                    border: "1px solid #475569",
+                    color: "#f8fafc",
+                    padding: "3px 8px",
+                    borderRadius: "6px",
+                    fontSize: "11px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ✕ লাইভ ক্যামেরায় ফিরুন
+                </button>
+              </div>
+            ) : isTestScannerActive ? (
               <div
                 style={{
                   position: "relative",
@@ -638,13 +751,32 @@ export default function FamilyMembersModal({
                   </button>
                 </div>
               </div>
-            )}
+            ) : null}
 
             {/* Quick Demo Simulator Buttons */}
             <div style={{ marginTop: "0.6rem", marginBottom: "0.8rem" }}>
-              <span style={{ fontSize: "0.75rem", color: "#94a3b8", display: "block", marginBottom: "0.3rem" }}>
-                দ্রুত ডেমো ও রেকর্ডিং টেস্ট বাটন:
-              </span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+                <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
+                  দ্রুত ডেমো ও রেকর্ডিং টেস্ট বাটন:
+                </span>
+                <button
+                  type="button"
+                  onClick={triggerReshmaDemo}
+                  style={{
+                    backgroundColor: isReshmaDemoActive ? "#047857" : "#0f766e",
+                    color: "#f0fdf4",
+                    border: "2px solid #34d399",
+                    borderRadius: "0.4rem",
+                    padding: "0.3rem 0.65rem",
+                    fontSize: "0.82rem",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    boxShadow: "0 0 10px rgba(52, 211, 153, 0.4)",
+                  }}
+                >
+                  🎬 রেশমা (গতকাল দেখা হওয়া মুখ)
+                </button>
+              </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.4rem" }}>
                 <button
                   type="button"

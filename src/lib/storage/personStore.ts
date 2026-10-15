@@ -84,6 +84,14 @@ export const DEFAULT_SEED_MEMBERS: PersonProfile[] = [
     vector: generateSeedVector(404),
     enrolledAt: 1710000003000,
   },
+  {
+    id: "member-reshma",
+    name: "রেশমা",
+    relationBn: "যার সাথে গতকালও আপনার দেখা হয়েছিল",
+    photoUri: "/demo/reshma_bd_girl.jpg",
+    vector: generateSeedVector(505),
+    enrolledAt: 1710000004000,
+  },
 ];
 
 let inMemoryPersons: PersonProfile[] | null = null;
