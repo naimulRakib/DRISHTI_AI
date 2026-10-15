@@ -449,3 +449,14 @@ export function speakTouch(description: string): void {
     speak(clean);
   }, 100);
 }
+
+/**
+ * Cancel any pending touch pronunciation so that click actions and their voice responses
+ * take priority immediately without being overridden by a hover audio.
+ */
+export function cancelTouchPronounce(): void {
+  if (touchDebounceTimer) {
+    clearTimeout(touchDebounceTimer);
+    touchDebounceTimer = null;
+  }
+}

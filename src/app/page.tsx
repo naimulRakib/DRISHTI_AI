@@ -225,9 +225,27 @@ export default function Home() {
 
   // Direct trigger for registry tool buttons
   const handleExecuteTool = async (toolName: ToolName) => {
+    if (toolName === "walkWithMe") {
+      setIsWalkOpen(true);
+      return;
+    }
+
     if (toolName === "describeSurroundings") {
       setCameraMode("objects");
       setIsCameraOpen(true);
+      return;
+    }
+
+    if (toolName === "recognizePerson") {
+      setIsFamilyOpen(true);
+      const msg = "পরিচিত মুখ ও পরিবার তালিকা চালু হয়েছে। ক্যামেরার সামনে মুখ রাখুন।";
+      setCurrentMessage(msg);
+      speak(msg);
+      return;
+    }
+
+    if (toolName === "safetyTest") {
+      setIsSafetyOpen(true);
       return;
     }
 
@@ -243,28 +261,24 @@ export default function Home() {
       return;
     }
 
-    if (toolName === "safetyTest") {
-      setIsSafetyOpen(true);
-    }
-
-    if (toolName === "readProximity") {
-      setIsProximityOpen(true);
-    }
-
-    if (toolName === "walkWithMe") {
-      setIsWalkOpen(true);
-    }
-
     if (toolName === "readCurrency") {
       setIsCurrencyOpen(true);
+      return;
     }
 
     if (toolName === "checkSafeZone") {
       setIsGeofenceOpen(true);
+      return;
     }
 
     if (toolName === "echolocationRadar") {
       setIsRadarOpen(true);
+      return;
+    }
+
+    if (toolName === "readProximity") {
+      setIsProximityOpen(true);
+      return;
     }
 
     const tool = toolRegistry[toolName];

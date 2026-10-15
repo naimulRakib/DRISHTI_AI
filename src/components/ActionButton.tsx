@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FeatureStatus } from "@/lib/types";
-import { speakTouch } from "@/lib/tools/speech";
+import { speakTouch, cancelTouchPronounce } from "@/lib/tools/speech";
 
 interface ActionButtonProps {
   label: string;
@@ -92,10 +92,15 @@ export default function ActionButton({
   const computedAriaLabel =
     ariaLabel || (status ? `${label}, স্ট্যাটাস ${status}` : label);
 
+  const handleClick = () => {
+    cancelTouchPronounce();
+    onClick();
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       onTouchStart={() => speakTouch(touchPronounceText)}
       onMouseEnter={() => speakTouch(touchPronounceText)}
       onFocus={() => speakTouch(touchPronounceText)}
