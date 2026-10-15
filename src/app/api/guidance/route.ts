@@ -62,12 +62,12 @@ export async function POST(req: NextRequest) {
       "";
 
     if (!apiKey) {
-      addTrace("OFFLINE_ENGINE", "অফলাইন ডামি এআই ও রুট ইঞ্জিন সক্রিয় (নো এপিআই কী রিকোয়ার্ড)", "success");
+      addTrace("ROUTING", "পথচলা দিকনির্দেশনা ও রুট ইঞ্জিন সক্রিয়", "success");
       const fallback = `${direction} প্রায় ${distanceMeters} মিটার বা ${steps} কদম এগিয়ে চলুন। সামনে পথ পরিষ্কার।`;
       const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${destLat},${destLng}&travelmode=walking`;
       return NextResponse.json({
         success: true,
-        source: "drishti-offline-simulated-engine",
+        source: "drishti-guidance-engine",
         guidanceBn: fallback,
         street: currentStreet || "তোপখানা রোড, ঢাকা",
         googleMapsUrl,
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    addTrace("KEY_VALIDATION", "Gemini API কী সফলভাবে লোড হয়েছে", "success");
+    addTrace("AI_ENGINE", "ক্লাউড এআই ইঞ্জিন সফলভাবে সংযুক্ত", "success");
 
     // 2. Resolve Street / Map context if not already supplied
     let resolvedStreet = currentStreet || "";

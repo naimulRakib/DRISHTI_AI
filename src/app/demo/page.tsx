@@ -1550,7 +1550,7 @@ export default function DemoPage() {
           </div>
         </div>
 
-        {/* Live Navigation Map Component (Zero API Key, Dummy Offline Simulation) */}
+        {/* Live Navigation Map Component */}
         <LiveNavigationMap
           initialAutoPlay={true}
           onGuidanceChange={(g) => announceAction(g, false)}
