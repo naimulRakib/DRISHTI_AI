@@ -81,7 +81,11 @@ export default function SettingsPanel({
   const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(null);
   const [geminiApiKey, setGeminiApiKey] = useState<string>(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("drishti.gemini_api_key.v1") || "";
+      return (
+        localStorage.getItem("drishti.gemini_api_key.v1") ||
+        process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
+        ""
+      );
     }
     return "";
   });
