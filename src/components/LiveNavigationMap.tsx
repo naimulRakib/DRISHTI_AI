@@ -168,9 +168,10 @@ export default function LiveNavigationMap({
         attributionControl: false,
       }).setView([initialWp.lat, initialWp.lng], 17);
 
-      // Open, high-contrast CartoDB Voyager tiles (100% free, reliable, no API key)
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        maxZoom: 20,
+      // Standard Free OpenStreetMap Tiles (100% free, open-source, zero watermark, no API key)
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
 
       // Passed route polyline
