@@ -37,7 +37,7 @@ import SafetyPanel from "@/components/SafetyPanel";
 import CameraPanel from "@/components/CameraPanel";
 import ProximityPanel from "@/components/ProximityPanel";
 import SettingsPanel from "@/components/SettingsPanel";
-import LiveNavigationMap from "@/components/LiveNavigationMap";
+import DummyNavigationMap from "@/components/DummyNavigationMap";
 
 interface ChecklistItem {
   id: string;
@@ -1550,13 +1550,11 @@ export default function DemoPage() {
           </div>
         </div>
 
-        {/* Live Navigation Map Component */}
-        <LiveNavigationMap
+        {/* Dummy Image-Based Navigation Map Component */}
+        <DummyNavigationMap
           initialAutoPlay={true}
           onGuidanceChange={(g) => announceAction(g, false)}
           height="420px"
-          showCameraToggle={true}
-          videoSrc="/demo/dhaka_walk_live.mp4"
         />
       </section>
 

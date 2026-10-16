@@ -14,7 +14,7 @@ import { detectObjects } from "@/lib/tools/objects";
 import { speak, speakTouch } from "@/lib/tools/speech";
 import { toBengaliDigits } from "@/lib/storage/geofenceStore";
 import { convertSourceToBase64 } from "@/lib/tools/visualQa";
-import LiveNavigationMap from "./LiveNavigationMap";
+import DummyNavigationMap from "./DummyNavigationMap";
 
 interface WalkWithMeModalProps {
   isOpen: boolean;
@@ -811,13 +811,12 @@ export default function WalkWithMeModal({ isOpen, onClose, initialRoadDemo = fal
           </p>
         </div>
 
-        {/* Live Location & Turn-by-Turn Map Container (Offline Dummy Simulation) */}
+        {/* Dummy Image-Based Navigation Map Container */}
         <div style={{ marginBottom: "16px" }}>
-          <LiveNavigationMap
+          <DummyNavigationMap
             initialAutoPlay={isRoadDemoActive}
             onGuidanceChange={(g) => setAiGuidanceBn(g)}
-            height="260px"
-            showCameraToggle={true}
+            height="280px"
           />
         </div>
 
