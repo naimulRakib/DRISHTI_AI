@@ -1234,6 +1234,25 @@ body {
   border-color: var(--accent-cyan);
 }
 
+@keyframes ocrLaserScan {
+  0% {
+    top: 4%;
+    opacity: 0.9;
+  }
+  50% {
+    top: 94%;
+    opacity: 1;
+  }
+  100% {
+    top: 4%;
+    opacity: 0.9;
+  }
+}
+
+.ocr-scan-laser {
+  animation: ocrLaserScan 3s ease-in-out infinite;
+}
+
 
 
 

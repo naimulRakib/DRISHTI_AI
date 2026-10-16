@@ -218,7 +218,7 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
                 gap: "0.5rem",
               }}
             >
-              <span>💵</span> টাকা চেনা ও গণনা (Currency Reader)
+              টাকা চেনা ও গণনা (Currency Reader)
             </h2>
             <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>
               বাংলাদেশী ব্যাংক নোট সনাক্ত করুন এবং মোট টাকা একসাথে হিসাব রাখুন
@@ -350,7 +350,7 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
             <span style={{ fontSize: "0.8rem", color: "#94a3b8", display: "block", marginBottom: "0.4rem" }}>
               নোট সিমুলেশন বাটন (দ্রুত টেস্ট ও ডেমো রেকর্ডিং):
             </span>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0.5rem" }}>
               <button
                 type="button"
                 onClick={() => handleQuickNote(10)}
@@ -360,12 +360,28 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
                   border: "1px solid #10b981",
                   borderRadius: "0.5rem",
                   padding: "0.5rem",
-                  fontSize: "0.9rem",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
               >
-                💵 ১০ টাকা
+                ১০ টাকা
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickNote(20)}
+                style={{
+                  backgroundColor: "#064e3b",
+                  color: "#6ee7b7",
+                  border: "1px solid #059669",
+                  borderRadius: "0.5rem",
+                  padding: "0.5rem",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                ২০ টাকা
               </button>
               <button
                 type="button"
@@ -376,12 +392,12 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
                   border: "1px solid #3b82f6",
                   borderRadius: "0.5rem",
                   padding: "0.5rem",
-                  fontSize: "0.9rem",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
               >
-                💵 ১০০ টাকা
+                ১০০ টাকা
               </button>
               <button
                 type="button"
@@ -392,12 +408,12 @@ export default function CurrencyModal({ isOpen, onClose }: CurrencyModalProps) {
                   border: "1px solid #ec4899",
                   borderRadius: "0.5rem",
                   padding: "0.5rem",
-                  fontSize: "0.9rem",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                 }}
               >
-                💵 ৫০০ টাকা
+                ৫০০ টাকা
               </button>
             </div>
           </div>

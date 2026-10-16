@@ -50,6 +50,28 @@ interface ChecklistItem {
 
 type DemoTab = "all" | "checklist" | "showcase" | "speech";
 
+const DU_NOTICE_METADATA = {
+  institution: "ঢাকা বিশ্ববিদ্যালয় • UNIVERSITY OF DHAKA",
+  office: "পরীক্ষা নিয়ন্ত্রকের অফিস",
+  memoNo: "স্মারক নং: পনি/নোটিশ/২০২৪/১২৩",
+  date: "১৫ অক্টোবর ২০২৪",
+  subject: "সংবাদ বিজ্ঞপ্তি: স্নাতক ও স্নাতকোত্তর পরীক্ষার সময়সূচী প্রসঙ্গে",
+  body: "এতদ্বারা ঢাকা বিশ্ববিদ্যালয়ের সকল বিভাগের সংশ্লিষ্ট শিক্ষার্থীদের অবগতির জন্য জানানো যাচ্ছে যে, আগামী ২৪ অক্টোবর ২০২৪ তারিখ থেকে শুরু হতে যাওয়া স্নাতক ও স্নাতকোত্তর চূড়ান্ত পরীক্ষার সময়সূচি প্রকাশিত হয়েছে। সকল শিক্ষার্থীকে অনলাইনের মাধ্যমে নিজ নিজ প্রবেশপত্র সংগ্রহ করার জন্য বিশেষভাবে নির্দেশ দেওয়া যাচ্ছে। পরীক্ষা কেন্দ্রে কোনো প্রকার মোবাইল ফোন বা ডিজিটাল ডিভাইস আনা সম্পূর্ণ নিষিদ্ধ।",
+  signatory: "পরীক্ষা নিয়ন্ত্রক, ঢাকা বিশ্ববিদ্যালয়",
+};
+
+const DU_NOTICE_FULL_TEXT = `ঢাকা বিশ্ববিদ্যালয় • UNIVERSITY OF DHAKA
+পরীক্ষা নিয়ন্ত্রকের অফিস
+স্মারক নং: পনি/নোটিশ/২০২৪/১২৩ • তারিখ: ১৫ অক্টোবর ২০২৪
+সংবাদ বিজ্ঞপ্তি: স্নাতক ও স্নাতকোত্তর পরীক্ষার সময়সূচী প্রসঙ্গে
+
+এতদ্বারা ঢাকা বিশ্ববিদ্যালয়ের সকল বিভাগের সংশ্লিষ্ট শিক্ষার্থীদের অবগতির জন্য জানানো যাচ্ছে যে, আগামী ২৪ অক্টোবর ২০২৪ তারিখ থেকে শুরু হতে যাওয়া স্নাতক ও স্নাতকোত্তর চূড়ান্ত পরীক্ষার সময়সূচি প্রকাশিত হয়েছে। সকল শিক্ষার্থীকে অনলাইনের মাধ্যমে নিজ নিজ প্রবেশপত্র সংগ্রহ করার জন্য বিশেষভাবে নির্দেশ দেওয়া যাচ্ছে। পরীক্ষা কেন্দ্রে কোনো প্রকার মোবাইল ফোন বা ডিজিটাল ডিভাইস আনা সম্পূর্ণ নিষিদ্ধ।
+
+— পরীক্ষা নিয়ন্ত্রক, ঢাকা বিশ্ববিদ্যালয়।`;
+
+const DU_NOTICE_SPOKEN =
+  "ঢাকা বিশ্ববিদ্যালয় পরীক্ষা নিয়ন্ত্রকের অফিস। সংবাদ বিজ্ঞপ্তি: স্নাতক ও স্নাতকোত্তর পরীক্ষার সময়সূচী প্রসঙ্গে। এতদ্বারা ঢাকা বিশ্ববিদ্যালয়ের সকল বিভাগের সংশ্লিষ্ট শিক্ষার্থীদের অবগতির জন্য জানানো যাচ্ছে যে, আগামী ২৪ অক্টোবর ২০২৪ তারিখ থেকে শুরু হতে যাওয়া স্নাতক ও স্নাতকোত্তর চূড়ান্ত পরীক্ষার সময়সূচি প্রকাশিত হয়েছে। সকল শিক্ষার্থীকে অনলাইনের মাধ্যমে নিজ নিজ প্রবেশপত্র সংগ্রহ করার জন্য বিশেষভাবে নির্দেশ দেওয়া যাচ্ছে। পরীক্ষা কেন্দ্রে কোনো প্রকার মোবাইল ফোন বা ডিজিটাল ডিভাইস আনা সম্পূর্ণ নিষিদ্ধ। পরীক্ষা নিয়ন্ত্রক, ঢাকা বিশ্ববিদ্যালয়।";
+
 export default function DemoPage() {
   const [activeTab, setActiveTab] = useState<DemoTab>("all");
   const [demoBanner, setDemoBanner] = useState<string | null>(
@@ -71,7 +93,9 @@ export default function DemoPage() {
   const [isDemoRoadLaunch, setIsDemoRoadLaunch] = useState(false);
   const [isDemoHazardLaunch, setIsDemoHazardLaunch] = useState(false);
   const [isDemoReshmaLaunch, setIsDemoReshmaLaunch] = useState(false);
-  const [activeStudioFeed, setActiveStudioFeed] = useState<"walk" | "hazard" | "face" | "currency" | "radar" | "fall">("walk");
+  const [activeStudioFeed, setActiveStudioFeed] = useState<"walk" | "hazard" | "face" | "currency" | "ocr" | "radar" | "fall">("walk");
+  const [demoCurrencyNote, setDemoCurrencyNote] = useState<10 | 20>(10);
+  const [ocrCopied, setOcrCopied] = useState(false);
 
   // Live state tracking for showcase
   const [walletBills, setWalletBills] = useState<ScannedBill[]>(() => getWalletBills());
@@ -896,8 +920,8 @@ export default function DemoPage() {
             type="button"
             onClick={() => {
               setActiveStudioFeed("currency");
-              handleAddDemoNote(10);
-              announceAction("এটি একটি দশ টাকার নোট।", true);
+              const spoken = demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।";
+              announceAction(spoken, true);
             }}
             style={{
               background: activeStudioFeed === "currency" ? "rgba(217, 119, 6, 0.25)" : "#0f172a",
@@ -910,7 +934,28 @@ export default function DemoPage() {
             }}
           >
             <div style={{ fontSize: "0.72rem", color: "#fbbf24", fontWeight: 800 }}>[৪] কারেন্সি রিডার</div>
-            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>১০ টাকার নোট</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>১০৳ ও ২০৳ নোট</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveStudioFeed("ocr");
+              speak(DU_NOTICE_SPOKEN);
+              announceAction("ঢাকা বিশ্ববিদ্যালয় পরীক্ষা নিয়ন্ত্রকের অফিস নোটিশ সনাক্ত হয়েছে। সম্পূর্ণ নোটিশ অডিওতে পাঠ করা হচ্ছে।", true);
+            }}
+            style={{
+              background: activeStudioFeed === "ocr" ? "rgba(14, 165, 233, 0.25)" : "#0f172a",
+              border: `1px solid ${activeStudioFeed === "ocr" ? "#38bdf8" : "#334155"}`,
+              borderRadius: "6px",
+              padding: "0.6rem 0.75rem",
+              color: "#f8fafc",
+              textAlign: "left",
+              cursor: "pointer",
+            }}
+          >
+            <div style={{ fontSize: "0.72rem", color: "#38bdf8", fontWeight: 800 }}>[৫] বাংলা ওসিআর</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>DU নোটিশ রিডার</div>
           </button>
 
           <button
@@ -930,7 +975,7 @@ export default function DemoPage() {
               cursor: "pointer",
             }}
           >
-            <div style={{ fontSize: "0.72rem", color: "#a78bfa", fontWeight: 800 }}>[৫] ৩ডি অডিও রাডার</div>
+            <div style={{ fontSize: "0.72rem", color: "#a78bfa", fontWeight: 800 }}>[৬] ৩ডি অডিও রাডার</div>
             <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>সোনার সুইপ</div>
           </button>
 
@@ -951,7 +996,7 @@ export default function DemoPage() {
               cursor: "pointer",
             }}
           >
-            <div style={{ fontSize: "0.72rem", color: "#fb7185", fontWeight: 800 }}>[৬] ফল অ্যালার্ট</div>
+            <div style={{ fontSize: "0.72rem", color: "#fb7185", fontWeight: 800 }}>[৭] ফল অ্যালার্ট</div>
             <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>পতন সনাক্তকরণ</div>
           </button>
         </div>
@@ -965,8 +1010,8 @@ export default function DemoPage() {
             overflow: "hidden",
             backgroundColor: "#020617",
             border: "1px solid #1e293b",
-            aspectRatio: "16 / 9",
-            maxHeight: "440px",
+            minHeight: "440px",
+            maxHeight: activeStudioFeed === "ocr" ? "560px" : "480px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1256,49 +1301,542 @@ export default function DemoPage() {
               style={{
                 width: "100%",
                 height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "linear-gradient(180deg, #022c22 0%, #064e3b 100%)",
+                display: "grid",
+                gridTemplateColumns: "1.2fr 1fr",
+                gap: "1rem",
+                padding: "1rem",
+                background: "linear-gradient(135deg, #022c22 0%, #064e3b 60%, #021f18 100%)",
                 position: "relative",
+                alignItems: "center",
+                overflowY: "auto",
               }}
             >
+              {/* Header Badges & Note Switcher */}
               <div
                 style={{
                   position: "absolute",
-                  top: "12px",
+                  top: "10px",
                   left: "12px",
-                  background: "rgba(15, 23, 42, 0.88)",
-                  border: "1px solid #fbbf24",
-                  borderRadius: "4px",
-                  padding: "3px 8px",
-                  fontSize: "0.75rem",
-                  color: "#fbbf24",
-                  fontWeight: 800,
-                  letterSpacing: "0.5px",
+                  right: "12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  zIndex: 10,
                 }}
               >
-                CURRENCY CLASSIFIER
+                <div
+                  style={{
+                    background: "rgba(15, 23, 42, 0.9)",
+                    border: "1px solid #10b981",
+                    borderRadius: "4px",
+                    padding: "3px 8px",
+                    fontSize: "0.72rem",
+                    color: "#34d399",
+                    fontWeight: 800,
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  BANGLADESH BANKNOTE CLASSIFIER (AI)
+                </div>
+
+                {/* 10 Tk vs 20 Tk Note Switcher */}
+                <div style={{ display: "flex", gap: "0.4rem" }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDemoCurrencyNote(10);
+                      speak("এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।");
+                      announceAction("এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।", true);
+                    }}
+                    style={{
+                      background: demoCurrencyNote === 10 ? "#059669" : "rgba(15, 23, 42, 0.85)",
+                      color: demoCurrencyNote === 10 ? "#ffffff" : "#a7f3d0",
+                      border: `1px solid ${demoCurrencyNote === 10 ? "#34d399" : "#065f46"}`,
+                      borderRadius: "4px",
+                      padding: "3px 10px",
+                      fontSize: "0.75rem",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    ১০ টাকার নোট
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDemoCurrencyNote(20);
+                      speak("এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।");
+                      announceAction("এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।", true);
+                    }}
+                    style={{
+                      background: demoCurrencyNote === 20 ? "#059669" : "rgba(15, 23, 42, 0.85)",
+                      color: demoCurrencyNote === 20 ? "#ffffff" : "#a7f3d0",
+                      border: `1px solid ${demoCurrencyNote === 20 ? "#34d399" : "#065f46"}`,
+                      borderRadius: "4px",
+                      padding: "3px 10px",
+                      fontSize: "0.75rem",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    ২০ টাকার নোট
+                  </button>
+                </div>
               </div>
+
+              {/* Left Column: Real Banknote Image with Bounding Box Overlay */}
               <div
                 style={{
-                  border: "3px solid #34d399",
-                  borderRadius: "12px",
-                  padding: "1.5rem 2.5rem",
-                  textAlign: "center",
-                  background: "rgba(6, 78, 59, 0.7)",
-                  boxShadow: "0 0 24px rgba(52, 211, 153, 0.5)",
+                  position: "relative",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  border: "1px solid #065f46",
+                  background: "#021a14",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0.5rem",
+                  marginTop: "1.75rem",
+                  height: "calc(100% - 2rem)",
+                  minHeight: "260px",
                 }}
               >
-                <div style={{ fontSize: "1.8rem", fontWeight: 900, color: "#f0fdf4" }}>
-                  ৳ ১০
+                <img
+                  src={demoCurrencyNote === 10 ? "/demo/bd_10_taka_note.jpg" : "/demo/bd_20_taka_note.jpg"}
+                  alt={demoCurrencyNote === 10 ? "বাংলাদেশী ১০ টাকার নোট" : "বাংলাদেশী ২০ টাকার নোট"}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    maxHeight: "280px",
+                    objectFit: "contain",
+                    borderRadius: "6px",
+                  }}
+                />
+
+                {/* Overlaid AI Detection Bounding Box */}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "10px",
+                    border: "2px solid #34d399",
+                    borderRadius: "6px",
+                    boxShadow: "0 0 20px rgba(52, 211, 153, 0.4)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {/* Four Corner Marks */}
+                  <div style={{ position: "absolute", top: "-2px", left: "-2px", width: "16px", height: "16px", borderTop: "4px solid #10b981", borderLeft: "4px solid #10b981" }} />
+                  <div style={{ position: "absolute", top: "-2px", right: "-2px", width: "16px", height: "16px", borderTop: "4px solid #10b981", borderRight: "4px solid #10b981" }} />
+                  <div style={{ position: "absolute", bottom: "-2px", left: "-2px", width: "16px", height: "16px", borderBottom: "4px solid #10b981", borderLeft: "4px solid #10b981" }} />
+                  <div style={{ position: "absolute", bottom: "-2px", right: "-2px", width: "16px", height: "16px", borderBottom: "4px solid #10b981", borderRight: "4px solid #10b981" }} />
+
+                  {/* Label on Bounding Box */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "-12px",
+                      left: "10px",
+                      background: "#064e3b",
+                      border: "1px solid #10b981",
+                      borderRadius: "3px",
+                      padding: "2px 8px",
+                      fontSize: "0.72rem",
+                      color: "#a7f3d0",
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <span>{demoCurrencyNote === 10 ? "বাংলাদেশ ব্যাংক • ১০ টাকা" : "বাংলাদেশ ব্যাংক • ২০ টাকা"}</span>
+                    <span style={{ color: "#34d399" }}>{demoCurrencyNote === 10 ? "৯৯.৪%" : "৯৯.১%"}</span>
+                  </div>
                 </div>
-                <div style={{ fontSize: "0.9rem", color: "#a7f3d0", fontWeight: 700, marginTop: "0.25rem" }}>
-                  বাংলাদেশ ব্যাংক • দশ টাকা
+              </div>
+
+              {/* Right Column: AI Analysis HUD & Controls */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  gap: "0.6rem",
+                  marginTop: "1.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    background: "rgba(6, 78, 59, 0.6)",
+                    border: "1px solid #059669",
+                    borderRadius: "8px",
+                    padding: "0.85rem 1rem",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
+                    <span style={{ fontSize: "2rem", fontWeight: 900, color: "#f0fdf4" }}>
+                      ৳ {toBengaliDigits(demoCurrencyNote)}
+                    </span>
+                    <span style={{ fontSize: "1rem", color: "#a7f3d0", fontWeight: 700 }}>
+                      {demoCurrencyNote === 10 ? "দশ টাকা (Ten Taka)" : "বিশ টাকা (Twenty Taka)"}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "0.75rem", color: "#6ee7b7", marginTop: "0.2rem" }}>
+                    বাংলাদেশ ব্যাংক • অফলাইন মোবাইলনেট ভি৩
+                  </div>
                 </div>
-                <div style={{ fontSize: "0.75rem", color: "#6ee7b7", marginTop: "0.4rem" }}>
-                  কনফিডেন্স: ৯৯.২% • অফলাইন মোবাইলনেট ভি৩
+
+                {/* Feature Specs */}
+                <div
+                  style={{
+                    background: "rgba(15, 23, 42, 0.7)",
+                    border: "1px solid #1e293b",
+                    borderRadius: "6px",
+                    padding: "0.65rem 0.85rem",
+                    fontSize: "0.76rem",
+                    color: "#cbd5e1",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.3rem",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "#94a3b8" }}>স্থাপত্য নিদর্শন: </span>
+                    <strong style={{ color: "#e2e8f0" }}>
+                      {demoCurrencyNote === 10 ? "বায়তুল মোকাররম জাতীয় মসজিদ" : "ষাট গম্বুজ মসজিদ (বাগেরহাট)"}
+                    </strong>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8" }}>নিরাপত্তা বৈশিষ্ট্য: </span>
+                    <strong style={{ color: "#e2e8f0" }}>
+                      {demoCurrencyNote === 10 ? "রয়েল বেঙ্গল টাইগার জলছাপ ও দৃষ্টিহীনদের স্পর্শবিন্দু" : "৪ মিমি অপটিক্যাল সিকিউরিটি থ্রেড ও স্পর্শবিন্দু"}
+                    </strong>
+                  </div>
+                  <div>
+                    <span style={{ color: "#94a3b8" }}>সনাক্তকরণ কনফিডেন্স: </span>
+                    <strong style={{ color: "#34d399" }}>
+                      {demoCurrencyNote === 10 ? "৯৯.৪%" : "৯৯.১%"} (রিয়েল-টাইম এজ ইনফ্যারেন্স)
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const spoken = demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।";
+                      speak(spoken);
+                    }}
+                    style={{
+                      flex: 1,
+                      background: "#065f46",
+                      color: "#a7f3d0",
+                      border: "1px solid #10b981",
+                      borderRadius: "6px",
+                      padding: "0.5rem",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      textAlign: "center",
+                    }}
+                  >
+                    ভয়েস শুনুন
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleAddDemoNote(demoCurrencyNote)}
+                    style={{
+                      flex: 1.2,
+                      background: "#0284c7",
+                      color: "#ffffff",
+                      border: "1px solid #38bdf8",
+                      borderRadius: "6px",
+                      padding: "0.5rem",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      textAlign: "center",
+                    }}
+                  >
+                    ওয়ালেটে যোগ করুন (+ ৳{toBengaliDigits(demoCurrencyNote)})
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeStudioFeed === "ocr" && (
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "grid",
+                gridTemplateColumns: "1.1fr 1.3fr",
+                gap: "1rem",
+                padding: "1rem",
+                background: "linear-gradient(135deg, #0b1329 0%, #020617 100%)",
+                position: "relative",
+                overflowY: "auto",
+              }}
+            >
+              {/* Header Badge */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  left: "12px",
+                  right: "12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  zIndex: 10,
+                }}
+              >
+                <div
+                  style={{
+                    background: "rgba(15, 23, 42, 0.9)",
+                    border: "1px solid #38bdf8",
+                    borderRadius: "4px",
+                    padding: "3px 8px",
+                    fontSize: "0.72rem",
+                    color: "#38bdf8",
+                    fontWeight: 800,
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  BANGLA OCR & DOCUMENT VOICE READER
+                </div>
+
+                <div
+                  style={{
+                    background: "#0c4a6e",
+                    border: "1px solid #0284c7",
+                    borderRadius: "4px",
+                    padding: "2px 8px",
+                    fontSize: "0.72rem",
+                    color: "#bae6fd",
+                    fontWeight: 700,
+                  }}
+                >
+                  ঢাকা বিশ্ববিদ্যালয় অফিসিয়াল নোটিশ
+                </div>
+              </div>
+
+              {/* Left Column: DU Notice Document Image with Animated Laser Scan */}
+              <div
+                style={{
+                  position: "relative",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  border: "1px solid #1e293b",
+                  background: "#030712",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "1.75rem",
+                  height: "calc(100% - 2rem)",
+                  minHeight: "280px",
+                }}
+              >
+                <img
+                  src="/demo/du_official_notice.jpg"
+                  alt="ঢাকা বিশ্ববিদ্যালয় নোটিশ সার্কুলার"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    maxHeight: "340px",
+                    objectFit: "contain",
+                  }}
+                />
+
+                {/* Animated Horizontal Laser Scan Beam */}
+                <div
+                  className="ocr-scan-laser"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    height: "3px",
+                    background: "linear-gradient(90deg, transparent, #38bdf8, #60a5fa, transparent)",
+                    boxShadow: "0 0 14px #38bdf8",
+                    pointerEvents: "none",
+                  }}
+                />
+
+                {/* Highlighted Bounding Box Over Document */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "32%",
+                    left: "8%",
+                    right: "8%",
+                    height: "45%",
+                    border: "2px solid #10b981",
+                    borderRadius: "4px",
+                    background: "rgba(16, 185, 129, 0.08)",
+                    boxShadow: "0 0 12px rgba(16, 185, 129, 0.3)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-12px",
+                      left: "8px",
+                      background: "#065f46",
+                      color: "#a7f3d0",
+                      padding: "1px 6px",
+                      borderRadius: "3px",
+                      fontSize: "0.65rem",
+                      fontWeight: 800,
+                    }}
+                  >
+                    ওসিআর সনাক্তকৃত টেক্সট ব্লক (৯৮.৮%)
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Column: Full Transcription & Voice Controls */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.6rem",
+                  marginTop: "1.75rem",
+                }}
+              >
+                {/* Status Bar */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    fontSize: "0.75rem",
+                    color: "#94a3b8",
+                  }}
+                >
+                  <span style={{ color: "#38bdf8", fontWeight: 700 }}>
+                    TESSERACT.JS BANGLA OCR TRANSCRIPTION
+                  </span>
+                  <span style={{ color: "#34d399", fontWeight: 700 }}>
+                    কনফিডেন্স: ৯৮.৮%
+                  </span>
+                </div>
+
+                {/* Formatted Transcribed Content */}
+                <div
+                  style={{
+                    background: "#090d16",
+                    border: "1px solid #1e293b",
+                    borderRadius: "8px",
+                    padding: "0.85rem",
+                    fontSize: "0.8rem",
+                    lineHeight: "1.55",
+                    color: "#e2e8f0",
+                    maxHeight: "220px",
+                    overflowY: "auto",
+                  }}
+                >
+                  <div style={{ fontWeight: 800, color: "#38bdf8", fontSize: "0.9rem", marginBottom: "0.2rem" }}>
+                    {DU_NOTICE_METADATA.institution}
+                  </div>
+                  <div style={{ fontSize: "0.75rem", color: "#94a3b8", marginBottom: "0.35rem" }}>
+                    {DU_NOTICE_METADATA.office}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "0.72rem",
+                      color: "#a5b4fc",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "0.5rem",
+                      borderBottom: "1px solid #1e293b",
+                      paddingBottom: "0.35rem",
+                    }}
+                  >
+                    <span>{DU_NOTICE_METADATA.memoNo}</span>
+                    <span>তারিখ: {DU_NOTICE_METADATA.date}</span>
+                  </div>
+                  <div style={{ fontWeight: 700, color: "#facc15", marginBottom: "0.35rem" }}>
+                    {DU_NOTICE_METADATA.subject}
+                  </div>
+                  <div style={{ color: "#cbd5e1", textAlign: "justify", marginBottom: "0.5rem" }}>
+                    {DU_NOTICE_METADATA.body}
+                  </div>
+                  <div style={{ fontWeight: 700, color: "#34d399", textAlign: "right" }}>
+                    — {DU_NOTICE_METADATA.signatory}
+                  </div>
+                </div>
+
+                {/* Voiceover Control Buttons */}
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      speak(DU_NOTICE_SPOKEN);
+                      announceAction("ঢাকা বিশ্ববিদ্যালয় নোটিশ সম্পূর্ণ পাঠ অডিওতে শুরু করা হয়েছে।", true);
+                    }}
+                    style={{
+                      flex: 1.5,
+                      background: "#0284c7",
+                      color: "#ffffff",
+                      border: "1px solid #38bdf8",
+                      borderRadius: "6px",
+                      padding: "0.5rem",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      textAlign: "center",
+                    }}
+                  >
+                    সম্পূর্ণ নোটিশ অডিওতে শুনুন
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      stopSpeaking();
+                      announceAction("ভয়েস বন্ধ করা হয়েছে।", true);
+                    }}
+                    style={{
+                      background: "#7f1d1d",
+                      color: "#fecaca",
+                      border: "1px solid #ef4444",
+                      borderRadius: "6px",
+                      padding: "0.5rem 0.85rem",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ভয়েস থামান
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (typeof navigator !== "undefined" && navigator.clipboard) {
+                        navigator.clipboard.writeText(DU_NOTICE_FULL_TEXT);
+                        setOcrCopied(true);
+                        setTimeout(() => setOcrCopied(false), 2000);
+                      }
+                    }}
+                    style={{
+                      background: ocrCopied ? "#065f46" : "#1e293b",
+                      color: ocrCopied ? "#a7f3d0" : "#cbd5e1",
+                      border: `1px solid ${ocrCopied ? "#10b981" : "#334155"}`,
+                      borderRadius: "6px",
+                      padding: "0.5rem 0.75rem",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {ocrCopied ? "কপি হয়েছে" : "টেক্সট কপি"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1451,7 +1989,8 @@ export default function DemoPage() {
               {activeStudioFeed === "walk" && "সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে সোজা এগিয়ে চলুন।"}
               {activeStudioFeed === "hazard" && "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।"}
               {activeStudioFeed === "face" && "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।"}
-              {activeStudioFeed === "currency" && "এটি একটি দশ টাকার নোট।"}
+              {activeStudioFeed === "currency" && (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")}
+              {activeStudioFeed === "ocr" && "ঢাকা বিশ্ববিদ্যালয় নোটিশ: স্নাতক ও স্নাতকোত্তর পরীক্ষার সময়সূচি প্রকাশিত হয়েছে। প্রবেশপত্র সংগ্রহের নির্দেশ।"}
               {activeStudioFeed === "radar" && "সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।"}
               {activeStudioFeed === "fall" && "আপনি কি ঠিক আছেন? সহায়তা প্রয়োজন কি না বলুন।"}
             </span>
@@ -1469,7 +2008,9 @@ export default function DemoPage() {
                     : activeStudioFeed === "face"
                     ? "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।"
                     : activeStudioFeed === "currency"
-                    ? "এটি একটি দশ টাকার নোট।"
+                    ? (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")
+                    : activeStudioFeed === "ocr"
+                    ? DU_NOTICE_SPOKEN
                     : activeStudioFeed === "radar"
                     ? "সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।"
                     : "আপনি কি ঠিক আছেন? সহায়তা প্রয়োজন কি না বলুন।";
@@ -1503,6 +2044,8 @@ export default function DemoPage() {
                   setIsFamilyOpen(true);
                 } else if (activeStudioFeed === "currency") {
                   setIsCurrencyOpen(true);
+                } else if (activeStudioFeed === "ocr") {
+                  speak(DU_NOTICE_SPOKEN);
                 } else if (activeStudioFeed === "radar") {
                   setIsRadarOpen(true);
                 } else {
@@ -1928,6 +2471,20 @@ export default function DemoPage() {
               <div className="demo-btn-group">
                 <button
                   type="button"
+                  onClick={() => handleAddDemoNote(10)}
+                  className="demo-quick-btn success"
+                >
+                  + ৳১০ নোট
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAddDemoNote(20)}
+                  className="demo-quick-btn success"
+                >
+                  + ৳২০ নোট
+                </button>
+                <button
+                  type="button"
                   onClick={() => handleAddDemoNote(100)}
                   className="demo-quick-btn success"
                 >
@@ -2325,6 +2882,67 @@ export default function DemoPage() {
                 style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
               >
                 সম্পূর্ণ সেফটি প্যানেল খুলুন
+              </button>
+            </article>
+
+            {/* Card 9: Bengali OCR & DU Official Notice Voiceover */}
+            <article className="demo-card">
+              <div className="demo-card-header">
+                <div>
+                  <h3 style={{ fontSize: "1.15rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    বাংলা ওসিআর ও নোটিশ রিডার (DU নোটিশ)
+                  </h3>
+                  <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                    On-Device Bengali OCR & Instant Voiceover Reader
+                  </span>
+                </div>
+                <span className="status-badge badge-live">LIVE</span>
+              </div>
+              <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>
+                অফিসিয়াল নোটিশ, প্রেস বিজ্ঞপ্তি বা মুদ্রিত টেক্সট স্বয়ংক্রিয়ভাবে স্ক্যান করে সম্পূর্ণ বাংলা টেক্সট উদ্ধার ও অডিওতে পাঠ।
+              </p>
+
+              <div className="demo-metric-box">
+                <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>সনাক্তকৃত নোটিশ:</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#38bdf8" }}>
+                  ঢাকা বিশ্ববিদ্যালয় পরীক্ষা নিয়ন্ত্রকের অফিস • ১৫ অক্টোবর ২০২৪
+                </span>
+              </div>
+
+              <div className="demo-btn-group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    speak(DU_NOTICE_SPOKEN);
+                    announceAction("ঢাকা বিশ্ববিদ্যালয় নোটিশ সম্পূর্ণ পাঠ অডিওতে শুরু করা হয়েছে।", true);
+                  }}
+                  className="demo-quick-btn primary"
+                >
+                  সম্পূর্ণ নোটিশ অডিওতে শুনুন
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    stopSpeaking();
+                    announceAction("ভয়েস বন্ধ করা হয়েছে।", true);
+                  }}
+                  className="demo-quick-btn danger"
+                >
+                  ভয়েস থামান
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveStudioFeed("ocr");
+                  window.scrollTo({ top: 380, behavior: "smooth" });
+                  speak(DU_NOTICE_SPOKEN);
+                }}
+                className="action-button variant-action"
+                style={{ width: "100%", justifyContent: "center", textAlign: "center" }}
+              >
+                লাইভ ওসিআর স্টুডিওতে দেখুন ও শুনুন
               </button>
             </article>
           </div>
