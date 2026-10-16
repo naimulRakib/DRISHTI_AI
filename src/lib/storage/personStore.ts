@@ -92,6 +92,22 @@ export const DEFAULT_SEED_MEMBERS: PersonProfile[] = [
     vector: generateSeedVector(505),
     enrolledAt: 1710000004000,
   },
+  {
+    id: "member-naimul",
+    name: "নাইমুল",
+    relationBn: "আপনার বন্ধু",
+    photoUri: "/demo/naimul.jpg",
+    vector: generateSeedVector(606),
+    enrolledAt: 1710000005000,
+  },
+  {
+    id: "member-nil",
+    name: "নীল",
+    relationBn: "আপনার বন্ধু",
+    photoUri: "/demo/nil.jpg",
+    vector: generateSeedVector(707),
+    enrolledAt: 1710000006000,
+  },
 ];
 
 let inMemoryPersons: PersonProfile[] | null = null;

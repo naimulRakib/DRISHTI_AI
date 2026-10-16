@@ -96,6 +96,7 @@ export default function DemoPage() {
   const [activeStudioFeed, setActiveStudioFeed] = useState<"walk" | "hazard" | "face" | "currency" | "ocr" | "radar" | "fall">("walk");
   const [demoCurrencyNote, setDemoCurrencyNote] = useState<10 | 20>(10);
   const [ocrCopied, setOcrCopied] = useState(false);
+  const [faceVideoTime, setFaceVideoTime] = useState<number>(0);
 
   // Live state tracking for showcase
   const [walletBills, setWalletBills] = useState<ScannedBill[]>(() => getWalletBills());
@@ -900,7 +901,8 @@ export default function DemoPage() {
             type="button"
             onClick={() => {
               setActiveStudioFeed("face");
-              announceAction("ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।", true);
+              speak("সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।");
+              announceAction("সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।", true);
             }}
             style={{
               background: activeStudioFeed === "face" ? "rgba(16, 185, 129, 0.25)" : "#0f172a",
@@ -913,7 +915,7 @@ export default function DemoPage() {
             }}
           >
             <div style={{ fontSize: "0.72rem", color: "#34d399", fontWeight: 800 }}>[৩] ফেস রিকগনিশন</div>
-            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>রেশমা (পরিচিত মুখ)</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 700 }}>নাইমুল ও নীল (আড্ডা)</div>
           </button>
 
           <button
@@ -1237,13 +1239,24 @@ export default function DemoPage() {
           )}
 
           {activeStudioFeed === "face" && (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/demo/reshma_bd_girl.jpg"
-                alt="Face Scan"
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#000" }}>
+              <video
+                src="/face_drishti_Ai.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                onTimeUpdate={(e) => setFaceVideoTime(e.currentTarget.currentTime)}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  maxHeight: "480px",
+                  objectFit: "contain",
+                  display: "block",
+                }}
               />
+
+              {/* Top-Left: Engine Badge */}
               <div
                 style={{
                   position: "absolute",
@@ -1257,43 +1270,174 @@ export default function DemoPage() {
                   color: "#6ee7b7",
                   fontWeight: 800,
                   letterSpacing: "0.5px",
+                  zIndex: 5,
                 }}
               >
-                ARCFACE 512-D RECOGNITION
+                ARCFACE 512-D MULTI-FACE SENTINEL
               </div>
 
-              {/* Face Tracking Bounding Box */}
+              {/* Top-Right: Enrolled Profiles Recognized */}
+              <div style={{ position: "absolute", top: "12px", right: "12px", display: "flex", gap: "6px", zIndex: 5 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "rgba(15, 23, 42, 0.9)",
+                    border: `1px solid ${faceVideoTime >= 3.2 ? "#10b981" : "#334155"}`,
+                    borderRadius: "6px",
+                    padding: "3px 8px",
+                  }}
+                >
+                  <img
+                    src="/demo/naimul.jpg"
+                    alt="নাইমুল"
+                    style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }}
+                  />
+                  <div style={{ fontSize: "0.72rem", lineHeight: 1.15 }}>
+                    <div style={{ color: "#f8fafc", fontWeight: 700 }}>নাইমুল</div>
+                    <div style={{ color: "#34d399", fontSize: "0.65rem", fontWeight: 700 }}>৯৯% মিল</div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "rgba(15, 23, 42, 0.9)",
+                    border: `1px solid ${faceVideoTime < 3.2 ? "#38bdf8" : "#334155"}`,
+                    borderRadius: "6px",
+                    padding: "3px 8px",
+                  }}
+                >
+                  <img
+                    src="/demo/nil.jpg"
+                    alt="নীল"
+                    style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }}
+                  />
+                  <div style={{ fontSize: "0.72rem", lineHeight: 1.15 }}>
+                    <div style={{ color: "#f8fafc", fontWeight: 700 }}>নীল</div>
+                    <div style={{ color: "#38bdf8", fontSize: "0.65rem", fontWeight: 700 }}>৯৬% মিল</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Face Tracking Bounding Box: Nil (0s to ~3.2s) */}
+              {faceVideoTime < 3.2 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "10%",
+                    left: "44%",
+                    width: "12%",
+                    height: "18%",
+                    border: "3px solid #38bdf8",
+                    borderRadius: "8px",
+                    boxShadow: "0 0 18px rgba(56, 189, 248, 0.8)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-24px",
+                      left: "-10px",
+                      background: "#0c4a6e",
+                      color: "#bae6fd",
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    [নীল ৯৬% • ArcFace: 0.94]
+                  </span>
+                </div>
+              )}
+
+              {/* Face Tracking Bounding Box: Naimul (3.2s to 7.5s) */}
+              {faceVideoTime >= 3.2 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "8%",
+                    left: "45%",
+                    width: "15%",
+                    height: "22%",
+                    border: "3px solid #10b981",
+                    borderRadius: "8px",
+                    boxShadow: "0 0 18px rgba(16, 185, 129, 0.8)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-24px",
+                      left: "-10px",
+                      background: "#064e3b",
+                      color: "#6ee7b7",
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    [নাইমুল ৯৯% • ArcFace: 0.98]
+                  </span>
+                </div>
+              )}
+
+              {/* Bottom Activity & Action Banner */}
               <div
                 style={{
                   position: "absolute",
-                  top: "14%",
-                  left: "28%",
-                  width: "44%",
-                  height: "66%",
-                  border: "3px solid #10b981",
-                  borderRadius: "8px",
-                  boxShadow: "0 0 18px rgba(16, 185, 129, 0.8)",
-                  pointerEvents: "none",
+                  bottom: "12px",
+                  left: "12px",
+                  right: "12px",
+                  background: "rgba(15, 23, 42, 0.9)",
+                  border: "1px solid #10b981",
+                  borderRadius: "6px",
+                  padding: "6px 12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backdropFilter: "blur(4px)",
+                  zIndex: 5,
                 }}
               >
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "-24px",
-                    left: 0,
-                    background: "#064e3b",
-                    color: "#6ee7b7",
-                    fontSize: "11px",
-                    fontWeight: 800,
-                    padding: "2px 8px",
-                    borderRadius: "4px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  [রেশমা ৯৮% • ArcFace: 0.94]
-                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 8px #10b981" }} />
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f8fafc" }}>
+                    শনাক্ত ব্যক্তি: <strong style={{ color: "#34d399" }}>নাইমুল</strong> ও <strong style={{ color: "#38bdf8" }}>নীল</strong>
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontSize: "0.74rem", background: "#065f46", color: "#a7f3d0", border: "1px solid #10b981", padding: "2px 8px", borderRadius: "4px", fontWeight: 800 }}>
+                    আড্ডা দিচ্ছেন (GOSSIPING)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => speak("সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।")}
+                    style={{
+                      background: "#0284c7",
+                      color: "#ffffff",
+                      border: "none",
+                      borderRadius: "4px",
+                      padding: "3px 9px",
+                      fontSize: "0.75rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ভয়েস শুনুন
+                  </button>
+                </div>
               </div>
-            </>
+            </div>
           )}
 
           {activeStudioFeed === "currency" && (
@@ -1988,7 +2132,7 @@ export default function DemoPage() {
             <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "#f8fafc" }}>
               {activeStudioFeed === "walk" && "সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে সোজা এগিয়ে চলুন।"}
               {activeStudioFeed === "hazard" && "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।"}
-              {activeStudioFeed === "face" && "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।"}
+              {activeStudioFeed === "face" && "সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।"}
               {activeStudioFeed === "currency" && (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")}
               {activeStudioFeed === "ocr" && "ঢাকা বিশ্ববিদ্যালয় নোটিশ: স্নাতক ও স্নাতকোত্তর পরীক্ষার সময়সূচি প্রকাশিত হয়েছে। প্রবেশপত্র সংগ্রহের নির্দেশ।"}
               {activeStudioFeed === "radar" && "সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।"}
@@ -2006,7 +2150,7 @@ export default function DemoPage() {
                     : activeStudioFeed === "hazard"
                     ? "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।"
                     : activeStudioFeed === "face"
-                    ? "ইনি হচ্ছেন রেশমা, যার সাথে গতকালও আপনার দেখা হয়েছিল।"
+                    ? "সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।"
                     : activeStudioFeed === "currency"
                     ? (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")
                     : activeStudioFeed === "ocr"
@@ -2594,24 +2738,42 @@ export default function DemoPage() {
               <div className="demo-metric-box">
                 <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>নথিভুক্ত সদস্য:</span>
                 <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--accent-emerald)" }}>
-                  {toBengaliDigits(getEnrolledPersons().length)} জন সদস্য (আমেনা বেগম, রহিম, ডা. তানভীর)
+                  {toBengaliDigits(getEnrolledPersons().length)} জন সদস্য (নাইমুল, নীল, আমেনা বেগম...)
                 </span>
               </div>
 
-              <div className="demo-btn-group">
+              <div className="demo-btn-group" style={{ flexWrap: "wrap", gap: "0.4rem" }}>
                 <button
                   type="button"
-                  onClick={() => handlePersonMatchTest("আমেনা বেগম", "মা", true)}
+                  onClick={() => handlePersonMatchTest("নাইমুল", "বন্ধু / লাল শার্ট", true)}
                   className="demo-quick-btn success"
                 >
-                  মা (আমেনা বেগম)
+                  নাইমুল (বন্ধু)
                 </button>
                 <button
                   type="button"
-                  onClick={() => handlePersonMatchTest("রহিম", "ছোট ভাই", true)}
+                  onClick={() => handlePersonMatchTest("নীল", "বন্ধু / পাঞ্জাবি", true)}
                   className="demo-quick-btn success"
                 >
-                  ভাই (রহিম)
+                  নীল (বন্ধু)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    announceAction("সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।", true);
+                    speak("সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।");
+                  }}
+                  className="demo-quick-btn success"
+                  style={{ background: "#065f46", color: "#6ee7b7", borderColor: "#10b981" }}
+                >
+                  আড্ডা ডিটেকশন
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePersonMatchTest("আমেনা বেগম", "মা", true)}
+                  className="demo-quick-btn"
+                >
+                  মা (আমেনা)
                 </button>
                 <button
                   type="button"
