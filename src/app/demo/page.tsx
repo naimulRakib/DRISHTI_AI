@@ -655,7 +655,7 @@ export default function DemoPage() {
       const breachLat = 23.8350;
       const breachLng = 90.4350;
       triggerGeofenceAlert("বাড়ি (Home)", breachLat, breachLng, 1850);
-      const msg = "🚨 সতর্কতা: আপনি নিরাপদ সীমানা (১৫০ মিটার) অতিক্রম করেছেন! কেয়ারগিভারকে জরুরি এসএমএস পাঠানো হয়েছে।";
+      const msg = "সতর্কতা: আপনি নিরাপদ সীমানা (১৫০ মিটার) অতিক্রম করেছেন! কেয়ারগিভারকে জরুরি এসএমএস পাঠানো হয়েছে।";
       announceAction(msg, true);
     } else {
       const evalRes = evaluateSafeZones(23.8103, 90.4125);
@@ -922,8 +922,11 @@ export default function DemoPage() {
             type="button"
             onClick={() => {
               setActiveStudioFeed("currency");
-              const spoken = demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।";
+              const spoken = demoCurrencyNote === 10
+                ? "এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।"
+                : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।";
               announceAction(spoken, true);
+              speak(spoken);
             }}
             style={{
               background: activeStudioFeed === "currency" ? "rgba(217, 119, 6, 0.25)" : "#0f172a",
@@ -1489,8 +1492,9 @@ export default function DemoPage() {
                     type="button"
                     onClick={() => {
                       setDemoCurrencyNote(10);
-                      speak("এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।");
-                      announceAction("এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।", true);
+                      const spoken = "এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।";
+                      speak(spoken);
+                      announceAction(spoken, true);
                     }}
                     style={{
                       background: demoCurrencyNote === 10 ? "#059669" : "rgba(15, 23, 42, 0.85)",
@@ -1504,7 +1508,7 @@ export default function DemoPage() {
                       transition: "all 0.15s ease",
                     }}
                   >
-                    ১০ টাকার নোট
+                    ১০ টাকার নোট (১ ইঞ্চি ছেঁড়া)
                   </button>
                   <button
                     type="button"
@@ -1598,6 +1602,44 @@ export default function DemoPage() {
                     <span style={{ color: "#34d399" }}>{demoCurrencyNote === 10 ? "৯৯.৪%" : "৯৯.১%"}</span>
                   </div>
                 </div>
+
+                {/* 10 Tk Tear / Damage Detection Overlay */}
+                {demoCurrencyNote === 10 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "6%",
+                      left: "47%",
+                      width: "8%",
+                      height: "22%",
+                      border: "2px dashed #ef4444",
+                      borderRadius: "4px",
+                      background: "rgba(239, 68, 68, 0.25)",
+                      boxShadow: "0 0 14px rgba(239, 68, 68, 0.8)",
+                      pointerEvents: "none",
+                      zIndex: 3,
+                    }}
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        bottom: "-22px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        background: "#7f1d1d",
+                        color: "#fecaca",
+                        fontSize: "10px",
+                        fontWeight: 800,
+                        padding: "2px 6px",
+                        borderRadius: "3px",
+                        whiteSpace: "nowrap",
+                        border: "1px solid #ef4444",
+                      }}
+                    >
+                      [ডানপাশে ১ ইঞ্চি ছেঁড়া]
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Right Column: AI Analysis HUD & Controls */}
@@ -1648,13 +1690,13 @@ export default function DemoPage() {
                   <div>
                     <span style={{ color: "#94a3b8" }}>স্থাপত্য নিদর্শন: </span>
                     <strong style={{ color: "#e2e8f0" }}>
-                      {demoCurrencyNote === 10 ? "বায়তুল মোকাররম জাতীয় মসজিদ" : "ষাট গম্বুজ মসজিদ (বাগেরহাট)"}
+                      {demoCurrencyNote === 10 ? "জাতীয় স্মৃতিসৌধ ও বায়তুল মোকাররম" : "ষাট গম্বুজ মসজিদ (বাগেরহাট)"}
                     </strong>
                   </div>
                   <div>
                     <span style={{ color: "#94a3b8" }}>নিরাপত্তা বৈশিষ্ট্য: </span>
                     <strong style={{ color: "#e2e8f0" }}>
-                      {demoCurrencyNote === 10 ? "রয়েল বেঙ্গল টাইগার জলছাপ ও দৃষ্টিহীনদের স্পর্শবিন্দু" : "৪ মিমি অপটিক্যাল সিকিউরিটি থ্রেড ও স্পর্শবিন্দু"}
+                      {demoCurrencyNote === 10 ? "রয়েল বেঙ্গল টাইগার জলছাপ ও স্পর্শবিন্দু" : "৪ মিমি অপটিক্যাল সিকিউরিটি থ্রেড ও স্পর্শবিন্দু"}
                     </strong>
                   </div>
                   <div>
@@ -1663,6 +1705,22 @@ export default function DemoPage() {
                       {demoCurrencyNote === 10 ? "৯৯.৪%" : "৯৯.১%"} (রিয়েল-টাইম এজ ইনফ্যারেন্স)
                     </strong>
                   </div>
+                  {demoCurrencyNote === 10 && (
+                    <div
+                      style={{
+                        background: "rgba(153, 27, 27, 0.35)",
+                        border: "1px solid #ef4444",
+                        borderRadius: "4px",
+                        padding: "5px 8px",
+                        marginTop: "2px",
+                      }}
+                    >
+                      <span style={{ color: "#f87171", fontWeight: 800 }}>নোটের অবস্থা (Defect Inspection): </span>
+                      <strong style={{ color: "#fecaca" }}>
+                        নোটটির ডান পাশে প্রায় ১ ইঞ্চি ছেঁড়া সনাক্ত হয়েছে
+                      </strong>
+                    </div>
+                  )}
                 </div>
 
                 {/* Action Buttons */}
@@ -1670,7 +1728,9 @@ export default function DemoPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      const spoken = demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।";
+                      const spoken = demoCurrencyNote === 10
+                        ? "এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।"
+                        : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।";
                       speak(spoken);
                     }}
                     style={{
@@ -2133,7 +2193,7 @@ export default function DemoPage() {
               {activeStudioFeed === "walk" && "সামনে আয়েশা মেডিকেল হলের সাইনবোর্ড দেখা যাচ্ছে। ফুটপাত দিয়ে সোজা এগিয়ে চলুন।"}
               {activeStudioFeed === "hazard" && "সাবধান, সামনে ৩ কদম দূরে ফুটপাতে খোলা গর্ত রয়েছে। সামান্য বাঁয়ে সরুন।"}
               {activeStudioFeed === "face" && "সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।"}
-              {activeStudioFeed === "currency" && (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")}
+              {activeStudioFeed === "currency" && (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")}
               {activeStudioFeed === "ocr" && "ঢাকা বিশ্ববিদ্যালয় নোটিশ: স্নাতক ও স্নাতকোত্তর পরীক্ষার সময়সূচি প্রকাশিত হয়েছে। প্রবেশপত্র সংগ্রহের নির্দেশ।"}
               {activeStudioFeed === "radar" && "সামনে ১.২ মিটার দূরত্বে প্রতিবন্ধকতা রয়েছে।"}
               {activeStudioFeed === "fall" && "আপনি কি ঠিক আছেন? সহায়তা প্রয়োজন কি না বলুন।"}
@@ -2152,7 +2212,7 @@ export default function DemoPage() {
                     : activeStudioFeed === "face"
                     ? "সামনে নাইমুল ও নীল উপস্থিত আছেন। তারা আড্ডা দিচ্ছেন।"
                     : activeStudioFeed === "currency"
-                    ? (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। বাংলাদেশ ব্যাংক।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")
+                    ? (demoCurrencyNote === 10 ? "এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।" : "এটি একটি বিশ টাকার নোট। বাংলাদেশ ব্যাংক।")
                     : activeStudioFeed === "ocr"
                     ? DU_NOTICE_SPOKEN
                     : activeStudioFeed === "radar"
@@ -2612,13 +2672,28 @@ export default function DemoPage() {
                 </div>
               </div>
 
-              <div className="demo-btn-group">
+              <div className="demo-btn-group" style={{ flexWrap: "wrap", gap: "0.4rem" }}>
                 <button
                   type="button"
-                  onClick={() => handleAddDemoNote(10)}
+                  onClick={() => {
+                    handleAddDemoNote(10);
+                    speak("এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।");
+                  }}
                   className="demo-quick-btn success"
                 >
                   + ৳১০ নোট
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const msg = "এটি একটি দশ টাকার নোট। নোটটির ডান পাশে এক ইঞ্চি ছেঁড়া রয়েছে।";
+                    announceAction(msg, true);
+                    speak(msg);
+                  }}
+                  className="demo-quick-btn danger"
+                  style={{ background: "#7f1d1d", color: "#fecaca", borderColor: "#ef4444" }}
+                >
+                  ১০৳ ছেঁড়া নোট টেস্ট
                 </button>
                 <button
                   type="button"
